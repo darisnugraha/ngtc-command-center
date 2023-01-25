@@ -72,9 +72,25 @@ export const actions = {
   logout: (): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
     // Invoke API
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      localStorage.removeItem('isLogin');
-      localStorage.removeItem('userData');
-      dispatch({ type: actionTypes.Logout, payload: {} });
+      getLocal('userData').then((res) => {
+        const onSendData = {
+          user_id: res.user_id,
+          refresh_token: res.refresh_token,
+        };
+        AxiosPostLogin('auth/logout', onSendData)
+          .then(() => {
+            toast.success('Success Logout');
+            localStorage.clear();
+            dispatch({ type: actionTypes.Logout, payload: {} });
+          })
+          .catch((err) => {
+            const dataErr = err.response.data;
+            console.log(dataErr);
+            toast.success('Success Logout');
+            localStorage.clear();
+            dispatch({ type: actionTypes.Logout, payload: {} });
+          });
+      });
     };
   },
   isLogin: (): ThunkAction<Promise<void>, {}, {}, AnyAction> => {

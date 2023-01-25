@@ -2,7 +2,7 @@
   "name": "demo1",
   "version": "8.0.31",
   "private": true,
-  "homepage": ".",
+  "homepage": "https://ngtc-command-center.netlify.app/",
   "dependencies": {
     "@develoka/angka-terbilang-js": "^1.4.2",
     "@formatjs/intl-pluralrules": "^4.0.28",

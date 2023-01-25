@@ -83,9 +83,7 @@ export const actions = {
             localStorage.clear();
             dispatch({ type: actionTypes.Logout, payload: {} });
           })
-          .catch((err) => {
-            const dataErr = err.response.data;
-            console.log(dataErr);
+          .catch(() => {
             toast.success('Success Logout');
             localStorage.clear();
             dispatch({ type: actionTypes.Logout, payload: {} });

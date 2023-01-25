@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { connect, ConnectedProps, useDispatch } from 'react-redux';
+import React, { FC, useEffect } from 'react';
+import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
 import { ColumnDescription } from 'react-bootstrap-table-next';
 import { RootState } from '../../../../setup';
 import GlobalModal from '../../../modules/modal/GlobalModal';
@@ -15,50 +15,51 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const UserPage: FC<PropsFromRedux> = () => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(redux.actions.getUser());
+  }, [dispatch]);
+
   const columns: ColumnDescription[] = [
     {
-      dataField: 'no',
+      dataField: 'key',
       text: 'No',
+      align: 'center',
       headerClasses: 'ps-4 min-w-100px rounded-start',
       formatter: (cell) => {
-        return (
-          <p className='ps-4 text-dark fw-bolder text-hover-primary d-block mb-1 fs-6'>{cell}</p>
-        );
+        return <p className='ps-4 text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
       dataField: 'user_id',
       text: 'User Id',
+      align: 'center',
       formatter: (cell) => {
-        return <p className='text-dark fw-bolder text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
       dataField: 'user_name',
       text: 'Username',
+      align: 'center',
       formatter: (cell) => {
-        return <p className='text-dark fw-bolder text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
-      },
-    },
-    {
-      dataField: 'password',
-      text: 'Password',
-      formatter: (cell) => {
-        return <p className='text-dark fw-bolder text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
       dataField: 'level',
       text: 'Level',
+      align: 'center',
       formatter: (cell) => {
-        return <p className='text-dark fw-bolder text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
       dataField: '',
       text: 'Action',
+      align: 'center',
       headerClasses: 'ps-4 min-w-100px rounded-end',
-      formatter: () => {
+      formatter: (cell, row) => {
         return (
           <>
             <button
@@ -70,7 +71,10 @@ const UserPage: FC<PropsFromRedux> = () => {
             </button>
             <button
               type='button'
-              onClick={() => {}}
+              onClick={() => {
+                // eslint-disable-next-line
+                dispatch(redux.actions.deleteUser(row._id));
+              }}
               className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
             >
               <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
@@ -88,6 +92,8 @@ const UserPage: FC<PropsFromRedux> = () => {
   const handleCloseUser = () => {
     dispatch(modal.actions.hide());
   };
+
+  const dataTab: any = useSelector<RootState>(({ user }) => user.feedback);
 
   return (
     <>
@@ -141,7 +147,7 @@ const UserPage: FC<PropsFromRedux> = () => {
         </div>
         {/* begin::Body */}
       </div>
-      <DefaultTable className='mb-5 mb-xl-8' data={[]} columns={columns} />
+      <DefaultTable className='mb-5 mb-xl-8' data={dataTab} columns={columns} />
     </>
   );
 };

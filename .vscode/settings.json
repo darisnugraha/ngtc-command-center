@@ -1,0 +1,144 @@
+{
+    "folderTemplates.fileTemplates": {
+        "create-redux-file" :[
+            "import { Action, AnyAction } from '@reduxjs/toolkit'",
+            "import { persistReducer } from 'redux-persist'",
+            "import storage from 'redux-persist/lib/storage'",
+            "import { ThunkAction, ThunkDispatch } from 'redux-thunk'",
+
+            "export const actionTypes = {",
+            "Show: '[Modal] Showing',",
+            "}",
+
+            "export interface IModalState {",
+            "isShowing?: boolean",
+            "data?: string",
+            "}",
+            "const initialModalState: IModalState = {",
+            "isShowing: false,",
+            "data: '',",
+            "}",
+            "export interface IPayload {",
+                "isShowing?: boolean",
+            "}",
+
+            "export interface ActionWithPayload<T> extends Action {",
+                "payload?: T",
+            "}",
+            "const key = process.env.REACT_APP_STORAGE_KEY ?? 'key-nagatech-storage';",
+            "export const reducer = persistReducer(",
+            "{storage, key: key, whitelist: ['isShowing']},",
+            "(state: IModalState = initialModalState, action: ActionWithPayload<IPayload>) => {",
+                "switch (action.type) {",
+                "case actionTypes.Show: {",
+                    "const isShowing = true",
+                    "return {isShowing, data: ''}",
+                "}",
+                "default:",
+                    "return state",
+                "}",
+            "}",
+            ")",
+            "export const actions = {",
+            "show: () : ThunkAction<Promise<void>, {}, {}, AnyAction> => {",
+                "return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState): Promise<void> => {",
+                "dispatch({type: actionTypes.Show, payload: {isShowing: true}})",
+                "}",
+            "},",
+            "}",
+        ],
+    "create-model": [
+        "export interface <FTName | pascalcase>Model {",
+           
+          "}", 
+    ],
+    "create-page": [
+        "import React, { FC } from 'react'",
+        "import { connect, ConnectedProps, useDispatch } from 'react-redux'",
+        "const mapState = (state: RootState) => ({});",
+        "const connector = connect(mapState)",
+        "type PropsFromRedux = ConnectedProps<typeof connector>",
+        "const <FTName | pascalcase>Page: FC<PropsFromRedux> = () => {",
+        "const dispatch = useDispatch()",
+        "return (",
+            "<BaseCard>",
+            "</BaseCard>",
+                ")",
+        "}",
+
+        "export default connector(<FTName | pascalcase>Page)",
+    ],
+    "create-component" : [
+       " import { connect } from 'react-redux'",
+"import { InjectedFormProps, reduxForm } from 'redux-form'",
+       " interface Props {}",
+"const <FTName | pascalcase>Component: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {",
+  "const {handleSubmit, pristine, submitting} = props",
+  "return (",
+    "<form onSubmit={handleSubmit}>",
+      "<div className='row justify-content-end mt-5'>",
+        "<div className='col-lg-2 d-grid'>",
+          "<button className='btn btn-primary' disabled={pristine || submitting}>",
+            "{!submitting && <span className='indicator-label'>Simpan</span>}",
+            "{submitting && (",
+              "<span className='indicator-progress' style={{display: 'block'}}>",
+                "Please wait...",
+                "<span className='spinner-border spinner-border-sm align-middle ms-2'></span>",
+              "</span>",
+            ")}",
+          "</button>",
+        "</div>",
+      "</div>",
+    "</form>",
+  ")",
+"}",
+
+"const form = reduxForm<{}, Props>({",
+  "destroyOnUnmount: false,",
+  "forceUnregisterOnUnmount: true,",
+  "form: '<FTName | pascalcase>Component',",
+  "touchOnChange: true,",
+"})(<FTName | pascalcase>Component)",
+"export default connect()(form)",
+    ],
+    "create-validation": [
+        "import { FormErrors } from 'redux-form'",
+"import { <FTName | pascalcase>Model } from '../model/<FTName | pascalcase>.model'",
+       " const <FTName | pascalcase>Validation = (values: <FTName | pascalcase>Model): FormErrors<<FTName | pascalcase>Model> => {",
+            "const errors: FormErrors<<FTName | pascalcase>Model> = {}",
+            "return errors",
+          "}",
+          "export default <FTName | pascalcase>Validation",
+    ]
+    },
+    "folderTemplates.structures": [
+        {
+            "name": "Create Redux",
+            "structure": [
+                {
+                    "fileName": "redux/<FTName | pascalcase>.redux.tsx",
+                    "template": "create-redux-file"
+                },
+                {
+                    "fileName": "model/<FTName | pascalcase>.model.tsx",
+                    "template": "create-model"
+                },
+                {
+                    "fileName": "<FTName | pascalcase>.tsx",
+                    "template": "create-page"
+                },
+                {
+                    "fileName": "component/<FTName | pascalcase>.component.tsx",
+                    "template": "create-component"
+                },
+                {
+                    "fileName": "validation/<FTName | pascalcase>.form-validation.tsx",
+                    "template": "create-validation"
+                }
+            ]
+        }
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
+}

@@ -1,0 +1,27 @@
+//
+// Theme style
+//
+
+// Mode
+$mode: default;
+
+// Initialize
+
+// eslint-disable-next-line
+@import 'init';
+
+// Components
+
+// eslint-disable-next-line
+@import './core/components/components';
+
+// eslint-disable-next-line
+@import 'components/components';
+
+// Layout
+
+// eslint-disable-next-line
+@import 'layout/layout';
+
+// eslint-disable-next-line
+@import './core/layout/docs/layout';

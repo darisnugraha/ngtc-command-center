@@ -1,0 +1,7 @@
+*.css
+*.svg
+*.js
+*.jsx
+Firebase.ts
+**/*.stories.*
+**/.storybook/**/*.*

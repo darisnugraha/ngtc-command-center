@@ -1,0 +1,87 @@
+{
+	// Place your metronic workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	"Generate Basic Columns For DefaultTable": {
+		"scope": "javascriptreact,typescriptreact",
+		"prefix": "basic-column",
+		"body": [
+			"[",
+			"{",
+			" dataField: '$1',",
+			"text: '$2',",
+			"headerClasses: 'ps-4 min-w-100px rounded-start',",
+			"formatter: (cell, row, rowIndex, colIndex) => {",
+			"return <p className='ps-4 text-dark fw-bolder text-hover-primary d-block mb-1 fs-6'>{cell}</p>;",
+			"},",
+			"},",
+			"{",
+			" dataField: '$3example',",
+			"text: 'example',",
+			"formatter: (cell, row, rowIndex, colIndex) => {",
+			"return <p className='text-dark fw-bolder text-hover-primary d-block mb-1 fs-6'>{cell}</p>;",
+			"},",
+			"},",
+			"{",
+			" dataField: '',",
+			"text: '',",
+			"headerClasses: 'ps-4 min-w-100px rounded-end',",
+			"formatter: (cell, row, rowIndex, colIndex) => {",
+			"return (",
+			"<>",
+			"<button",
+			" onClick={() => $4}",
+			"className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>",
+			"<KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />",
+			"</button>",
+			"<button",
+			" onClick={() => $5}",
+			"className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>",
+			"<KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />",
+			"</button>",
+			"</>",
+			")",
+			"},",
+			"},",
+			"]",
+
+		],
+		"description": "Log output to console"
+	},
+
+	"Generate Redux Thunk Basic Action": {
+		"scope": "javascriptreact,typescriptreact",
+		"prefix": "basic-action-thunk",
+		"body": [
+			"show: (): ThunkAction<Promise<void>, {}, {}, AnyAction> => {",
+				"return async (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState): Promise<void> => {",
+					" dispatch({type: actionTypes.Show, payload: {isShowing: true}})",
+				"}",
+			"}"
+
+		],
+		"description": "Log output to console"
+	},
+	"Generate Statless Component": {
+		"scope": "javascriptreact,typescriptreact",
+		"prefix": "function-component",
+		"body": [
+			"type Props = {",
+				"};",
+					"const DefaultTable: React.FC<Props> = ({",
+					"$1",
+					"}) => {",
+					"return (",
+						"$2",
+					");",
+					"};",
+				"export default DefaultTable;"
+
+		],
+		"description": "Create Basic Stateless Component Template"
+	}
+}

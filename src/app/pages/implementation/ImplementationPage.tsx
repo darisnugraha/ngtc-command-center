@@ -36,8 +36,24 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
       },
     },
     {
+      dataField: 'no_order_konfirmasi',
+      text: 'No Order Confirmation',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+      },
+    },
+    {
       dataField: 'no_implementasi',
       text: 'No Implementation',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+      },
+    },
+    {
+      dataField: 'nama_toko',
+      text: 'Store',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;

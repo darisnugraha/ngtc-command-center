@@ -15,6 +15,7 @@ export interface DetailProduk {
   jenis_produk: String;
   satuan: String;
   harga: Number;
+  type: Number;
 }
 export interface FeedbackModelBundle {
   _id: String;

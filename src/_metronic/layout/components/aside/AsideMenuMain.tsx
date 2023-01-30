@@ -89,6 +89,20 @@ export default function AsideMenuMain() {
         title='Implementation'
         fontIcon='bi-app-indicator'
       />
+      <AsideMenuItem
+        to='/delivery-note'
+        icon='/media/icons/duotune/ecommerce/ecm006.svg'
+        title='Delivery Note'
+        fontIcon='bi-app-indicator'
+      />
+      <AsideMenuItemWithSub
+        to='/invoice'
+        title='Invoice'
+        icon='/media/icons/duotune/general/gen032.svg'
+        fontIcon='bi-archive'
+      >
+        <AsideMenuItem to='/invoice/list-invoice' title='List Invoice' hasBullet />
+      </AsideMenuItemWithSub>
       <AsideMenuItemWithSub
         to='/report'
         title='Report'

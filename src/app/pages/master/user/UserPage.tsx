@@ -64,7 +64,10 @@ const UserPage: FC<PropsFromRedux> = () => {
           <>
             <button
               type='button'
-              onClick={() => {}}
+              onClick={() => {
+                // eslint-disable-next-line
+                dispatch(redux.actions.getUserID(row._id));
+              }}
               className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
             >
               <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
@@ -90,17 +93,22 @@ const UserPage: FC<PropsFromRedux> = () => {
   };
 
   const handleCloseUser = () => {
-    dispatch(modal.actions.hide());
+    dispatch(redux.actions.closeModal());
   };
 
   const dataTab: any = useSelector<RootState>(({ user }) => user.feedback);
+  const isEdit = useSelector<RootState>(({ user }) => user.isEdit);
 
   return (
     <>
-      <GlobalModal title='Add User' onClose={() => handleCloseUser()}>
+      <GlobalModal title={`${isEdit ? 'Edit' : 'Add'} User`} onClose={() => handleCloseUser()}>
         <FormUserComponent
           onSubmit={(data: any) => {
-            dispatch(redux.actions.addUser(data));
+            if (isEdit) {
+              dispatch(redux.actions.editUser(data));
+            } else {
+              dispatch(redux.actions.addUser(data));
+            }
           }}
         />
       </GlobalModal>

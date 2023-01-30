@@ -7,6 +7,7 @@ import SubmitButton from '../../../../modules/button';
 import { RenderField, RenderTextArea } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
 import * as reduxAddCustomer from '../redux/AddOrderConfirmationCustomerRedux';
+import AddCustomerValidation from '../validasi/AddCustomerOCValidation';
 
 interface Props {}
 
@@ -255,6 +256,6 @@ const form = reduxForm<{}, Props>({
   forceUnregisterOnUnmount: true,
   form: 'FormAddCustomerOC',
   touchOnChange: true,
-  //   validate: AddBankValidation,
+  validate: AddCustomerValidation,
 })(FormAddCustomerOC);
 export default connect(mapState, null)(form);

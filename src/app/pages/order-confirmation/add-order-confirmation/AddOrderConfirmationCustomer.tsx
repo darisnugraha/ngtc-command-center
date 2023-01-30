@@ -5,11 +5,9 @@ import * as reduxStaff from '../../master/staff/redux/StaffRedux';
 import FormAddCustomer from './component/FormAddCustomer';
 import * as redux from './redux/AddOrderConfirmationCustomerRedux';
 
-type Props = {
-  nextStep?: any;
-};
+type Props = {};
 
-const AddOrderConfirmationCustomer: FC<Props> = ({ nextStep }) => {
+const AddOrderConfirmationCustomer: FC<Props> = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,8 +31,7 @@ const AddOrderConfirmationCustomer: FC<Props> = ({ nextStep }) => {
           <FormAddCustomer
             onSubmit={(data: any) => {
               // eslint-disable-next-line
-              dispatch(redux.actions.addCustomer(data))
-              nextStep();
+              dispatch(redux.actions.addCustomer(data));
             }}
           />
         </div>

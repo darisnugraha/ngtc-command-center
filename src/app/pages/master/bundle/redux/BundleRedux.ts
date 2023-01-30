@@ -106,6 +106,7 @@ export const actions = {
               kode_produk: element.product_code,
               nama_produk: element.product_name,
               satuan: element.unit,
+              type: element.type,
             };
             dataArrnew.push(row);
           });
@@ -185,6 +186,7 @@ export const actions = {
             product_type: element.jenis_produk,
             unit: element.satuan,
             price: element.harga,
+            type: element.type,
             // eslint-disable-next-line
             id: element._id,
           };
@@ -239,6 +241,7 @@ export const actions = {
               kode_produk: element.product_code,
               nama_produk: element.product_name,
               satuan: element.unit,
+              type: element.type,
             };
             dataArrnew.push(row);
           });
@@ -382,6 +385,7 @@ export const actions = {
             '_id',
             'input_date',
             'harga',
+            'type',
           ]);
           dispatch({
             type: actionTypes.GetProductDetail,
@@ -392,6 +396,7 @@ export const actions = {
           dispatch(change('FormAddProductComponent', 'product_name', dataDecrypt.nama_produk));
           dispatch(change('FormAddProductComponent', 'unit', dataDecrypt.satuan));
           dispatch(change('FormAddProductComponent', 'price', dataDecrypt.harga));
+          dispatch(change('FormAddProductComponent', 'type', dataDecrypt.type));
         });
       } else if (data === 'HARDWARE') {
         AxiosGet(`hardware/by-kode/${id}`).then((res: any) => {
@@ -412,6 +417,7 @@ export const actions = {
           dispatch(change('FormAddProductComponent', 'product_name', dataDecrypt.nama_hardware));
           dispatch(change('FormAddProductComponent', 'unit', dataDecrypt.satuan));
           dispatch(change('FormAddProductComponent', 'price', dataDecrypt.harga));
+          dispatch(change('FormAddProductComponent', 'type', '-'));
         });
       } else {
         AxiosGet(`consumable/by-kode/${id}`).then((res: any) => {
@@ -432,6 +438,7 @@ export const actions = {
           dispatch(change('FormAddProductComponent', 'product_name', dataDecrypt.nama_consumable));
           dispatch(change('FormAddProductComponent', 'unit', dataDecrypt.satuan));
           dispatch(change('FormAddProductComponent', 'price', dataDecrypt.harga));
+          dispatch(change('FormAddProductComponent', 'type', '-'));
         });
       }
     };
@@ -452,7 +459,8 @@ export const actions = {
           data.product_type === undefined ||
           data.product_name === undefined ||
           data.unit === undefined ||
-          data.price === undefined
+          data.price === undefined ||
+          data.type === undefined
         ) {
           toast.info('Fill The Form First !');
         } else {

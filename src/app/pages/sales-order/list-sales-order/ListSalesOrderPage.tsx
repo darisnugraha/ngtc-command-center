@@ -4,7 +4,7 @@ import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
 import BootstrapTable, { ColumnDescription } from 'react-bootstrap-table-next';
 import { Tab, Tabs } from 'react-bootstrap-v5';
 import { RootState } from '../../../../setup';
-import { KTSVG } from '../../../../_metronic/helpers';
+// import { KTSVG } from '../../../../_metronic/helpers';
 import FormSearchOC from './component/FormSearchSO';
 import * as reduxStaff from '../../master/staff/redux/StaffRedux';
 import * as reduxCustomer from '../../master/customer/redux/CustomerRedux';
@@ -116,43 +116,53 @@ const ListSalesOrder: FC<PropsFromRedux> = () => {
       headerClasses: 'ps-4 min-w-100px rounded-end',
       formatter: (cell, row) => {
         return (
-          <div className='row'>
-            <div className='col-lg-4'>
-              <button
-                type='button'
-                onClick={() => {
-                  dispatch(redux.actions.getListSOByNo(row.no_order_konfirmasi));
-                  setTypeModal('DETAIL');
-                }}
-                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-              >
-                <i className='bi bi-eye-fill' />
-              </button>
-            </div>
-            <div className='col-lg-4'>
-              <button
-                type='button'
-                onClick={() => {
-                  // eslint-disable-next-line
-                }}
-                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-              >
-                <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
-              </button>
-            </div>
-            <div className='col-lg-4'>
-              <button
-                type='button'
-                onClick={() => {
-                  // eslint-disable-next-line
-                  dispatch(redux.actions.deleteSO(row._id));
-                }}
-                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-              >
-                <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
-              </button>
-            </div>
-          </div>
+          <button
+            type='button'
+            onClick={() => {
+              dispatch(redux.actions.getListSOByNo(row.no_order_konfirmasi));
+              setTypeModal('DETAIL');
+            }}
+            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+          >
+            <i className='bi bi-eye-fill' />
+          </button>
+          // <div className='row'>
+          //   <div className='col-lg-4'>
+          //     <button
+          //       type='button'
+          //       onClick={() => {
+          //         dispatch(redux.actions.getListSOByNo(row.no_order_konfirmasi));
+          //         setTypeModal('DETAIL');
+          //       }}
+          //       className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+          //     >
+          //       <i className='bi bi-eye-fill' />
+          //     </button>
+          //   </div>
+          //   <div className='col-lg-4 d-none'>
+          //     <button
+          //       type='button'
+          //       onClick={() => {
+          //         // eslint-disable-next-line
+          //       }}
+          //       className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+          //     >
+          //       <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
+          //     </button>
+          //   </div>
+          //   <div className='col-lg-4 d-none'>
+          //     <button
+          //       type='button'
+          //       onClick={() => {
+          //         // eslint-disable-next-line
+          //         dispatch(redux.actions.deleteSO(row._id));
+          //       }}
+          //       className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+          //     >
+          //       <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
+          //     </button>
+          //   </div>
+          // </div>
         );
       },
     },

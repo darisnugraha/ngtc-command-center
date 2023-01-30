@@ -17,9 +17,7 @@ import GlobalModal from '../../../modules/modal/GlobalModal';
 import FormAddDeskripsi from './component/FormAddDeskripsi';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
 
-interface Props {
-  prevStep: any;
-}
+interface Props {}
 
 const AddOrderConfirmationProduct: FC<Props> = () => {
   const dispatch = useDispatch();

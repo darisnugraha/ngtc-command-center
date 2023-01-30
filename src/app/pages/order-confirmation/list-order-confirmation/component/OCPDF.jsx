@@ -78,8 +78,8 @@ const OCPDF = (data, head) => {
   ];
   tableRows.push(footer);
 
-  const dataDiscountSoftware = data[0].detail_diskon.find(
-    (element) => element.nama_diskon === 'SOFTWARE'
+  const dataDiscountSoftware = data[0].detail_diskon.find((element) =>
+    element.nama_diskon.includes('SOFTWARE')
   );
   const softwarePercent = dataDiscountSoftware?.persentase || 0;
   let PersentaseSoftware = 0;
@@ -118,8 +118,8 @@ const OCPDF = (data, head) => {
   ];
   tableRows.push(discountSoftware);
 
-  const dataDiscountHardware = data[0].detail_diskon.find(
-    (element) => element.nama_diskon === 'HARDWARE'
+  const dataDiscountHardware = data[0].detail_diskon.find((element) =>
+    element.nama_diskon.includes('HARDWARE')
   );
   const hardwarePercent = dataDiscountHardware?.persentase || 0;
   let PersentaseHardware = 0;
@@ -157,8 +157,8 @@ const OCPDF = (data, head) => {
   ];
   tableRows.push(discountHardware);
 
-  const dataDiscountConsumable = data[0].detail_diskon.find(
-    (element) => element.nama_diskon === 'CONSUMABLE'
+  const dataDiscountConsumable = data[0].detail_diskon.find((element) =>
+    element.nama_diskon.includes('CONSUMABLE')
   );
   const ConsumablePercent = dataDiscountConsumable?.persentase || 0;
   let PersentaseConsumable = 0;

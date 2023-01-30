@@ -28,22 +28,24 @@ const KwitansiPDF = (data, head) => {
   doc.text('Banyaknya Uang   :', 15, 63);
   doc.text(angkaTerbilang(data[0].bayar_rp).toUpperCase(), 68, 63);
   doc.text('Untuk Pembayaran :', 15, 73);
-  const desc =
-    'Pelunasan pembelian Paket Software Nagagold Store Solution (Online Web Based Full Version)';
+  const desc = data[0].deskripsi;
   const jml_desc = desc.length;
-  if (jml_desc > 20) {
-    doc.text(desc.slice(0, 45), 68, 73);
+  let finalY = 73;
+  if (jml_desc > 10) {
+    doc.text(desc.slice(0, 45), 68, finalY);
   }
   if (jml_desc > 50) {
-    doc.text(desc.slice(45, 92), 68, 83);
+    doc.text(desc.slice(45, 92), 68, finalY + 10);
+    finalY = finalY + 10;
   }
   if (jml_desc > 70) {
-    doc.text(desc.slice(92, 135), 68, 93);
+    doc.text(desc.slice(92, 135), 68, finalY + 20);
+    finalY = finalY + 20;
   }
-  doc.text(`Terbilang Rp ${data[0].bayar_rp.toLocaleString()}`, 15, 103);
+  doc.text(`Terbilang Rp ${data[0].bayar_rp.toLocaleString()}`, 15, finalY + 10);
   const date = moment(data[0].tanggal).format('DD MMMM YYYY');
-  doc.text(`Bandung, ${date}`, 174, 103);
-  doc.text('Dudih Heryadi', 187, 143);
+  doc.text(`Bandung, ${date}`, 174, finalY + 10);
+  doc.text('Dudih Heryadi', 187, finalY + 40);
 
   const pages = doc.internal.getNumberOfPages();
   const pageWidth = doc.internal.pageSize.width;

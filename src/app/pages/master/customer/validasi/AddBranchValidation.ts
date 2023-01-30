@@ -20,10 +20,6 @@ const AddBranchValidation = (values: StoreModel): FormErrors<StoreModel> => {
     errors.correspondence_address = 'Correspondence Address required';
   }
 
-  if (!values.customer_name) {
-    errors.customer_name = 'Customer Name required';
-  }
-
   if (!values.city) {
     errors.city = 'City required';
   }

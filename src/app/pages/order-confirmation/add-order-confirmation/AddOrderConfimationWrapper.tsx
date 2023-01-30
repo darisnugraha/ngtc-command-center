@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../setup';
 import AddOrderConfirmationCustomer from './AddOrderConfirmationCustomer';
@@ -12,13 +12,9 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 const AddOrderConfirmation: FC<PropsFromRedux> = () => {
   const dispatch = useDispatch();
 
-  const [step, setstep] = useState(1);
-  const nextStep = () => {
-    setstep(step + 1);
-  };
-  const prevStep = () => {
-    setstep(step - 1);
-  };
+  const step = useSelector<RootState>(
+    ({ addorderconfirmationcustomer }) => addorderconfirmationcustomer.step
+  );
 
   useEffect(() => {
     dispatch(reduxCustomer.actions.getCustomerLocal());
@@ -42,9 +38,9 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
           <div className='card mb-5 mb-xl-8'>
             <div className='card-body py-3'>
               {dataCustomer !== undefined ? (
-                <AddOrderConfirmationProduct prevStep={prevStep} />
+                <AddOrderConfirmationProduct />
               ) : (
-                <AddOrderConfirmationCustomer nextStep={nextStep} />
+                <AddOrderConfirmationCustomer />
               )}
             </div>
           </div>
@@ -62,7 +58,7 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
           </div>
           <div className='card mb-5 mb-xl-8'>
             <div className='card-body py-3'>
-              <AddOrderConfirmationProduct prevStep={prevStep} />
+              <AddOrderConfirmationProduct />
             </div>
           </div>
         </>
@@ -81,9 +77,9 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
           <div className='card mb-5 mb-xl-8'>
             <div className='card-body py-3'>
               {dataCustomer !== undefined ? (
-                <AddOrderConfirmationProduct prevStep={prevStep} />
+                <AddOrderConfirmationProduct />
               ) : (
-                <AddOrderConfirmationCustomer nextStep={nextStep} />
+                <AddOrderConfirmationCustomer />
               )}
             </div>
           </div>

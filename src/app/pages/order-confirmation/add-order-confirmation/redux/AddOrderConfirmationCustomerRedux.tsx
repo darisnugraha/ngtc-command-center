@@ -15,6 +15,7 @@ export const actionTypes = {
   GetBranchStore: '[ADDOCCUSTOMER] Get Data Branch Store',
   GetBranchStoreDetail: '[ADDOCCUSTOMER] Get Data Branch Store Detail',
   GetDetailStaff: '[ADDOCCUSTOMER] Get Data Staff Detail',
+  setStep: '[ADDOC] Set Step',
 };
 export interface IAddOCState {
   isSending?: boolean;
@@ -22,6 +23,7 @@ export interface IAddOCState {
   branchList?: Array<any>;
   branchDetail?: branchModel;
   staffDetail?: staffModel;
+  step?: Number;
 }
 
 const initialAddOCState: IAddOCState = {
@@ -30,6 +32,7 @@ const initialAddOCState: IAddOCState = {
   branchList: [],
   branchDetail: undefined,
   staffDetail: undefined,
+  step: 1,
 };
 
 export const reducer = persistReducer(
@@ -51,6 +54,10 @@ export const reducer = persistReducer(
       case actionTypes.GetDetailStaff: {
         const data = action.payload?.staffDetail;
         return { ...state, staffDetail: data };
+      }
+      case actionTypes.setStep: {
+        const data = action.payload?.step;
+        return { ...state, step: data };
       }
 
       default:
@@ -172,9 +179,10 @@ export const actions = {
     };
   },
   addCustomer: (data: any) => {
-    // eslint-disable-next-line
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      saveLocal('dataCustomer', data);
+      saveLocal('dataCustomer', data).then(() => {
+        dispatch({ type: actionTypes.setStep, payload: { step: 2 } });
+      });
     };
   },
   getCustomerLocal: () => {

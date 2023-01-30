@@ -2,15 +2,8 @@ import React, { Suspense, lazy } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { FallbackView } from '../../_metronic/partials';
 import { DashboardWrapper } from '../pages/dashboard/DashboardWrapper';
-import { MenuTestPage } from '../pages/MenuTestPage';
 
 export const PrivateRoutes = () => {
-  const BuilderPageWrapper = lazy(() => import('../pages/layout-builder/BuilderPageWrapper'));
-  const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'));
-  const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'));
-  const AccountPage = lazy(() => import('../modules/accounts/AccountPage'));
-  const WidgetsPage = lazy(() => import('../modules/widgets/WidgetsPage'));
-  const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'));
   const CustomerPage = lazy(() => import('../pages/master/customer/CustomerPage'));
   const SoftwarePage = lazy(() => import('../pages/master/software/SoftwarePage'));
   const HardwarePage = lazy(() => import('../pages/master/hardware/HardwarePage'));
@@ -47,6 +40,8 @@ export const PrivateRoutes = () => {
     () => import('../pages/sales-order/list-sales-order/ListSalesOrderPage')
   );
   const ImplementationPage = lazy(() => import('../pages/implementation/ImplementationPage'));
+  const DeliveryNotePage = lazy(() => import('../pages/delivery-order/DeliveryNotePage'));
+  const ListInvoicePage = lazy(() => import('../pages/invoice/list-invoice/ListInvoicePage'));
   // Report
   const ReceivableReportPage = lazy(
     () => import('../pages/report/receivable-report/ReceivableReport')
@@ -90,18 +85,13 @@ export const PrivateRoutes = () => {
         <Route path='/receivable' component={ReceivablePage} />
         <Route path='/sales-order/list-sales-order' component={ListSalesOrderPage} />
         <Route path='/implementation' component={ImplementationPage} />
+        <Route path='/delivery-note' component={DeliveryNotePage} />
+        <Route path='/invoice/list-invoice' component={ListInvoicePage} />
         {/* report */}
         <Route path='/report/report-receivable' component={ReceivableReportPage} />
         <Route path='/report/report-order-confirmation' component={OCReportPage} />
         <Route path='/report/report-implementation' component={ImplementationReportPage} />
         {/* end report */}
-        <Route path='/builder' component={BuilderPageWrapper} />
-        <Route path='/crafted/pages/profile' component={ProfilePage} />
-        <Route path='/crafted/pages/wizards' component={WizardsPage} />
-        <Route path='/crafted/widgets' component={WidgetsPage} />
-        <Route path='/crafted/account' component={AccountPage} />
-        <Route path='/apps/chat' component={ChatPage} />
-        <Route path='/menu-test' component={MenuTestPage} />
         <Redirect from='/auth' to='/dashboard' />
         <Redirect exact from='/' to='/dashboard' />
         <Redirect to='error/404' />

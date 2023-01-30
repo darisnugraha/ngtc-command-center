@@ -20,7 +20,7 @@ export const actionTypes = {
 
 const initialAuthState: IAuthState = {
   user: undefined,
-  isLogin: false,
+  isLogin: undefined,
 };
 
 export interface IAuthState {
@@ -33,12 +33,11 @@ export const reducer = persistReducer(
   (state: IAuthState = initialAuthState, action: ActionWithPayload<IAuthState>) => {
     switch (action.type) {
       case actionTypes.Login: {
-        const isLogin = true;
         const userData = action.payload?.user;
-        return { isLogin, user: userData };
+        return { isLogin: true, user: userData };
       }
       case actionTypes.Logout: {
-        return { user: {}, accessToken: false };
+        return { user: {}, accessToken: false, isLogin: false };
       }
       default:
         return state;
@@ -110,6 +109,7 @@ export const actions = {
               .catch((err) => {
                 const dataErr = err.response.data;
                 toast.error(dataErr.message);
+                dispatch({ type: actionTypes.Logout, payload: {} });
                 localStorage.clear();
               });
           });

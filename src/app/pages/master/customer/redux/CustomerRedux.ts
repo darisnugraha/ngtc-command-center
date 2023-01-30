@@ -77,6 +77,8 @@ export const actions = {
         kota: data.city,
         alamat: data.address,
         alamat_korespondensi: data.correspondence_address,
+        telepon: data.telephone || '-',
+        email: data.email || '-',
       };
 
       AxiosPost('store', onSendData)
@@ -102,6 +104,8 @@ export const actions = {
         kota: data.city,
         alamat: data.address,
         alamat_korespondensi: data.correspondence_address,
+        telepon: data.telephone || '-',
+        email: data.email || '-',
       };
 
       AxiosPut(`store/${data.id}`, onSendData)

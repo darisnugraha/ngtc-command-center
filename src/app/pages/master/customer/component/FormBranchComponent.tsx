@@ -21,7 +21,6 @@ const mapState = (state: RootState) => {
         branch_store_name: state.customer.feedbackIDBranch.nama_cabang,
         address: state.customer.feedbackIDBranch.alamat_cabang || '-',
         correspondence_address: state.customer.feedbackIDBranch.alamat_korespondensi || '-',
-        customer_name: state.customer.feedbackIDBranch.nama_customer || '-',
         city: state.customer.feedbackIDBranch.kota || '-',
         email: state.customer.feedbackIDBranch.email || '-',
         telephone: state.customer.feedbackIDBranch.telepon || '-',
@@ -107,15 +106,6 @@ const FormBranchComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any)
             component={RenderTextArea}
             label='Correspondence Address'
             placeHolder='Insert Correspondence Address'
-          />
-        </div>
-        <div className='col-lg-6'>
-          <Field
-            name='customer_name'
-            type='text'
-            component={RenderField}
-            label='Customer Name'
-            placeHolder='Insert Customer Name'
           />
         </div>
         <div className='col-lg-6'>

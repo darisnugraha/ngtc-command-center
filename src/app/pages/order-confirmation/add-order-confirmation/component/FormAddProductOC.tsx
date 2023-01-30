@@ -7,6 +7,7 @@ import SubmitButton from '../../../../modules/button';
 import { RenderField } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
 import * as redux from '../redux/AddOrderConfirmationRedux';
+import AddProductValidation from '../validasi/AddProductValidation';
 
 interface Props {}
 
@@ -174,6 +175,6 @@ const form = reduxForm<{}, Props>({
   forceUnregisterOnUnmount: true,
   form: 'FormAddProductOC',
   touchOnChange: true,
-  //   validate: AddBankValidation,
+  validate: AddProductValidation,
 })(FormAddProductOC);
 export default connect(mapState, null)(form);

@@ -14,6 +14,7 @@ import DetailOC from './component/DetailOC';
 import FormPrintPDF from './component/FormPrintPDF';
 import FormEditCustomer from './component/FormEditCustomer';
 import FormEditProduct from './component/FormEditProduct';
+import TableDataProduct from './component/TableDataProduct';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
 const connector = connect(mapState);
@@ -224,12 +225,29 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
               }}
             />
           ) : (
-            <FormEditProduct
-              onSubmit={(data: any) => {
-                // eslint-disable-next-line
-                console.log(data);
-              }}
-            />
+            <>
+              <FormEditProduct
+                onSubmit={(data: any) => {
+                  dispatch(redux.actions.saveLocal(data));
+                }}
+              />
+              <hr />
+              <TableDataProduct />
+              <div className='row justify-content-end mt-5'>
+                <div className='col-lg-3 d-grid'>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      // eslint-disable-next-line
+                      // dispatch(redux.actions.postAddOC());
+                    }}
+                    className='btn btn-sm btn-primary'
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </>
           )
         }
       </GlobalModal>

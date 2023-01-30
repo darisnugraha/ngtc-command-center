@@ -15,26 +15,29 @@ const Routes: FC = () => {
 
   return (
     <>
-      <Switch>
-        {!isAuthorized ? (
-          <Route>
-            <LoginPage />
-          </Route>
-        ) : (
-          <Redirect from='/auth' to='/' />
-        )}
+      {isAuthorized !== undefined && (
+        <Switch>
+          {!isAuthorized ? (
+            <Route>
+              <LoginPage />
+            </Route>
+          ) : (
+            <Redirect from='/auth' to='/' />
+          )}
 
-        <Route path='/error' component={ErrorsPage} />
-        <Route path='/logout' component={Logout} />
+          <Route path='/error' component={ErrorsPage} />
+          <Route path='/logout' component={Logout} />
 
-        {!isAuthorized ? (
-          <Redirect to='/auth/login' />
-        ) : (
-          <MasterLayout>
-            <PrivateRoutes />
-          </MasterLayout>
-        )}
-      </Switch>
+          {!isAuthorized ? (
+            <Redirect to='/auth/login' />
+          ) : (
+            <MasterLayout>
+              <PrivateRoutes />
+            </MasterLayout>
+          )}
+        </Switch>
+      )}
+
       <MasterInit />
     </>
   );

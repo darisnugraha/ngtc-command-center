@@ -26,6 +26,8 @@ import * as paymentorderconfirmation from '../../app/pages/order-confirmation/pa
 import * as receivable from '../../app/pages/receivable/redux/ReceivableRedux';
 import * as listso from '../../app/pages/sales-order/list-sales-order/redux/ListSORedux';
 import * as implementation from '../../app/pages/implementation/redux/ImplementationRedux';
+import * as deliverynote from '../../app/pages/delivery-order/redux/DeliveryNoteRedux';
+import * as listinvoice from '../../app/pages/invoice/list-invoice/redux/ListInvoiceRedux';
 import * as reportreceivable from '../../app/pages/report/receivable-report/redux/ReceivableReportRedux';
 import * as reportoc from '../../app/pages/report/oc-report/redux/OCReportRedux';
 import * as reportimplementation from '../../app/pages/report/implementation-report/redux/ImplementationReportRedux';
@@ -58,6 +60,8 @@ export const rootReducer = combineReducers({
   receivable: receivable.reducer,
   listso: listso.reducer,
   implementation: implementation.reducer,
+  deliverynote: deliverynote.reducer,
+  listinvoice: listinvoice.reducer,
   reportreceivable: reportreceivable.reducer,
   reportoc: reportoc.reducer,
   reportimplementation: reportimplementation.reducer,

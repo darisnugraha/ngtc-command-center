@@ -93,12 +93,41 @@ export const actions = {
         const dataSave: any = [];
         let no = 1;
         dataDecrypt.forEach((element: any) => {
-          // eslint-disable-next-line
-          element.key = no;
-          dataSave.push(element);
-          no += 1;
+          const obj = {
+            key: no,
+            // eslint-disable-next-line
+            _id: element._id,
+            no_implementasi: element.no_implementasi,
+            tanggal_implementasi: element.tanggal_implementasi,
+            tanggal_realisasi: element.tanggal_realisasi,
+            staff_implementasi: element.staff_implementasi,
+            tipe_implementasi: element.tipe_implementasi,
+            lama_implementasi: element.lama_implementasi,
+            status: element.status,
+            input_date: element.input_date,
+            __v: 0,
+            no_order_konfirmasi: '',
+            kota: '',
+            nama_toko: '',
+            nama_customer: '',
+            nama_cabang: '',
+            alamat_cabang: '',
+          };
+          AxiosGet(
+            `sales-order/by-no-implementasi/?no_implementasi=${element.no_implementasi}`
+          ).then((resSO) => {
+            const dataDecryptSO = doDecryptData(resSO.data, ['no_order_konfirmasi']);
+            obj.no_order_konfirmasi = dataDecryptSO[0]?.no_order_konfirmasi;
+            obj.kota = dataDecryptSO[0]?.kota;
+            obj.nama_toko = dataDecryptSO[0]?.nama_toko;
+            obj.nama_customer = dataDecryptSO[0]?.nama_customer;
+            obj.nama_cabang = dataDecryptSO[0]?.nama_cabang;
+            obj.alamat_cabang = dataDecryptSO[0]?.alamat_cabang;
+            dataSave.push(obj);
+            no += 1;
+            dispatch({ type: actionTypes.GetImplementation, payload: { feedback: dataSave } });
+          });
         });
-        dispatch({ type: actionTypes.GetImplementation, payload: { feedback: dataSave } });
       });
     };
   },
@@ -235,7 +264,8 @@ export const actions = {
             tanggal_realisasi: moment(data.realization_date).format('YYYY-MM-DD'),
             detail_staff: detailStaff,
             tipe_implementasi: data.implementation_type,
-            lama_implementasi: data.duration,
+            // eslint-disable-next-line
+            lama_implementasi: parseInt(data.duration),
           };
           AxiosPost('implementation', onSendData)
             .then((resPost) => {

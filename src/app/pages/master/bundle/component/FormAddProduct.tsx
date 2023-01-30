@@ -88,6 +88,17 @@ const FormAddProductComponent: React.FC<InjectedFormProps<{}, Props>> = (props: 
           <Field
             readOnly
             isEdit={disable}
+            name='type'
+            type='text'
+            component={RenderField}
+            label='Type'
+            placeHolder='Insert Type'
+          />
+        </div>
+        <div className='col-lg-6'>
+          <Field
+            readOnly
+            isEdit={disable}
             name='unit'
             type='text'
             component={RenderField}

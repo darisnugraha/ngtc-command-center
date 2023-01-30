@@ -6,6 +6,7 @@ import { currencyMask, NumberOnly } from '../../../../../setup/function.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
+import AddDiscountValidation from '../validasi/AddDiscountValidation';
 
 interface Props {}
 
@@ -103,6 +104,6 @@ const form = reduxForm<{}, Props>({
   forceUnregisterOnUnmount: true,
   form: 'FormAddDiscount',
   touchOnChange: true,
-  //   validate: AddBankValidation,
+  validate: AddDiscountValidation,
 })(FormAddDiscount);
 export default connect(mapState, null)(form);

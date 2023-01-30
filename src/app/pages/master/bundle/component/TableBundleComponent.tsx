@@ -30,6 +30,14 @@ const TableBundleComponent: React.FC<Props> = () => {
       },
     },
     {
+      dataField: 'type',
+      text: 'Type',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+      },
+    },
+    {
       dataField: 'unit',
       text: 'Unit',
       align: 'center',

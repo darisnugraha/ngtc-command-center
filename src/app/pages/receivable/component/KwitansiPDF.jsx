@@ -30,8 +30,9 @@ const KwitansiPDF = (data, head) => {
   doc.text('Untuk Pembayaran :', 15, 73);
   const desc = data[0].deskripsi;
   const jml_desc = desc.length;
+  console.log(jml_desc);
   let finalY = 73;
-  if (jml_desc > 10) {
+  if (jml_desc > 0) {
     doc.text(desc.slice(0, 45), 68, finalY);
   }
   if (jml_desc > 50) {

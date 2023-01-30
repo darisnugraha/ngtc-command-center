@@ -355,6 +355,16 @@ export const actions = {
       const state = getState();
       // eslint-disable-next-line
       const inquiry = state.productionservice.inquiry;
+      const detailInquiry: any = [];
+      inquiry.forEach((element: inquiryModel) => {
+        const row = {
+          fitur: element.MENU_FITUR,
+          revisi: element.REVISI,
+          detail: element.DETAIL,
+          lama_pengerjaan: element.LAMA_PENGERJAAN,
+        };
+        detailInquiry.push(row);
+      });
       const onSendData = {
         nama_production_service: data.production_service_name,
         kode_toko: data.store_code,
@@ -367,7 +377,8 @@ export const actions = {
         inquiry: {
           detail_inquiry: inquiry,
           qc: data.qc,
-          total_pengerjaan: data.total_processing_time,
+          // eslint-disable-next-line
+          total_pengerjaan: parseInt(data.total_processing_time),
         },
       };
       AxiosPut(`production-service/${data.id}`, onSendData)

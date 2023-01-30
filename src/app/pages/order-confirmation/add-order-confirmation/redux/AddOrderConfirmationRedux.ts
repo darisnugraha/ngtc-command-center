@@ -657,25 +657,25 @@ export const actions = {
                         const ProductConsumable = resProd.filter(
                           (value: any) => value.tipe_produk === 'CONSUMABLE'
                         );
-                        const DiscountSoftware = resDisc.filter(
-                          (value: any) => value.nama_diskon === 'SOFTWARE'
+                        const DiscountSoftware = resDisc.filter((value: any) =>
+                          value.nama_diskon.includes('SOFTWARE')
                         );
-                        const DiscountHardware = resDisc.filter(
-                          (value: any) => value.nama_diskon === 'HARDWARE'
+                        const DiscountHardware = resDisc.filter((value: any) =>
+                          value.nama_diskon.includes('HARDWARE')
                         );
-                        const DiscountConsumable = resDisc.filter(
-                          (value: any) => value.nama_diskon === 'CONSUMABLE'
+                        const DiscountConsumable = resDisc.filter((value: any) =>
+                          value.nama_diskon.includes('CONSUMABLE')
                         );
                         const totalSoftware = ProductSoftware.reduce(
-                          (a: any, b: any) => a + b.harga,
+                          (a: any, b: any) => a + b.harga * b.qty,
                           0
                         );
                         const totalHardware = ProductHardware.reduce(
-                          (a: any, b: any) => a + b.harga,
+                          (a: any, b: any) => a + b.harga * b.qty,
                           0
                         );
                         const totalConsumable = ProductConsumable.reduce(
-                          (a: any, b: any) => a + b.harga,
+                          (a: any, b: any) => a + b.harga * b.qty,
                           0
                         );
 

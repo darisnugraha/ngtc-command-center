@@ -20,6 +20,7 @@ const mapState = (state: RootState) => {
       initialValues: {
         // eslint-disable-next-line
         id: state.productionservice.feedbackID._id,
+        no_inquiry: state.productionservice.feedbackID.inquiry.no_inquiry,
         production_service_name: state.productionservice.feedbackID.nama_production_service,
         store_code: state.productionservice.feedbackID.kode_toko,
         branch_code: state.productionservice.feedbackID.kode_cabang,
@@ -79,6 +80,15 @@ const FormProductionService: React.FC<InjectedFormProps<{}, Props>> = (props: an
   return (
     <form onSubmit={handleSubmit}>
       <div className='row'>
+        <div className='col-lg-12 d-none'>
+          <Field
+            name='no_inquiry'
+            type='text'
+            component={RenderField}
+            label='No Inquiry'
+            placeHolder='Insert No Inquiry'
+          />
+        </div>
         <div className='col-lg-12 d-none'>
           <Field
             name='id'

@@ -374,9 +374,11 @@ export const actions = {
         qty: parseInt(data.qty),
         harga: data.price,
         total_harga: data.total_price,
+        no_inquiry: data.no_inquiry,
         inquiry: {
           detail_inquiry: inquiry,
-          qc: data.qc,
+          // eslint-disable-next-line
+          qc: parseInt(data.qc),
           // eslint-disable-next-line
           total_pengerjaan: parseInt(data.total_processing_time),
         },

@@ -41,9 +41,11 @@ export interface FeedbackProductionServiceModel {
   no_production_service: String;
   tanggal: String;
   nama_production_service: String;
+  no_inquiry: String;
   kode_toko: String;
   kode_cabang: String;
   inquiry: {
+    no_inquiry: any;
     _id: String;
     detail_inquiry: [
       {

@@ -353,18 +353,7 @@ export const actions = {
     ): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
       const state = getState();
-      // eslint-disable-next-line
-      const inquiry = state.productionservice.inquiry;
-      const detailInquiry: any = [];
-      inquiry.forEach((element: inquiryModel) => {
-        const row = {
-          fitur: element.MENU_FITUR,
-          revisi: element.REVISI,
-          detail: element.DETAIL,
-          lama_pengerjaan: element.LAMA_PENGERJAAN,
-        };
-        detailInquiry.push(row);
-      });
+
       const onSendData = {
         nama_production_service: data.production_service_name,
         kode_toko: data.store_code,
@@ -374,9 +363,8 @@ export const actions = {
         qty: parseInt(data.qty),
         harga: data.price,
         total_harga: data.total_price,
-        no_inquiry: data.no_inquiry,
         inquiry: {
-          detail_inquiry: inquiry,
+          no_inquiry: data.no_inquiry,
           // eslint-disable-next-line
           qc: parseInt(data.qc),
           // eslint-disable-next-line

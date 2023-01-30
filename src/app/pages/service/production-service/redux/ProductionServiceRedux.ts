@@ -350,7 +350,7 @@ export const actions = {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
       const onSendData = {
-        nama_support_service: data.support_service_name,
+        nama_production_service: data.production_service_name,
         kode_toko: data.store_code,
         kode_cabang: data.branch_code,
         kode_satuan: data.unit,

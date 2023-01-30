@@ -347,12 +347,8 @@ export const actions = {
     };
   },
   updateProductionService: (data: any) => {
-    return async (
-      dispatch: ThunkDispatch<{}, {}, AnyAction>,
-      getState: () => any
-    ): Promise<void> => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
-      const state = getState();
 
       const onSendData = {
         nama_production_service: data.production_service_name,

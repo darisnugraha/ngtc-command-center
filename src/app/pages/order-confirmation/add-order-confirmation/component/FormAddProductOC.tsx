@@ -123,6 +123,9 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
             component={RenderField}
             label='Qty'
             placeHolder='Insert Qty'
+            onChange={(e: any) => {
+              dispatch(redux.actions.setSubTotal(e.target.value));
+            }}
           />
         </div>
         <div className='col-lg-2'>

@@ -850,4 +850,18 @@ export const actions = {
         });
     };
   },
+  setSubTotal: (qty: any) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const data = state.form.FormAddProductOC.values;
+      // eslint-disable-next-line
+      const price = data.price;
+      // eslint-disable-next-line
+      const total = parseInt(qty) * parseInt(price);
+      dispatch(change('FormAddProductOC', 'sub_total', total));
+    };
+  },
 };

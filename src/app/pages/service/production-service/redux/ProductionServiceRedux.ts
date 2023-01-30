@@ -347,8 +347,14 @@ export const actions = {
     };
   },
   updateProductionService: (data: any) => {
-    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
+      const state = getState();
+      // eslint-disable-next-line
+      const inquiry = state.productionservice.inquiry;
       const onSendData = {
         nama_production_service: data.production_service_name,
         kode_toko: data.store_code,
@@ -358,6 +364,11 @@ export const actions = {
         qty: parseInt(data.qty),
         harga: data.price,
         total_harga: data.total_price,
+        inquiry: {
+          detail_inquiry: inquiry,
+          qc: data.qc,
+          total_pengerjaan: data.total_processing_time,
+        },
       };
       AxiosPut(`production-service/${data.id}`, onSendData)
         .then(() => {

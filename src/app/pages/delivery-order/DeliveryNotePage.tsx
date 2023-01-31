@@ -19,9 +19,10 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
 
   useEffect(() => {
     dispatch(redux.actions.getDataListOC());
+    dispatch(redux.actions.getDataDelivery());
   }, [dispatch]);
 
-  const dataTab: any = [];
+  const dataTab: any = useSelector<RootState>(({ deliverynote }) => deliverynote.feedback);
 
   const columns: ColumnDescription[] = [
     {
@@ -42,15 +43,23 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
       },
     },
     {
-      dataField: 'no_sales_order',
-      text: 'No SO',
+      dataField: 'no_surat_jalan',
+      text: 'No Delivery Order',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
-      dataField: 'tanggal_order_konfirmasi',
+      dataField: 'kode_surat_jalan',
+      text: 'Delivery Order Code',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+      },
+    },
+    {
+      dataField: 'tanggal_surat_jalan',
       text: 'Date',
       align: 'center',
       formatter: (cell) => {
@@ -66,32 +75,16 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
       },
     },
     {
-      dataField: 'kota',
-      text: 'City',
+      dataField: 'kode_cabang',
+      text: 'Branch',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
-      dataField: 'alamat_cabang',
-      text: 'Address',
-      align: 'center',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
-      },
-    },
-    {
-      dataField: 'alamat_korespondensi',
-      text: 'Correspondence Address',
-      align: 'center',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
-      },
-    },
-    {
-      dataField: 'telepon',
-      text: 'Telephone',
+      dataField: 'nama_customer',
+      text: 'Customer Name',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
@@ -153,8 +146,7 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
         ) : (
           <FormDetailDeliveryNote
             onSubmit={(data: any) => {
-              // eslint-disable-next-line
-              console.log(data);
+              dispatch(redux.actions.postDeliveryData(data));
             }}
           />
         )}

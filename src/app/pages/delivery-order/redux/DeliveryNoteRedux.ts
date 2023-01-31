@@ -1,37 +1,46 @@
 import { Action, AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import moment from 'moment';
 import { toast } from 'react-toastify';
+import { change } from 'redux-form';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { AxiosGet } from '../../../../setup';
-import { doDecryptData, saveLocal } from '../../../../setup/encrypt.js';
+import { AxiosGet, AxiosPost } from '../../../../setup';
+import { doDecryptData, getLocal, saveLocal } from '../../../../setup/encrypt.js';
 import { DeliveryNoteLocalModel } from '../model/DeliveryNoteModel';
+import * as utility from '../../../../setup/redux/UtilityRedux';
+import * as modal from '../../../modules/modal/GlobalModalRedux';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
 }
 
 export const actionTypes = {
+  getDataDelivery: '[DELIVERYNOTE] Get Data Delivery Note',
   setStepForm: '[DELIVERYNOTE] Set Step Form',
   setDeliveryNoteLocal: '[DELIVERYNOTE] Set Delivery Note Local',
   getListOC: '[DELIVERYNOTE] Get List OC',
   getDataOC: '[DELIVERYNOTE] Get Data OC',
   setDate: '[DELIVERYNOTE] Set Date',
+  setProduct: '[DELIVERYNOTE] Set Product',
 };
 export interface IDeliveryNoteState {
+  feedback?: Array<any>;
   step?: Number;
   deliveryNoteLocal?: DeliveryNoteLocalModel;
   listOC?: Array<any>;
   dataOC?: any;
   date?: any;
+  dataProduct?: Array<any>;
 }
 
 const initialDeliveryNoteState: IDeliveryNoteState = {
+  feedback: [],
   step: 1,
   deliveryNoteLocal: undefined,
   listOC: [],
   dataOC: undefined,
   date: undefined,
+  dataProduct: [],
 };
 
 export const reducer = persistReducer(
@@ -41,6 +50,9 @@ export const reducer = persistReducer(
     action: ActionWithPayload<IDeliveryNoteState>
   ) => {
     switch (action.type) {
+      case actionTypes.getDataDelivery: {
+        return { ...state, feedback: action.payload?.feedback };
+      }
       case actionTypes.setDate: {
         return { ...state, date: action.payload?.date };
       }
@@ -57,6 +69,10 @@ export const reducer = persistReducer(
         const data = action.payload?.dataOC;
         return { ...state, dataOC: data };
       }
+      case actionTypes.setProduct: {
+        const data = action.payload?.dataProduct;
+        return { ...state, dataProduct: data };
+      }
 
       default:
         return state;
@@ -65,9 +81,117 @@ export const reducer = persistReducer(
 );
 
 export const actions = {
+  getDataDelivery: () => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      AxiosGet('delivery-order').then((res) => {
+        const dataDecrypt = doDecryptData(res.data, [
+          '_id',
+          'no_surat_jalan',
+          'tanggal_surat_jalan',
+          'kode_surat_jalan',
+          'kode_toko',
+          'kode_cabang',
+          'jenis_produk',
+          'nama_produk',
+          'unit',
+          'jumlah_kirim',
+          'jumlah_hilang',
+          'no_resi',
+          'nama_ekspedisi',
+          'tanggal_kirim',
+          'tanggal_terima',
+          'tanggal_batal',
+          'tanggal_hilang',
+          'ditagihkan',
+          'ongkos_kirim',
+          'status',
+          'input_date',
+          'no_order_konfirmasi',
+        ]);
+        const dataSave: any = [];
+        let no = 1;
+        dataDecrypt.forEach((element: any) => {
+          // eslint-disable-next-line
+          element.key = no;
+          dataSave.push(element);
+          no += 1;
+        });
+        dispatch({ type: actionTypes.getDataDelivery, payload: { feedback: dataSave } });
+      });
+    };
+  },
   setDate: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch({ type: actionTypes.setDate, payload: { date: data } });
+    };
+  },
+  countQty: (qty: any, namaProduk: any, data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      const dataFil = data.find((element: any) => element.nama_produk === namaProduk);
+      const qtysisa = dataFil.qty - qty;
+
+      // eslint-disable-next-line
+      if (!Number.isNaN(parseInt(qty))) {
+        // eslint-disable-next-line
+        if (parseInt(qty) === 0) {
+          toast.error('Send Qty Must Bigger Than 0 !');
+          // eslint-disable-next-line
+        } else if (parseInt(qty) > parseInt(dataFil.qty)) {
+          toast.error('Qty More Than Stock !');
+        } else {
+          getLocal('dataProductSend').then((res) => {
+            if (res.length === 0) {
+              const dataArr = [];
+              const row = {
+                jenis_produk: dataFil.jenis_produk,
+                nama_produk: dataFil.nama_produk,
+                qty: dataFil.qty,
+                unit: dataFil.satuan,
+                // eslint-disable-next-line
+                jumlah_kirim: parseInt(qty),
+              };
+              dataArr.push(row);
+              saveLocal('dataProductSend', dataArr).then(() => {
+                dispatch(change('FormDetailDeliveryNote', `qty_sisa_${namaProduk}`, qtysisa));
+              });
+            } else {
+              const cek = res.find((val: any) => val.nama_produk === namaProduk);
+              if (cek) {
+                const dataFilUpdate = res.filter(
+                  (element: any) => element.nama_produk !== namaProduk
+                );
+                const dataArr = dataFilUpdate;
+                const row = {
+                  jenis_produk: dataFil.jenis_produk,
+                  nama_produk: dataFil.nama_produk,
+                  qty: dataFil.qty,
+                  unit: dataFil.satuan,
+                  // eslint-disable-next-line
+                  jumlah_kirim: parseInt(qty),
+                };
+                dataArr.push(row);
+                saveLocal('dataProductSend', dataArr).then(() => {
+                  dispatch(change('FormDetailDeliveryNote', `qty_sisa_${namaProduk}`, qtysisa));
+                });
+              } else {
+                const dataArr = res;
+                const row = {
+                  jenis_produk: dataFil.jenis_produk,
+                  nama_produk: dataFil.nama_produk,
+                  qty: dataFil.qty,
+                  unit: dataFil.satuan,
+                  // eslint-disable-next-line
+                  jumlah_kirim: parseInt(qty),
+                };
+                dataArr.push(row);
+                saveLocal('dataProductSend', dataArr).then(() => {
+                  dispatch(change('FormDetailDeliveryNote', `qty_sisa_${namaProduk}`, qtysisa));
+                });
+              }
+            }
+          });
+        }
+      }
     };
   },
   setStepNext: (data: any) => {
@@ -77,21 +201,63 @@ export const actions = {
         kode_toko: data.kode_toko,
         kode_cabang: data.kode_cabang,
         alamat: data.alamat_cabang,
-        nama_toko: data.nama_toko,
+        nama_toko: data.toko,
         nama_customer: data.nama_customer,
         tanggal: moment(data.date).format('YYYY-MM-DD'),
         telepon: data.telepon,
       };
-      saveLocal('deliveryNoteData', dataLocal)
-        .then(() => {
-          dispatch({
-            type: actionTypes.setStepForm,
-            payload: { step: 2, deliveryNoteLocal: dataLocal },
-          });
-        })
-        .catch(() => {
-          toast.error('Failed Add Data !');
+      AxiosGet(`sales-order/by-no-ok?no_order_konfirmasi=${data.no_oc}`).then((res) => {
+        const dataDecrypt = doDecryptData(res.data, [
+          '_id',
+          'no_order_konfirmasi',
+          'no_sales_order',
+          'tanggal_sales_order',
+          'tanggal_order_konfirmasi',
+          'kode_toko',
+          'kode_cabang',
+          'kode_staff',
+          'biaya_reseller',
+          'jenis_ok',
+          'jenis_produk',
+          'satuan',
+          'qty',
+          'harga',
+          'sub_total',
+          'kode_diskon',
+          'nama_diskon',
+          'persentase',
+          'no_support_service',
+          'no_production_service',
+          'total_harga',
+          'sisa_bayar',
+          'no_implementasi',
+          'status_implementasi',
+          'status',
+          'input_date',
+        ]);
+        const datafil = dataDecrypt[0].detail_produk.filter(
+          (val: any) => val.jenis_produk !== 'SOFTWARE'
+        );
+        dispatch({
+          type: actionTypes.setProduct,
+          payload: { dataProduct: datafil },
         });
+        dataDecrypt[0].detail_produk.forEach((element: any) => {
+          dispatch(
+            change('FormDetailDeliveryNote', `qty_sisa_${element.nama_produk}`, element.qty)
+          );
+        });
+        saveLocal('deliveryNoteData', dataLocal)
+          .then(() => {
+            dispatch({
+              type: actionTypes.setStepForm,
+              payload: { step: 2, deliveryNoteLocal: dataLocal },
+            });
+          })
+          .catch(() => {
+            toast.error('Failed Add Data !');
+          });
+      });
     };
   },
   setStepPrev: () => {
@@ -166,6 +332,41 @@ export const actions = {
           'input_date',
         ]);
         disptch({ type: actionTypes.getDataOC, payload: { dataOC: dataDecrypt } });
+      });
+    };
+  },
+  postDeliveryData: (data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch(utility.actions.showLoadingButton());
+      getLocal('deliveryNoteData').then((res) => {
+        getLocal('dataProductSend').then((resProd) => {
+          const onSendData = {
+            tanggal: res.tanggal,
+            no_order_konfirmasi: res.no_order_konfirmasi,
+            kode_toko: res.kode_toko,
+            nama_toko: res.nama_toko,
+            kode_cabang: res.kode_cabang,
+            nama_customer: res.nama_customer,
+            telepon: res.telepon,
+            alamat: res.alamat,
+            detail_surat_jalan: resProd,
+            keterangan: data.keterangan,
+          };
+          AxiosPost('delivery-order', onSendData)
+            .then(() => {
+              toast.success('Success Add Data !');
+              localStorage.removeItem('deliveryNoteData');
+              localStorage.removeItem('dataProductSend');
+              dispatch(actions.getDataDelivery());
+              dispatch(utility.actions.hideLoading());
+              dispatch(modal.actions.hide());
+            })
+            .catch((err) => {
+              const dataErr = err.response.data;
+              toast.error(dataErr.message || 'Failed Add Data !');
+              dispatch(utility.actions.hideLoading());
+            });
+        });
       });
     };
   },

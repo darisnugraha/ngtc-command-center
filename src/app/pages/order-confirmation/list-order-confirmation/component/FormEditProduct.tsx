@@ -91,6 +91,17 @@ const FormEditProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
         </div>
         <div className='col-lg-2'>
           <Field
+            name='type'
+            type='text'
+            component={RenderField}
+            label='Type'
+            placeHolder='Insert Type'
+            isEdit={typeProduct === 'PACKAGE'}
+            readOnly={typeProduct === 'PACKAGE'}
+          />
+        </div>
+        <div className='col-lg-2'>
+          <Field
             isEdit={typeProduct === 'PACKAGE'}
             readOnly={typeProduct === 'PACKAGE'}
             name='qty'

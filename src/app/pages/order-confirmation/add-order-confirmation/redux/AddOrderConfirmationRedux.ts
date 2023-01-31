@@ -312,7 +312,7 @@ export const actions = {
                   'jenis_produk',
                   'harga',
                 ]);
-                getLocal('listProduct').then((res) => {
+                getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
                   if (res.length === 0) {
                     const dataArr: listProductModel[] = [];
                     let no = 1;
@@ -330,7 +330,7 @@ export const actions = {
                       dataArr.push(row);
                       no += 1;
                     });
-                    saveLocal('listProduct', dataArr).then(() => {
+                    saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
                       saveLocal('dataPackage', true).then(() => {
                         toast.success('Success Add Data !');
                         dispatch(reset('FormAddProductOC'));
@@ -354,7 +354,7 @@ export const actions = {
                       dataArr.push(row);
                       no += 1;
                     });
-                    saveLocal('listProduct', dataArr).then(() => {
+                    saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
                       saveLocal('dataPackage', true).then(() => {
                         toast.success('Success Add Data !');
                         dispatch(reset('FormAddProductOC'));
@@ -365,7 +365,7 @@ export const actions = {
                 });
               });
             } else {
-              getLocal('listProduct').then((res) => {
+              getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
                 if (res.length === 0) {
                   const dataArr = [];
                   const row: listProductModel = {
@@ -378,7 +378,7 @@ export const actions = {
                     tipe_produk: data.product_type || typeProd,
                   };
                   dataArr.push(row);
-                  saveLocal('listProduct', dataArr).then(() => {
+                  saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
                     saveLocal('dataPackage', false).then(() => {
                       toast.success('Success Add Data !');
                       dispatch(reset('FormAddProductOC'));
@@ -399,7 +399,7 @@ export const actions = {
                     tipe_produk: data.product_type || typeProd,
                   };
                   dataArr.push(row);
-                  saveLocal('listProduct', dataArr).then(() => {
+                  saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
                     saveLocal('dataPackage', false).then(() => {
                       toast.success('Success Add Data !');
                       dispatch(reset('FormAddProductOC'));
@@ -423,7 +423,7 @@ export const actions = {
                 'jenis_produk',
                 'harga',
               ]);
-              getLocal('listProduct').then((res) => {
+              getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
                 if (res.length === 0) {
                   const dataArr: listProductModel[] = [];
                   let no = 1;
@@ -441,7 +441,7 @@ export const actions = {
                     dataArr.push(row);
                     no += 1;
                   });
-                  saveLocal('listProduct', dataArr).then(() => {
+                  saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
                     saveLocal('dataPackage', true).then(() => {
                       toast.success('Success Add Data !');
                       dispatch(reset('FormAddProductOC'));
@@ -465,7 +465,7 @@ export const actions = {
                     dataArr.push(row);
                     no += 1;
                   });
-                  saveLocal('listProduct', dataArr).then(() => {
+                  saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
                     saveLocal('dataPackage', true).then(() => {
                       toast.success('Success Add Data !');
                       dispatch(reset('FormAddProductOC'));
@@ -476,7 +476,7 @@ export const actions = {
               });
             });
           } else {
-            getLocal('listProduct').then((res) => {
+            getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
               if (res.length === 0) {
                 const dataArr = [];
                 const row: listProductModel = {
@@ -489,7 +489,7 @@ export const actions = {
                   tipe_produk: data.product_type || typeProd,
                 };
                 dataArr.push(row);
-                saveLocal('listProduct', dataArr).then(() => {
+                saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
                   saveLocal('dataPackage', false).then(() => {
                     toast.success('Success Add Data !');
                     dispatch(reset('FormAddProductOC'));
@@ -510,7 +510,7 @@ export const actions = {
                   tipe_produk: data.product_type || typeProd,
                 };
                 dataArr.push(row);
-                saveLocal('listProduct', dataArr).then(() => {
+                saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
                   saveLocal('dataPackage', false).then(() => {
                     toast.success('Success Add Data !');
                     dispatch(reset('FormAddProductOC'));
@@ -526,7 +526,7 @@ export const actions = {
   },
   getDataProductLocal: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listProduct').then((res) => {
+      getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
         const respon = localStorage.getItem('dataPackage');
         dispatch({
           type: actionTypes.GetListProduct,
@@ -571,7 +571,7 @@ export const actions = {
         confirmButtonText: 'Yes, delete it!',
       }).then((result: any) => {
         if (result.isConfirmed) {
-          getLocal('listProduct').then((res) => {
+          getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
             const newArr = res.filter((object: any) => {
               // eslint-disable-next-line
               return object.key !== id;
@@ -637,7 +637,7 @@ export const actions = {
         if (resCust.length === 0) {
           toast.error('Fill Customer Data First !');
         } else {
-          getLocal('listProduct').then((resProd) => {
+          getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((resProd) => {
             if (resProd.length === 0) {
               toast.error('Fill Product Data First !');
             } else {

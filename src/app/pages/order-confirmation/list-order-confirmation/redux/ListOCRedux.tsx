@@ -176,7 +176,11 @@ export const actions = {
             'jenis_ok',
             'jenis_produk',
           ]);
-          saveLocal('dataProduct', dataDecrypt[0].detail_produk).then(() => {
+          saveLocal('dataProduct', dataDecrypt[0].detail_produk, [
+            'qty',
+            'sub_total',
+            'harga',
+          ]).then(() => {
             dispatch(actions.getLocalProd());
           });
         }
@@ -185,15 +189,17 @@ export const actions = {
   },
   saveLocal: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('dataProduct').then((res) => {
+      getLocal('dataProduct', ['qty', 'sub_total', 'harga']).then((res) => {
         let newArrData = [];
         const row = {
           harga: data.price,
+          kode_produk: data.product,
           nama_produk: data.product_name,
           qty: data.qty,
           satuan: data.unit,
           sub_total: data.sub_total,
-          tipe_produk: data.product_type,
+          jenis_produk: data.product_type,
+          type: data.type || '-',
         };
         const cek = res.find((el: any) => el.nama_produk === data.product_name);
 
@@ -203,14 +209,14 @@ export const actions = {
           // eslint-disable-next-line
           if (res.length === 0) {
             newArrData.push(row);
-            saveLocal('dataProduct', newArrData).then(() => {
+            saveLocal('dataProduct', newArrData, ['qty', 'sub_total', 'harga']).then(() => {
               toast.success('Success Add Product !');
               dispatch(actions.getLocalProd());
             });
           } else {
             newArrData = res;
             newArrData.push(row);
-            saveLocal('dataProduct', newArrData).then(() => {
+            saveLocal('dataProduct', newArrData, ['qty', 'sub_total', 'harga']).then(() => {
               toast.success('Success Add Product !');
               dispatch(actions.getLocalProd());
             });
@@ -219,41 +225,38 @@ export const actions = {
       });
     };
   },
-  // postProduct: () => {
-  //   return async (
-  //     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-  //     getState: () => any
-  //   ): Promise<void> => {
-  //     getLocal('dataProduct').then((res) => {
-  //       const state = getState();
-  //       const dataOK = state.listorderconfirmation.feedbackNo[0];
-  //       const onSendData = {
-  //         kode_toko: dataOK.kode_toko,
-  //         nama_toko: dataOK.nama_toko,
-  //         kode_cabang: dataOK.kode_cabang,
-  //         nama_cabang: dataOK.nama_cabang,
-  //         nama_customer: dataOK.nama_customer,
-  //         alamat_cabang: dataOK.alamat_cabang,
-  //         alamat_korespondensi: dataOK.alamat_korespondensi,
-  //         kota: dataOK.kota,
-  //         telepon: dataOK.telepon,
-  //         email: dataOK.email,
-  //         kode_staff: dataOK.kode_staff,
-  //         biaya_reseller: dataOK.biaya_reseller,
-  //         jenis_ok: dataOK.jenis_ok,
-  //         detail_produk: res,
-  //         detail_diskon: dataOK.detail_diskon,
-  //         no_support_service: dataOK.no_support_service,
-  //         no_production_service: dataOK.no_production_service,
-  //         total_harga: dataOK.total_harga,
-  //         deskripsi: dataOK.deskripsi,
-  //       };
-  //     });
-  //   };
-  // },
+  postProduct: () => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      dispatch(utility.actions.showLoadingButton());
+      getLocal('dataProduct', ['qty', 'sub_total', 'harga']).then((res) => {
+        const state = getState();
+        const dataOK = state.listorderconfirmation.feedbackNo[0];
+        const onSendData = {
+          no_order_konfirmasi: dataOK.no_order_konfirmasi,
+          detail_produk: res,
+        };
+        AxiosPut('order-confirmation/update/product', onSendData)
+          .then(() => {
+            toast.success('Success Edit Data !');
+            localStorage.removeItem('dataProduct');
+            dispatch(actions.getListOC());
+            dispatch(utility.actions.hideLoading());
+            dispatch(modal.actions.hide());
+          })
+          .catch((err: any) => {
+            dispatch(utility.actions.hideLoading());
+            const dataErr = err.response.data;
+            toast.error(dataErr.message);
+          });
+      });
+    };
+  },
   getLocalProd: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('dataProduct').then((res) => {
+      getLocal('dataProduct', ['qty', 'sub_total', 'harga']).then((res) => {
         dispatch({ type: actionTypes.setLocalProduct, payload: { feedbackProduct: res } });
       });
     };
@@ -484,6 +487,7 @@ export const actions = {
             '_id',
             'input_date',
             'harga',
+            'type',
           ]);
           dispatch({
             type: actionTypes.GetDetailDataProduct,
@@ -494,6 +498,7 @@ export const actions = {
           dispatch(change('FormEditProduct', 'unit', dataDecrypt[0].satuan));
           dispatch(change('FormEditProduct', 'price', dataDecrypt[0].harga));
           dispatch(change('FormEditProduct', 'sub_total', dataDecrypt[0].harga * 1));
+          dispatch(change('FormEditProduct', 'type', dataDecrypt[0].type || '-'));
         });
       } else if (type === 'CONSUMABLE') {
         AxiosGet(`consumable/by-kode/${code}`).then((res) => {
@@ -504,6 +509,7 @@ export const actions = {
             '_id',
             'input_date',
             'harga',
+            'type',
           ]);
           dispatch({
             type: actionTypes.GetDetailDataProduct,
@@ -514,6 +520,7 @@ export const actions = {
           dispatch(change('FormEditProduct', 'unit', dataDecrypt[0].satuan));
           dispatch(change('FormEditProduct', 'price', dataDecrypt[0].harga));
           dispatch(change('FormEditProduct', 'sub_total', dataDecrypt[0].harga * 1));
+          dispatch(change('FormEditProduct', 'type', dataDecrypt[0].type || '-'));
         });
       } else if (type === 'HARDWARE') {
         AxiosGet(`hardware/by-kode/${code}`).then((res) => {
@@ -524,6 +531,7 @@ export const actions = {
             '_id',
             'input_date',
             'harga',
+            'type',
           ]);
           dispatch({
             type: actionTypes.GetDetailDataProduct,
@@ -534,6 +542,7 @@ export const actions = {
           dispatch(change('FormEditProduct', 'unit', dataDecrypt[0].satuan));
           dispatch(change('FormEditProduct', 'price', dataDecrypt[0].harga));
           dispatch(change('FormEditProduct', 'sub_total', dataDecrypt[0].harga * 1));
+          dispatch(change('FormEditProduct', 'type', dataDecrypt[0].type || '-'));
         });
       } else {
         AxiosGet(`bundle/by-kode/${code}`).then((res) => {
@@ -545,6 +554,7 @@ export const actions = {
             'kode_produk',
             'jenis_produk',
             'harga',
+            'type',
             'total_harga',
           ]);
           dispatch({
@@ -556,6 +566,7 @@ export const actions = {
           dispatch(change('FormEditProduct', 'product_name', dataDecrypt[0].nama_paket));
           dispatch(change('FormEditProduct', 'price', dataDecrypt[0].total_harga));
           dispatch(change('FormEditProduct', 'sub_total', dataDecrypt[0].total_harga * 1));
+          dispatch(change('FormEditProduct', 'type', dataDecrypt[0].type || '-'));
         });
       }
     };

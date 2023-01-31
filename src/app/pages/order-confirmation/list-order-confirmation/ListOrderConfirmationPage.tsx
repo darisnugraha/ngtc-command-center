@@ -239,7 +239,7 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
                     type='button'
                     onClick={() => {
                       // eslint-disable-next-line
-                      // dispatch(redux.actions.postAddOC());
+                      dispatch(redux.actions.postProduct());
                     }}
                     className='btn btn-sm btn-primary'
                   >

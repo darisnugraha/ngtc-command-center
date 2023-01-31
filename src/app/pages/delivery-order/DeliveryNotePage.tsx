@@ -95,23 +95,21 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
       text: 'Action',
       align: 'center',
       headerClasses: 'ps-4 min-w-100px rounded-end',
-      formatter: () => {
+      formatter: (cell, row) => {
         return (
           <>
             <button
               type='button'
               onClick={() => {
-                // eslint-disable-next-line
+                dispatch(redux.actions.printDeliveryOrder(row.no_surat_jalan));
               }}
               className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
             >
-              <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
+              <KTSVG path='/media/icons/duotune/general/gen005.svg' className='svg-icon-3' />
             </button>
             <button
               type='button'
-              onClick={() => {
-                // eslint-disable-next-line
-              }}
+              onClick={() => {}}
               className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
             >
               <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />

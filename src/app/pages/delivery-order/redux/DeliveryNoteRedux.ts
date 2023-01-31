@@ -9,6 +9,7 @@ import { doDecryptData, getLocal, saveLocal } from '../../../../setup/encrypt.js
 import { DeliveryNoteLocalModel } from '../model/DeliveryNoteModel';
 import * as utility from '../../../../setup/redux/UtilityRedux';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
+import PDFDeliveryOrder from '../component/PDFDeliveryOrder.jsx';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -367,6 +368,38 @@ export const actions = {
               dispatch(utility.actions.hideLoading());
             });
         });
+      });
+    };
+  },
+  printDeliveryOrder: (no_surat_jalan: string) => {
+    // eslint-disable-next-line
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      AxiosGet(`delivery-order/by-no/${no_surat_jalan}`).then((res) => {
+        const dataDecrypt = doDecryptData(res.data, [
+          '_id',
+          'no_surat_jalan',
+          'tanggal_surat_jalan',
+          'kode_surat_jalan',
+          'kode_toko',
+          'kode_cabang',
+          'jenis_produk',
+          'nama_produk',
+          'unit',
+          'jumlah_kirim',
+          'jumlah_hilang',
+          'no_resi',
+          'nama_ekspedisi',
+          'tanggal_kirim',
+          'tanggal_terima',
+          'tanggal_batal',
+          'tanggal_hilang',
+          'ditagihkan',
+          'ongkos_kirim',
+          'status',
+          'input_date',
+          'no_order_konfirmasi',
+        ]);
+        PDFDeliveryOrder(dataDecrypt, []);
       });
     };
   },

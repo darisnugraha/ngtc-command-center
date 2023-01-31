@@ -102,6 +102,7 @@ export default function AsideMenuMain() {
         fontIcon='bi-archive'
       >
         <AsideMenuItem to='/invoice/list-invoice' title='List Invoice' hasBullet />
+        <AsideMenuItem to='/invoice/serial-number' title='Serial Number' hasBullet />
       </AsideMenuItemWithSub>
       <AsideMenuItemWithSub
         to='/report'

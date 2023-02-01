@@ -75,6 +75,12 @@ export default function AsideMenuMain() {
         title='Receivable'
         fontIcon='bi-app-indicator'
       />
+      <AsideMenuItem
+        to='/validation-payment'
+        icon='/media/icons/duotune/general/gen048.svg'
+        title='Validation Payment'
+        fontIcon='bi-app-indicator'
+      />
       <AsideMenuItemWithSub
         to='/sales-order'
         title='Sales Order'

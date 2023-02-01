@@ -23,6 +23,7 @@ import * as addorderconfirmation from '../../app/pages/order-confirmation/add-or
 import * as addorderconfirmationcustomer from '../../app/pages/order-confirmation/add-order-confirmation/redux/AddOrderConfirmationCustomerRedux';
 import * as addorderconfirmationservice from '../../app/pages/order-confirmation/add-order-confirmation/redux/AddOrderConfirmationServiceRedux';
 import * as paymentorderconfirmation from '../../app/pages/order-confirmation/payment-order-confirmation/redux/PaymentOrderConfirmationRedux';
+import * as validationpayment from '../../app/pages/payment-validation/redux/ValidationPaymentRedux';
 import * as receivable from '../../app/pages/receivable/redux/ReceivableRedux';
 import * as listso from '../../app/pages/sales-order/list-sales-order/redux/ListSORedux';
 import * as implementation from '../../app/pages/implementation/redux/ImplementationRedux';
@@ -58,6 +59,7 @@ export const rootReducer = combineReducers({
   addorderconfirmationcustomer: addorderconfirmationcustomer.reducer,
   addorderconfirmationservice: addorderconfirmationservice.reducer,
   paymentorderconfirmation: paymentorderconfirmation.reducer,
+  validationpayment: validationpayment.reducer,
   receivable: receivable.reducer,
   listso: listso.reducer,
   implementation: implementation.reducer,

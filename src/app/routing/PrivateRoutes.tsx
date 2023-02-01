@@ -36,6 +36,9 @@ export const PrivateRoutes = () => {
       import('../pages/order-confirmation/payment-order-confirmation/PaymentOrderConfirmationPage')
   );
   const ReceivablePage = lazy(() => import('../pages/receivable/ReceivablePage'));
+  const ValidationPaymentPage = lazy(
+    () => import('../pages/payment-validation/ValidationPaymentPage')
+  );
   const ListSalesOrderPage = lazy(
     () => import('../pages/sales-order/list-sales-order/ListSalesOrderPage')
   );
@@ -84,6 +87,7 @@ export const PrivateRoutes = () => {
           component={PaymentOrderConfirmationPage}
         />
         <Route path='/receivable' component={ReceivablePage} />
+        <Route path='/validation-payment' component={ValidationPaymentPage} />
         <Route path='/sales-order/list-sales-order' component={ListSalesOrderPage} />
         <Route path='/implementation' component={ImplementationPage} />
         <Route path='/delivery-order' component={DeliveryNotePage} />

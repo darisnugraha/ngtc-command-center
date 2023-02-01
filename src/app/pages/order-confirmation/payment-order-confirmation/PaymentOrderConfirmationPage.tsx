@@ -274,7 +274,7 @@ const PaymentOrderConfirmationPage: FC<PropsFromRedux> = () => {
         </div>
       </div>
       <DefaultTable className='mb-5 mb-xl-8' data={dataTab} columns={columns} />
-      <DefaultTable className='mb-5 mb-xl-8' data={dataTabDP} columns={columnsDP} />
+      <DefaultTable className='mb-5 mb-xl-8 d-none' data={dataTabDP} columns={columnsDP} />
     </>
   );
 };

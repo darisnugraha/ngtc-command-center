@@ -18,6 +18,23 @@ export function postImage(file: any, name: string) {
   });
 }
 
+export function postImageResi(file: any, name: string) {
+  return new Promise((resolve, reject) => {
+    const storage = firebase.storage();
+    let storageRef = storage.ref('NSIPIC/Resi/' + name + '.jpg');
+    storageRef
+      .put(file)
+      .then((res: any) => {
+        storageRef.getDownloadURL().then(function (url: any) {
+          resolve(url);
+        });
+      })
+      .catch((err: string) => {
+        reject(JSON.parse(err));
+      });
+  });
+}
+
 export function postPDF(file: any, name: string) {
   return new Promise((resolve, reject) => {
     const storage = firebase.storage();
@@ -85,6 +102,34 @@ export function getImage(file: string) {
   return new Promise((resolve, reject) => {
     const storage = firebase.storage();
     let storageRef = storage.ref('NSIPIC/BuktiBayar/' + file + '.jpg');
+
+    storageRef
+      .getDownloadURL()
+      .then(function (url: string | URL) {
+        // console.log('ini url', url)
+        let xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = async () => {
+          let data = await convertBase64(xhr.response);
+          const file = dataURLtoFile(data);
+          const res = await resizeFile(file);
+          resolve(res);
+        };
+        xhr.open('GET', url);
+        xhr.send();
+        // resolve(url);
+      })
+      .catch((err: { customData: { serverResponse: string } }) => {
+        reject(JSON.parse(err.customData.serverResponse).error);
+      });
+  });
+}
+
+export function getImageResi(file: string) {
+  // console.log(file);
+  return new Promise((resolve, reject) => {
+    const storage = firebase.storage();
+    let storageRef = storage.ref('NSIPIC/Resi/' + file + '.jpg');
 
     storageRef
       .getDownloadURL()

@@ -17,3 +17,13 @@ export interface DeliveryNoteLocalModel {
   telepon: String;
   alamat: String;
 }
+export interface SendProductModel {
+  date: Date;
+  nama_ekspedisi: String;
+  no_surat_jalan: String;
+  ongkos_kirim: String;
+  no_resi: String;
+  nama_toko: String;
+  ditagihkan: String;
+  foto: String;
+}

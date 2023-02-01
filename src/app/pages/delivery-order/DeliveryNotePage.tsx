@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
 import { ColumnDescription } from 'react-bootstrap-table-next';
 import { RootState } from '../../../setup';
@@ -9,6 +9,8 @@ import DefaultTable from '../../modules/custom-table';
 import FormDeliveryNote from './component/FormDeliveryNote';
 import FormDetailDeliveryNote from './component/FormDetailDeliveryNote';
 import * as redux from './redux/DeliveryNoteRedux';
+import FormSendProduct from './component/FormSendProduct';
+import FormValidation from './component/FormValidation';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
 const connector = connect(mapState);
@@ -23,6 +25,8 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
   }, [dispatch]);
 
   const dataTab: any = useSelector<RootState>(({ deliverynote }) => deliverynote.feedback);
+
+  const [modalType, setModalType] = useState('');
 
   const columns: ColumnDescription[] = [
     {
@@ -91,30 +95,91 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
       },
     },
     {
+      dataField: 'status',
+      text: 'Status',
+      align: 'center',
+      formatter: (cell) => {
+        if (cell === 'OPEN') {
+          return (
+            <span className='btn btn-outline btn-outline-primary btn-active-light-primary'>
+              {cell}
+            </span>
+          );
+        }
+        if (cell === 'DONE') {
+          return (
+            <span className='btn btn-outline btn-outline-success btn-active-light-success'>
+              {cell}
+            </span>
+          );
+        }
+        if (cell === 'CANCEL') {
+          return (
+            <span className='btn btn-outline btn-outline-danger btn-active-light-danger'>
+              {cell}
+            </span>
+          );
+        }
+        return (
+          <span className='btn btn-outline btn-outline-warning btn-active-light-warning'>
+            {cell}
+          </span>
+        );
+      },
+    },
+    {
+      dataField: 'no_surat_jalan',
+      text: 'Validation',
+      align: 'center',
+      formatter: (cell, row) => {
+        return (
+          <button
+            type='button'
+            onClick={() => {
+              dispatch(redux.actions.showValidation(cell));
+              setModalType('VALIDATION');
+            }}
+            className='btn btn-warning btn-sm me-1'
+            disabled={row.status !== 'OPEN'}
+          >
+            Validation
+          </button>
+        );
+      },
+    },
+    {
       dataField: '',
       text: 'Action',
       align: 'center',
       headerClasses: 'ps-4 min-w-100px rounded-end',
       formatter: (cell, row) => {
         return (
-          <>
-            <button
-              type='button'
-              onClick={() => {
-                dispatch(redux.actions.printDeliveryOrder(row.no_surat_jalan));
-              }}
-              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-            >
-              <KTSVG path='/media/icons/duotune/general/gen005.svg' className='svg-icon-3' />
-            </button>
-            <button
-              type='button'
-              onClick={() => {}}
-              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-            >
-              <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
-            </button>
-          </>
+          <div className='row'>
+            <div className='col-lg-3'>
+              <button
+                type='button'
+                onClick={() => {
+                  dispatch(redux.actions.printDeliveryOrder(row.no_surat_jalan));
+                }}
+                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              >
+                <KTSVG path='/media/icons/duotune/general/gen005.svg' className='svg-icon-3' />
+              </button>
+            </div>
+            <div className='col-lg-3'>
+              <button
+                type='button'
+                onClick={() => {
+                  dispatch(redux.actions.getDataDeliveryByNo(row.no_surat_jalan));
+                  setModalType('SENDPRODUCT');
+                }}
+                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+                disabled={row.status === 'DONE' || row.status === 'CANCEl' || row.status === 'LOST'}
+              >
+                <KTSVG path='/media/icons/duotune/general/gen016.svg' className='svg-icon-3' />
+              </button>
+            </div>
+          </div>
         );
       },
     },
@@ -122,6 +187,7 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
 
   const handleClick = () => {
     dispatch(modal.actions.show());
+    setModalType('ADDDELIVERY');
   };
 
   const handleClose = () => {
@@ -134,26 +200,48 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
 
   return (
     <>
-      <GlobalModal title={`${isEdit ? 'Edit' : 'Add'} Delivery Note`} onClose={() => handleClose()}>
-        {step === 1 ? (
-          <FormDeliveryNote
-            onSubmit={(data: any) => {
-              dispatch(redux.actions.setStepNext(data));
-            }}
-          />
-        ) : (
-          <FormDetailDeliveryNote
-            onSubmit={(data: any) => {
-              dispatch(redux.actions.postDeliveryData(data));
-            }}
-          />
-        )}
+      <GlobalModal
+        title={`${
+          modalType === 'SENDPRODUCT' ? 'Send Product' : `${isEdit ? 'Edit' : 'Add'} Delivery Order`
+        }`}
+        onClose={() => handleClose()}
+      >
+        {
+          // eslint-disable-next-line
+          modalType === 'VALIDATION' ? (
+            <FormValidation
+              onSubmit={(data: any) => {
+                // eslint-disable-next-line
+                console.log(data);
+              }}
+            />
+          ) : // eslint-disable-next-line
+          modalType === 'SENDPRODUCT' ? (
+            <FormSendProduct
+              onSubmit={(data: any) => {
+                dispatch(redux.actions.sendProductPost(data));
+              }}
+            />
+          ) : step === 1 ? (
+            <FormDeliveryNote
+              onSubmit={(data: any) => {
+                dispatch(redux.actions.setStepNext(data));
+              }}
+            />
+          ) : (
+            <FormDetailDeliveryNote
+              onSubmit={(data: any) => {
+                dispatch(redux.actions.postDeliveryData(data));
+              }}
+            />
+          )
+        }
       </GlobalModal>
       <div className='card mb-5 mb-xl-8'>
         {/* begin::Header */}
         <div className='card-header border-0 pt-5'>
           <h3 className='card-title align-items-start flex-column'>
-            <span className='card-label fw-bolder fs-3 mb-1'>Delivery Note</span>
+            <span className='card-label fw-bolder fs-3 mb-1'>Delivery Order</span>
             {/* <span className='text-muted mt-1 fw-bold fs-7'>{subtitle}</span> */}
           </h3>
         </div>
@@ -184,7 +272,7 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
                   onClick={() => handleClick()}
                 >
                   <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
-                  Add Delivery Note
+                  Add Delivery Order
                 </button>
               </div>
             </div>

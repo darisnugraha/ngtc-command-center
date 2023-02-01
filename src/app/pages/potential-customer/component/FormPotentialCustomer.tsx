@@ -1,37 +1,14 @@
 import React from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
-import { RootState } from '../../../../setup';
 import SubmitButton from '../../../modules/button';
-import { RenderField } from '../../../modules/redux-form/BasicInput';
-import { RenderFieldSelect } from '../../../modules/redux-form/dropdown';
+import { RenderField, RenderTextArea } from '../../../modules/redux-form/BasicInput';
 import PotentialCustomerValidation from '../validasi/PotentialCustomerValidation';
-import * as redux from '../redux/PotentialCustomerRedux';
 
 interface Props {}
 
 const FormPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const { handleSubmit } = props;
-  const dispatch = useDispatch();
-  const dataToko: any = useSelector<RootState>(({ customer }) => customer.feedback);
-  const dataCabang: any = useSelector<RootState>(
-    ({ potentialcustomer }) => potentialcustomer.feedbackBranchList
-  );
-
-  const disable = true;
-  const listDataCabang = [
-    {
-      value: 'PUSAT',
-      label: 'PUSAT',
-    },
-  ];
-  dataCabang.forEach((element: any) => {
-    const row = {
-      value: element.kode_cabang,
-      label: element.nama_cabang,
-    };
-    listDataCabang.push(row);
-  });
 
   return (
     <form onSubmit={handleSubmit}>
@@ -43,44 +20,9 @@ const FormPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: an
           <Field
             name='store_code'
             type='text'
-            component={RenderFieldSelect}
-            options={dataToko.map((element: any) => {
-              return {
-                value: element.kode_toko,
-                label: element.nama_toko,
-              };
-            })}
-            label='Store'
-            placeHolder='Select Store'
-            onChange={(e: any) => {
-              dispatch(redux.actions.getStoreDetailDataByCode(e.value));
-            }}
-            // defaultValue={isEdit ? defaultUnit : ''}
-          />
-        </div>
-        <div className='col-lg-6'>
-          <Field
-            name='branch_code'
-            type='text'
-            component={RenderFieldSelect}
-            options={listDataCabang}
-            label='Branch'
-            placeHolder='Select Branch'
-            onChange={(e: any) => {
-              dispatch(redux.actions.getBranchDetailDataByCode(e.value));
-            }}
-            // defaultValue={isEdit ? defaultUnit : ''}
-          />
-        </div>
-        <div className='col-lg-6'>
-          <Field
-            name='branch_name'
-            type='text'
             component={RenderField}
-            label='Branch Name'
-            placeHolder='Insert Branch Name'
-            isEdit={disable}
-            readOnly={disable}
+            label='Store Code'
+            placeHolder='Insert Store Code'
           />
         </div>
         <div className='col-lg-6'>
@@ -90,10 +32,26 @@ const FormPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: an
             component={RenderField}
             label='Store Name'
             placeHolder='Insert Store Name'
-            isEdit={disable}
-            readOnly={disable}
           />
         </div>
+        {/* <div className='col-lg-6'>
+          <Field
+            name='branch_store_code'
+            type='text'
+            component={RenderField}
+            label='Branch Store Code'
+            placeHolder='Insert Branch Store Code'
+          />
+        </div>
+        <div className='col-lg-6'>
+          <Field
+            name='branch_store_name'
+            type='text'
+            component={RenderField}
+            label='Branch Store Name'
+            placeHolder='Insert Branch Store Name'
+          />
+        </div> */}
         <div className='col-lg-6'>
           <Field
             name='customer_name'
@@ -101,8 +59,6 @@ const FormPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: an
             component={RenderField}
             label='Customer Name'
             placeHolder='Insert Customer Name'
-            isEdit={disable}
-            readOnly={disable}
           />
         </div>
         <div className='col-lg-6'>
@@ -112,8 +68,6 @@ const FormPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: an
             component={RenderField}
             label='City'
             placeHolder='Insert City'
-            isEdit={disable}
-            readOnly={disable}
           />
         </div>
         <div className='col-lg-6'>
@@ -123,8 +77,6 @@ const FormPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: an
             component={RenderField}
             label='Telephone'
             placeHolder='Insert Telephone'
-            isEdit={disable}
-            readOnly={disable}
           />
         </div>
         <div className='col-lg-6'>
@@ -134,30 +86,24 @@ const FormPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: an
             component={RenderField}
             label='Email'
             placeHolder='Insert Email'
-            isEdit={disable}
-            readOnly={disable}
           />
         </div>
         <div className='col-lg-6'>
           <Field
             name='address'
             type='text'
-            component={RenderField}
+            component={RenderTextArea}
             label='Address'
             placeHolder='Insert Address'
-            isEdit={disable}
-            readOnly={disable}
           />
         </div>
         <div className='col-lg-6'>
           <Field
             name='correspondence_address'
             type='text'
-            component={RenderField}
+            component={RenderTextArea}
             label='Correspondence Address'
             placeHolder='Insert Correspondence Address'
-            isEdit={disable}
-            readOnly={disable}
           />
         </div>
       </div>

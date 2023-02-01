@@ -135,6 +135,19 @@ const FormBranchComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any)
             placeHolder='Insert Telephone'
           />
         </div>
+        <div className='col-lg-6'>
+          <Field
+            name='type_branch'
+            type='text'
+            component={RenderFieldSelect}
+            options={[
+              { value: 'BARU', label: 'NEW' },
+              { value: 'LAMA', label: 'OLD' },
+            ]}
+            label='Branch Type'
+            placeHolder='Select Branch Type'
+          />
+        </div>
       </div>
       <div className='row justify-content-end mt-5'>
         <div className='col-lg-3 d-grid'>

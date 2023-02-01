@@ -4,6 +4,7 @@ import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup';
 import SubmitButton from '../../../../modules/button';
 import { RenderField, RenderTextArea } from '../../../../modules/redux-form/BasicInput';
+import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
 import AddStoreValidation from '../validasi/AddStoreValidation';
 
 interface Props {}
@@ -122,6 +123,19 @@ const FormStoreComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             component={RenderField}
             label='Telephone'
             placeHolder='Insert Telephone'
+          />
+        </div>
+        <div className='col-lg-6'>
+          <Field
+            name='type_store'
+            type='text'
+            component={RenderFieldSelect}
+            options={[
+              { value: 'BARU', label: 'NEW' },
+              { value: 'LAMA', label: 'OLD' },
+            ]}
+            label='Store Type'
+            placeHolder='Select Store Type'
           />
         </div>
       </div>

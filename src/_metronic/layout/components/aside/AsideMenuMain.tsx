@@ -13,31 +13,31 @@ export default function AsideMenuMain() {
         title='Dashboard'
         fontIcon='bi-app-indicator'
       />
-      <AsideMenuItemWithSub
-        to='/master'
-        title='Masterdata'
-        icon='/media/icons/duotune/art/art002.svg'
-        fontIcon='bi-archive'
-      >
-        <AsideMenuItem to='/master/software' title='Master Software' hasBullet />
-        <AsideMenuItem to='/master/hardware' title='Master Hardware' hasBullet />
-        <AsideMenuItem to='/master/consumable' title='Master Consumable' hasBullet />
-        <AsideMenuItem to='/master/unit' title='Master Unit' hasBullet />
-        <AsideMenuItem to='/master/customer' title='Customer Master' hasBullet />
-        <AsideMenuItem to='/master/staff' title='Master Staff' hasBullet />
-        <AsideMenuItem to='/master/bank' title='Master Bank' hasBullet />
-        <AsideMenuItem to='/master/supplier' title='Master Supplier' hasBullet />
-        <AsideMenuItem to='/master/user' title='Master User' hasBullet />
-        <AsideMenuItem to='/master/division' title='Master Division' hasBullet />
-        <AsideMenuItem to='/master/bundle' title='Master Bundle' hasBullet />
-        <AsideMenuItem to='/master/discount' title='Master Discount' hasBullet />
-      </AsideMenuItemWithSub>
       <AsideMenuItem
         to='/potential-customer'
         icon='/media/icons/duotune/communication/com006.svg'
         title='Potential Customer'
         fontIcon='bi-app-indicator'
       />
+      <AsideMenuItemWithSub
+        to='/master'
+        title='Masterdata'
+        icon='/media/icons/duotune/art/art002.svg'
+        fontIcon='bi-archive'
+      >
+        <AsideMenuItem to='/master/unit' title='Master Unit' hasBullet />
+        <AsideMenuItem to='/master/software' title='Master Software' hasBullet />
+        <AsideMenuItem to='/master/hardware' title='Master Hardware' hasBullet />
+        <AsideMenuItem to='/master/consumable' title='Master Consumable' hasBullet />
+        <AsideMenuItem to='/master/bundle' title='Master Bundle' hasBullet />
+        <AsideMenuItem to='/master/customer' title='Customer Master' hasBullet />
+        <AsideMenuItem to='/master/staff' title='Master Staff' hasBullet />
+        <AsideMenuItem to='/master/bank' title='Master Bank' hasBullet />
+        <AsideMenuItem to='/master/supplier' title='Master Supplier' hasBullet />
+        <AsideMenuItem to='/master/user' title='Master User' hasBullet />
+        <AsideMenuItem to='/master/division' title='Master Division' hasBullet />
+        <AsideMenuItem to='/master/discount' title='Master Discount' hasBullet />
+      </AsideMenuItemWithSub>
       <AsideMenuItemWithSub
         to='/service'
         title='Service'
@@ -90,9 +90,9 @@ export default function AsideMenuMain() {
         fontIcon='bi-app-indicator'
       />
       <AsideMenuItem
-        to='/delivery-note'
+        to='/delivery-order'
         icon='/media/icons/duotune/ecommerce/ecm006.svg'
-        title='Delivery Note'
+        title='Delivery Order'
         fontIcon='bi-app-indicator'
       />
       <AsideMenuItemWithSub

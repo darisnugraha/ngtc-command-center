@@ -86,7 +86,7 @@ export const PrivateRoutes = () => {
         <Route path='/receivable' component={ReceivablePage} />
         <Route path='/sales-order/list-sales-order' component={ListSalesOrderPage} />
         <Route path='/implementation' component={ImplementationPage} />
-        <Route path='/delivery-note' component={DeliveryNotePage} />
+        <Route path='/delivery-order' component={DeliveryNotePage} />
         <Route path='/invoice/list-invoice' component={ListInvoicePage} />
         <Route path='/invoice/serial-number' component={SerialNumberPage} />
         {/* report */}

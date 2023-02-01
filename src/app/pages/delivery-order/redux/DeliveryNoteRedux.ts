@@ -10,6 +10,7 @@ import { DeliveryNoteLocalModel } from '../model/DeliveryNoteModel';
 import * as utility from '../../../../setup/redux/UtilityRedux';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
 import PDFDeliveryOrder from '../component/PDFDeliveryOrder.jsx';
+import { postImageResi } from '../../../../setup/axios/Firebase';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -23,6 +24,8 @@ export const actionTypes = {
   getDataOC: '[DELIVERYNOTE] Get Data OC',
   setDate: '[DELIVERYNOTE] Set Date',
   setProduct: '[DELIVERYNOTE] Set Product',
+  getDataDeliveryByNO: '[DELIVERYNOTE] Get Data Delivery By No',
+  SetCamera: '[DELIVERYNOTE] Set Camera',
 };
 export interface IDeliveryNoteState {
   feedback?: Array<any>;
@@ -32,6 +35,8 @@ export interface IDeliveryNoteState {
   dataOC?: any;
   date?: any;
   dataProduct?: Array<any>;
+  feedbackNo?: any;
+  setCameraVal?: String;
 }
 
 const initialDeliveryNoteState: IDeliveryNoteState = {
@@ -42,6 +47,8 @@ const initialDeliveryNoteState: IDeliveryNoteState = {
   dataOC: undefined,
   date: undefined,
   dataProduct: [],
+  feedbackNo: undefined,
+  setCameraVal: '-',
 };
 
 export const reducer = persistReducer(
@@ -74,6 +81,14 @@ export const reducer = persistReducer(
         const data = action.payload?.dataProduct;
         return { ...state, dataProduct: data };
       }
+      case actionTypes.getDataDeliveryByNO: {
+        const data = action.payload?.feedbackNo;
+        return { ...state, feedbackNo: data };
+      }
+      case actionTypes.SetCamera: {
+        const data = action.payload?.setCameraVal;
+        return { ...state, setCameraVal: data };
+      }
 
       default:
         return state;
@@ -82,6 +97,11 @@ export const reducer = persistReducer(
 );
 
 export const actions = {
+  setCameraAction: (data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch({ type: actionTypes.SetCamera, payload: { setCameraVal: data } });
+    };
+  },
   getDataDelivery: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       AxiosGet('delivery-order').then((res) => {
@@ -401,6 +421,100 @@ export const actions = {
         ]);
         PDFDeliveryOrder(dataDecrypt, []);
       });
+    };
+  },
+  getDataDeliveryByNo: (no_surat_jalan: string) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      AxiosGet(`delivery-order/by-no/${no_surat_jalan}`).then((res) => {
+        const dataDecrypt = doDecryptData(res.data, [
+          '_id',
+          'no_surat_jalan',
+          'tanggal_surat_jalan',
+          'kode_surat_jalan',
+          'kode_toko',
+          'kode_cabang',
+          'jenis_produk',
+          'nama_produk',
+          'unit',
+          'jumlah_kirim',
+          'jumlah_hilang',
+          'no_resi',
+          'nama_ekspedisi',
+          'tanggal_kirim',
+          'tanggal_terima',
+          'tanggal_batal',
+          'tanggal_hilang',
+          'ditagihkan',
+          'ongkos_kirim',
+          'status',
+          'input_date',
+          'no_order_konfirmasi',
+        ]);
+        dispatch({ type: actionTypes.getDataDeliveryByNO, payload: { feedbackNo: dataDecrypt } });
+        dispatch(change('FormSendProduct', 'no_surat_jalan', no_surat_jalan));
+        dispatch(change('FormSendProduct', 'nama_toko', dataDecrypt[0].nama_toko));
+        dispatch(modal.actions.show());
+      });
+    };
+  },
+  sendProductPost: (data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch(utility.actions.showLoadingButton());
+      const onSendData = {
+        no_surat_jalan: data.no_surat_jalan,
+        tanggal_kirim: moment(data.date).format('YYYY-MM-DD'),
+        no_resi: data.no_resi,
+        nama_ekspedisi: data.nama_ekspedisi,
+        // eslint-disable-next-line
+        ongkos_kirim: parseInt(data.ongkos_kirim),
+        ditagihkan: data.ditagihkan,
+      };
+      postImageResi(data.foto, data.no_surat_jalan)
+        .then(() => {
+          AxiosPost('delivery-order/send-product', onSendData)
+            .then(() => {
+              toast.success('Success Add Data !');
+              dispatch(modal.actions.hide());
+              dispatch(utility.actions.hideLoading());
+            })
+            .catch((err) => {
+              const dataErr = err.response.data;
+              toast.error(dataErr.message);
+              dispatch(utility.actions.hideLoading());
+            });
+        })
+        .catch((err) => {
+          const dataErr = err.response.data;
+          toast.error(dataErr.message);
+          dispatch(utility.actions.hideLoading());
+        });
+    };
+  },
+  showValidation: (noSuratJalan: String) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch(change('FormValidation', 'no_surat_jalan', noSuratJalan));
+      dispatch(modal.actions.show());
+    };
+  },
+  validation: (type: String) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const dataForm = state.form.FormValidation.values;
+      const suratJalan = dataForm.no_surat_jalan;
+      const onSendData = { no_surat_jalan: suratJalan, status_validasi: type };
+      AxiosPost('delivery-order/validation', onSendData)
+        .then(() => {
+          toast.success('Success Validate Data !');
+          dispatch(actions.getDataDelivery());
+          dispatch(modal.actions.hide());
+        })
+        .catch((err) => {
+          const dataErr = err.response.data;
+          toast.error(dataErr.message);
+        });
     };
   },
 };

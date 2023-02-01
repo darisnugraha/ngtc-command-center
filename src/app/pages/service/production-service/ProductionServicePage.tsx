@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
 // eslint-disable-next-line
 import BootstrapTable, { ColumnDescription } from 'react-bootstrap-table-next';
@@ -28,6 +28,12 @@ const ProductionServicePage: FC<PropsFromRedux> = () => {
   const dataTab: any = useSelector<RootState>(
     ({ productionservice }) => productionservice.feedback
   );
+  const [dataSource, setDataSource] = useState(dataTab);
+  const [value, setValue] = useState('');
+  const [search, setSearch] = useState(false);
+
+  // eslint-disable-next-line
+  const dataTable = dataSource.length === 0 ? (search ? dataSource : dataTab) : dataSource;
 
   const columns: ColumnDescription[] = [
     {
@@ -261,6 +267,32 @@ const ProductionServicePage: FC<PropsFromRedux> = () => {
                   name='search'
                   placeholder='Search...'
                   data-kt-search-element='input'
+                  value={value}
+                  onChange={(e) => {
+                    const currValue = e.target.value;
+                    setValue(currValue);
+                    const filteredData = dataTab.filter(
+                      (entry: any) =>
+                        entry.nama_production_service
+                          ?.toUpperCase()
+                          .includes(currValue?.toUpperCase()) ||
+                        entry.no_production_service
+                          ?.toUpperCase()
+                          .includes(currValue?.toUpperCase()) ||
+                        entry.kode_toko?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.kode_satuan?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.tanggal?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.qty?.toString()?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.harga?.toString()?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.total_harga
+                          ?.toString()
+                          ?.toUpperCase()
+                          .includes(currValue?.toUpperCase()) ||
+                        entry.kode_cabang?.toUpperCase().includes(currValue?.toUpperCase())
+                    );
+                    setDataSource(filteredData);
+                    setSearch(true);
+                  }}
                 />
               </div>
             </div>
@@ -282,7 +314,7 @@ const ProductionServicePage: FC<PropsFromRedux> = () => {
       </div>
       <DefaultTable
         className='mb-5 mb-xl-8'
-        data={dataTab}
+        data={dataTable}
         columns={columns}
         expandRow={expandRow}
       />

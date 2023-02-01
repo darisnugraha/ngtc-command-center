@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
 import { ColumnDescription } from 'react-bootstrap-table-next';
 import { RootState } from '../../../../setup';
@@ -25,6 +25,12 @@ const SupportServicePage: FC<PropsFromRedux> = () => {
   }, [dispatch]);
 
   const dataTab: any = useSelector<RootState>(({ supportservice }) => supportservice.feedback);
+  const [dataSource, setDataSource] = useState(dataTab);
+  const [value, setValue] = useState('');
+  const [search, setSearch] = useState(false);
+
+  // eslint-disable-next-line
+  const dataTable = dataSource.length === 0 ? (search ? dataSource : dataTab) : dataSource;
 
   const columns: ColumnDescription[] = [
     {
@@ -184,6 +190,31 @@ const SupportServicePage: FC<PropsFromRedux> = () => {
                   name='search'
                   placeholder='Search...'
                   data-kt-search-element='input'
+                  value={value}
+                  onChange={(e) => {
+                    const currValue = e.target.value;
+                    setValue(currValue);
+                    const filteredData = dataTab.filter(
+                      (entry: any) =>
+                        entry.nama_support_service
+                          ?.toUpperCase()
+                          .includes(currValue?.toUpperCase()) ||
+                        entry.no_support_service
+                          ?.toUpperCase()
+                          .includes(currValue?.toUpperCase()) ||
+                        entry.kode_toko?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.kode_satuan?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.qty?.toString()?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.harga?.toString()?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.total_harga
+                          ?.toString()
+                          ?.toUpperCase()
+                          .includes(currValue?.toUpperCase()) ||
+                        entry.kode_cabang?.toUpperCase().includes(currValue?.toUpperCase())
+                    );
+                    setDataSource(filteredData);
+                    setSearch(true);
+                  }}
                 />
               </div>
             </div>
@@ -203,7 +234,7 @@ const SupportServicePage: FC<PropsFromRedux> = () => {
         </div>
         {/* begin::Body */}
       </div>
-      <DefaultTable className='mb-5 mb-xl-8' data={dataTab} columns={columns} />
+      <DefaultTable className='mb-5 mb-xl-8' data={dataTable} columns={columns} />
     </>
   );
 };

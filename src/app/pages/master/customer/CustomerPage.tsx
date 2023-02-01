@@ -22,6 +22,12 @@ const CustomerPage: FC<PropsFromRedux> = () => {
   }, [dispatch]);
 
   const dataTab: any = useSelector<RootState>(({ customer }) => customer.feedback);
+  const [dataSource, setDataSource] = useState(dataTab);
+  const [value, setValue] = useState('');
+  const [search, setSearch] = useState(false);
+
+  // eslint-disable-next-line
+  const dataTable = dataSource.length === 0 ? (search ? dataSource : dataTab) : dataSource;
 
   const [typeModal, setTypeModal] = useState('');
 
@@ -292,6 +298,23 @@ const CustomerPage: FC<PropsFromRedux> = () => {
                   name='search'
                   placeholder='Search...'
                   data-kt-search-element='input'
+                  value={value}
+                  onChange={(e) => {
+                    const currValue = e.target.value;
+                    setValue(currValue);
+                    const filteredData = dataTab.filter(
+                      (entry: any) =>
+                        entry.kode_toko?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.nama_toko?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.alamat?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.alamat_korespondensi
+                          ?.toUpperCase()
+                          .includes(currValue?.toUpperCase()) ||
+                        entry.kota?.toUpperCase().includes(currValue?.toUpperCase())
+                    );
+                    setDataSource(filteredData);
+                    setSearch(true);
+                  }}
                 />
               </div>
             </div>
@@ -322,7 +345,7 @@ const CustomerPage: FC<PropsFromRedux> = () => {
       </div>
       <DefaultTable
         className='mb-5 mb-xl-8'
-        data={dataTab}
+        data={dataTable}
         columns={columns}
         expandRow={expandRow}
       />

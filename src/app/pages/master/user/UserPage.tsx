@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
 import { ColumnDescription } from 'react-bootstrap-table-next';
 import { RootState } from '../../../../setup';
@@ -97,6 +97,12 @@ const UserPage: FC<PropsFromRedux> = () => {
   };
 
   const dataTab: any = useSelector<RootState>(({ user }) => user.feedback);
+  const [dataSource, setDataSource] = useState(dataTab);
+  const [value, setValue] = useState('');
+  const [search, setSearch] = useState(false);
+
+  // eslint-disable-next-line
+  const dataTable = dataSource.length === 0 ? (search ? dataSource : dataTab) : dataSource;
   const isEdit = useSelector<RootState>(({ user }) => user.isEdit);
 
   return (
@@ -136,6 +142,19 @@ const UserPage: FC<PropsFromRedux> = () => {
                   name='search'
                   placeholder='Search...'
                   data-kt-search-element='input'
+                  value={value}
+                  onChange={(e) => {
+                    const currValue = e.target.value;
+                    setValue(currValue);
+                    const filteredData = dataTab.filter(
+                      (entry: any) =>
+                        entry.user_id?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.user_name?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.level?.toUpperCase().includes(currValue?.toUpperCase())
+                    );
+                    setDataSource(filteredData);
+                    setSearch(true);
+                  }}
                 />
               </div>
             </div>
@@ -155,7 +174,7 @@ const UserPage: FC<PropsFromRedux> = () => {
         </div>
         {/* begin::Body */}
       </div>
-      <DefaultTable className='mb-5 mb-xl-8' data={dataTab} columns={columns} />
+      <DefaultTable className='mb-5 mb-xl-8' data={dataTable} columns={columns} />
     </>
   );
 };

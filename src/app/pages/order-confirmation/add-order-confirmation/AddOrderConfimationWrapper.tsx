@@ -32,9 +32,9 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
             <div className='card-header border-0 pt-5'>
               <h3 className='card-title align-items-start flex-column'>
                 <span className='card-label fw-bolder fs-3 mb-1'>
-                  Add Order Confirmation -{' '}
+                  Add Order Confirmation
                   {dataCustomer !== undefined
-                    ? `${dataCustomer.central_store_name} - ${dataCustomer.branch_store_name}`
+                    ? ` - ${dataCustomer.central_store_name} - ${dataCustomer.branch_store_name}`
                     : ''}
                 </span>
               </h3>
@@ -58,7 +58,12 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
           <div className='card mb-5 mb-xl-8'>
             <div className='card-header border-0 pt-5'>
               <h3 className='card-title align-items-start flex-column'>
-                <span className='card-label fw-bolder fs-3 mb-1'>Add Order Confirmation</span>
+                <span className='card-label fw-bolder fs-3 mb-1'>
+                  Add Order Confirmation
+                  {dataCustomer !== undefined
+                    ? ` - ${dataCustomer.central_store_name} - ${dataCustomer.branch_store_name}`
+                    : ''}
+                </span>
               </h3>
             </div>
           </div>
@@ -75,7 +80,12 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
           <div className='card mb-5 mb-xl-8'>
             <div className='card-header border-0 pt-5'>
               <h3 className='card-title align-items-start flex-column'>
-                <span className='card-label fw-bolder fs-3 mb-1'>Add Order Confirmation</span>
+                <span className='card-label fw-bolder fs-3 mb-1'>
+                  Add Order Confirmation
+                  {dataCustomer !== undefined
+                    ? ` - ${dataCustomer.central_store_name} - ${dataCustomer.branch_store_name}`
+                    : ''}
+                </span>
               </h3>
             </div>
           </div>

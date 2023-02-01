@@ -185,7 +185,7 @@ export const actions = {
   },
   addSupport: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listSupport').then((res) => {
+      getLocal('listSupport', ['qty', 'harga', 'total_harga']).then((res) => {
         if (res.length === 0) {
           const dataArr = [];
           const row = {
@@ -198,7 +198,7 @@ export const actions = {
             total_harga: data.total_price,
           };
           dataArr.push(row);
-          saveLocal('listSupport', dataArr).then(() => {
+          saveLocal('listSupport', dataArr, ['qty', 'harga', 'total_harga']).then(() => {
             toast.success('Success Add Data !');
             dispatch({
               type: actionTypes.GetDetailSupportByID,
@@ -219,7 +219,7 @@ export const actions = {
             total_harga: data.total_price,
           };
           dataArr.push(row);
-          saveLocal('listSupport', dataArr).then(() => {
+          saveLocal('listSupport', dataArr, ['qty', 'harga', 'total_harga']).then(() => {
             toast.success('Success Add Data !');
             dispatch({
               type: actionTypes.GetDetailSupportByID,
@@ -233,7 +233,7 @@ export const actions = {
   },
   addProduction: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listProduction').then((res) => {
+      getLocal('listProduction', ['qty', 'total_harga']).then((res) => {
         if (res.length === 0) {
           const dataArr = [];
           const row = {
@@ -245,7 +245,7 @@ export const actions = {
             total_harga: data.total_price,
           };
           dataArr.push(row);
-          saveLocal('listProduction', dataArr).then(() => {
+          saveLocal('listProduction', dataArr, ['qty', 'total_harga']).then(() => {
             toast.success('Success Add Data !');
             dispatch({
               type: actionTypes.GetDetailProductionByID,
@@ -265,7 +265,7 @@ export const actions = {
             total_harga: data.total_price,
           };
           dataArr.push(row);
-          saveLocal('listProduction', dataArr).then(() => {
+          saveLocal('listProduction', dataArr, ['qty', 'total_harga']).then(() => {
             toast.success('Success Add Data !');
             dispatch({
               type: actionTypes.GetDetailProductionByID,
@@ -279,23 +279,23 @@ export const actions = {
   },
   getSupportLocal: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listSupport').then((res) => {
+      getLocal('listSupport', ['qty', 'harga', 'total_harga']).then((res) => {
         dispatch({ type: actionTypes.GetLocalSupport, payload: { listSupport: res } });
       });
     };
   },
   getProductionLocal: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listProduction').then((res) => {
+      getLocal('listProduction', ['qty', 'total_harga']).then((res) => {
         dispatch({ type: actionTypes.GetLocalProduction, payload: { listProduction: res } });
       });
     };
   },
   deleteSupportLocal: (key: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listSupport').then((res) => {
+      getLocal('listSupport', ['qty', 'harga', 'total_harga']).then((res) => {
         const newData = res.filter((element: any) => element.key !== key);
-        saveLocal('listSupport', newData).then(() => {
+        saveLocal('listSupport', newData, ['qty', 'harga', 'total_harga']).then(() => {
           dispatch(actions.getSupportLocal());
           toast.success('Success Delete Data !');
         });
@@ -304,9 +304,9 @@ export const actions = {
   },
   deleteProductionLocal: (key: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listProduction').then((res) => {
+      getLocal('listProduction', ['qty', 'total_harga']).then((res) => {
         const newData = res.filter((element: any) => element.key !== key);
-        saveLocal('listProduction', newData).then(() => {
+        saveLocal('listProduction', newData, ['qty', 'total_harga']).then(() => {
           dispatch(actions.getProductionLocal());
           toast.success('Success Delete Data !');
         });

@@ -24,6 +24,7 @@ const mapState = (state: RootState) => {
         city: state.customer.feedbackIDStore.kota || '-',
         email: state.customer.feedbackIDStore.email || '-',
         telephone: state.customer.feedbackIDStore.telephone || '-',
+        type_store: state.customer.feedbackIDStore.tipe_toko,
       },
     };
   }
@@ -36,6 +37,8 @@ const FormStoreComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
   const { handleSubmit } = props;
 
   const isEdit: any = useSelector<RootState>(({ customer }) => customer.isEdit);
+  const dataEdit: any = useSelector<RootState>(({ customer }) => customer.feedbackIDStore);
+  const defaultType = [{ value: dataEdit?.tipe_toko, label: dataEdit?.tipe_toko }];
 
   return (
     <form onSubmit={handleSubmit}>
@@ -53,8 +56,6 @@ const FormStoreComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
         </div>
         <div className='col-lg-6'>
           <Field
-            readOnly={isEdit}
-            isEdit={isEdit}
             name='store_code'
             type='text'
             component={RenderField}
@@ -136,6 +137,7 @@ const FormStoreComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             ]}
             label='Store Type'
             placeHolder='Select Store Type'
+            defaultValue={isEdit ? defaultType : ''}
           />
         </div>
       </div>

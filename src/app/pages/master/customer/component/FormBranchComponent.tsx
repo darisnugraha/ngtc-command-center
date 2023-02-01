@@ -24,6 +24,7 @@ const mapState = (state: RootState) => {
         city: state.customer.feedbackIDBranch.kota || '-',
         email: state.customer.feedbackIDBranch.email || '-',
         telephone: state.customer.feedbackIDBranch.telepon || '-',
+        type_branch: state.customer.feedbackIDBranch.tipe_cabang,
       },
     };
   }
@@ -38,6 +39,7 @@ const FormBranchComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any)
   const isEdit: any = useSelector<RootState>(({ customer }) => customer.isEdit);
   const dataEdit: any = useSelector<RootState>(({ customer }) => customer.feedbackIDBranch);
   const defaultCentralStoreCode = [{ value: dataEdit?.kode_toko, label: dataEdit?.kode_toko }];
+  const defaultType = [{ value: dataEdit?.tipe_cabang, label: dataEdit?.tipe_cabang }];
   const dataCentralStoreCode: any = useSelector<RootState>(({ customer }) => customer.feedback);
 
   return (
@@ -146,6 +148,7 @@ const FormBranchComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any)
             ]}
             label='Branch Type'
             placeHolder='Select Branch Type'
+            defaultValue={isEdit ? defaultType : ''}
           />
         </div>
       </div>

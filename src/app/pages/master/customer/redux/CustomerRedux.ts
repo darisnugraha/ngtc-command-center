@@ -79,6 +79,7 @@ export const actions = {
         alamat_korespondensi: data.correspondence_address || '-',
         telepon: data.telephone || '-',
         email: data.email || '-',
+        tipe_toko: data.type_store || '-',
       };
 
       AxiosPost('store', onSendData)
@@ -135,6 +136,7 @@ export const actions = {
             kota: data.city || '-',
             alamat_cabang: data.address || '-',
             alamat_korespondensi: data.correspondence_address || '-',
+            tipe_cabang: data.type_branch || '-',
           },
         ],
       };
@@ -188,6 +190,7 @@ export const actions = {
           '_id',
           'input_date',
           'kode_cabang',
+          'tipe_toko',
         ]);
         const dataSave: any = [];
         let no = 1;
@@ -210,6 +213,7 @@ export const actions = {
           '_id',
           'input_date',
           'kode_cabang',
+          'tipe_toko',
         ]);
 
         dispatch({
@@ -229,6 +233,7 @@ export const actions = {
           '_id',
           'input_date',
           'kode_cabang',
+          'tipe_toko',
         ]);
 
         dispatch({

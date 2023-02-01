@@ -588,7 +588,7 @@ export const actions = {
   },
   addDataDiscount: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listDiscount').then((res) => {
+      getLocal('listDiscount', ['persentase', 'diskon_rp']).then((res) => {
         if (res.length === 0) {
           const dataArr = [];
           const row = {
@@ -599,7 +599,7 @@ export const actions = {
             diskon_rp: data.discount_rp || 0,
           };
           dataArr.push(row);
-          saveLocal('listDiscount', dataArr).then(() => {
+          saveLocal('listDiscount', dataArr, ['persentase', 'diskon_rp']).then(() => {
             toast.success('Success Add Data !');
             dispatch(reset('FormAddDiscount'));
             dispatch(actions.getDataDiscountLocal());
@@ -615,7 +615,7 @@ export const actions = {
             diskon_rp: data.discount_rp || 0,
           };
           dataArr.push(row);
-          saveLocal('listDiscount', dataArr).then(() => {
+          saveLocal('listDiscount', dataArr, ['persentase', 'diskon_rp']).then(() => {
             toast.success('Success Add Data !');
             dispatch(reset('FormAddDiscount'));
             dispatch(actions.getDataDiscountLocal());
@@ -626,7 +626,7 @@ export const actions = {
   },
   getDataDiscountLocal: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listDiscount').then((res) => {
+      getLocal('listDiscount', ['persentase', 'diskon_rp']).then((res) => {
         dispatch({ type: actionTypes.GetListDiscount, payload: { listDiscount: res } });
       });
     };
@@ -640,13 +640,13 @@ export const actions = {
           toast.error('Fill Customer Data First !');
         } else {
           getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((resProd) => {
-            getLocal('listDiscount').then((resDisc) => {
+            getLocal('listDiscount', ['persentase', 'diskon_rp']).then((resDisc) => {
               getLocal('type_oc').then((resType) => {
                 if (resType.length === 0) {
                   toast.error('Fill Product Data First !');
                 } else {
-                  getLocal('listSupport').then((resSupp) => {
-                    getLocal('listProduction').then((resProdServ) => {
+                  getLocal('listSupport', ['qty', 'harga', 'total_harga']).then((resSupp) => {
+                    getLocal('listProduction', ['qty', 'total_harga']).then((resProdServ) => {
                       const ProductSoftware = resProd.filter(
                         (value: any) => value.tipe_produk === 'SOFTWARE'
                       );

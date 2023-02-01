@@ -1,41 +1,45 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import { toAbsoluteUrl } from '../../../../../_metronic/helpers';
 
 const OCPDF = (data, head) => {
   const doc = new jsPDF('p', 'mm', 'a4');
   doc.setProperties({
     title: 'Order Confirmation',
   });
+  var imgData = toAbsoluteUrl('/media/kop/header.png');
+  doc.addImage(imgData, 'PNG', 0, 0, 215, 25);
+  let final = 15;
   doc.setFontSize(8);
-  doc.text('Kepada Yth : ', 15, 15);
+  doc.text('Kepada Yth : ', 15, final + 15);
   doc.setFont(undefined, 'bold');
-  doc.text(data[0].nama_toko, 15, 20);
+  doc.text(data[0].nama_toko, 15, final + 20);
   doc.setFont(undefined, 'normal');
-  doc.text(data[0].alamat_cabang, 15, 25);
-  doc.text(data[0].kota, 15, 35);
-  doc.text('Telp : ', 15, 40);
-  doc.text(data[0].telepon, 23, 40);
+  doc.text(data[0].alamat_cabang, 15, final + 25);
+  doc.text(data[0].kota, 15, final + 35);
+  doc.text('Telp : ', 15, final + 40);
+  doc.text(data[0].telepon, 23, final + 40);
   doc.setFont(undefined, 'bold');
-  doc.text('UP : ', 15, 50);
-  doc.text(data[0].nama_customer, 23, 50);
-  doc.text('Order Konfirmasi', 93, 55);
+  doc.text('UP : ', 15, final + 50);
+  doc.text(data[0].nama_customer, 23, final + 50);
+  doc.text('Order Konfirmasi', 93, final + 55);
   doc.setFont(undefined, 'normal');
-  doc.text(data[0].no_order_konfirmasi, 90, 60);
-  doc.text('Dengan Hormat ,', 23, 65);
+  doc.text(data[0].no_order_konfirmasi, 90, final + 60);
+  doc.text('Dengan Hormat ,', 23, final + 65);
   const headerDesc = head.header_desc;
   const jumlah_header_desc = headerDesc.length;
   if (jumlah_header_desc > 127) {
-    doc.text(headerDesc.slice(0, 127), 26, 70);
+    doc.text(headerDesc.slice(0, 127), 26, final + 70);
   }
   if (jumlah_header_desc > 157) {
-    doc.text(headerDesc.slice(127, 254), 23, 75);
+    doc.text(headerDesc.slice(127, 254), 23, final + 75);
   }
   // doc.text(head.header_desc, 26, 70);
 
   let tableRows = [];
   let tableColumn = [];
 
-  let finalY = 85;
+  let finalY = final + 80;
 
   tableColumn = [
     [
@@ -258,10 +262,12 @@ const OCPDF = (data, head) => {
     const horizontalPos = pageWidth / 2;
     const verticalPos = pageHeight - 10;
     doc.setPage(j);
-    doc.text(`${j} of ${pages}`, horizontalPos, verticalPos, {
-      align: 'center',
-    });
+    // doc.text(`${j} of ${pages}`, horizontalPos, verticalPos, {
+    //   align: 'center',
+    // });
   }
+  var imgData = toAbsoluteUrl('/media/kop/footer.png');
+  doc.addImage(imgData, 'PNG', 0, finalY + 95, pageWidth, 30);
   const string = doc.output('bloburl');
   const x = window.open();
   x.document.open();

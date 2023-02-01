@@ -213,7 +213,7 @@ const OCPDF = (data, head) => {
     head: tableColumn,
     body: tableRows,
     startY: finalY,
-    theme: 'plain',
+    theme: 'grid',
     pageBreak: 'auto',
     rowPageBreak: 'avoid',
     margin: { top: 10 },

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import SubmitButton from '../../../modules/button';
 import { RenderField, RenderTextArea } from '../../../modules/redux-form/BasicInput';
-import PotentialCustomerValidation from '../validasi/PotentialCustomerValidation';
+// import PotentialCustomerValidation from '../validasi/PotentialCustomerValidation';
 
 interface Props {}
 
@@ -121,6 +121,6 @@ const form = reduxForm<{}, Props>({
   forceUnregisterOnUnmount: true,
   form: 'FormPotentialCustomer',
   touchOnChange: true,
-  validate: PotentialCustomerValidation,
+  // validate: PotentialCustomerValidation,
 })(FormPotentialCustomer);
 export default connect()(form);

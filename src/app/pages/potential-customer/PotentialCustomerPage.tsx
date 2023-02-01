@@ -85,6 +85,14 @@ const PotentialCustomerPage: FC<PropsFromRedux> = () => {
       },
     },
     {
+      dataField: 'tipe_toko',
+      text: 'Store Type',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;
+      },
+    },
+    {
       dataField: 'status',
       text: 'Status',
       align: 'center',

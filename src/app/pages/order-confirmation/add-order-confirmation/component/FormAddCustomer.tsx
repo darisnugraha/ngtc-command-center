@@ -29,12 +29,7 @@ const FormAddCustomerOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =
 
   const disable = true;
 
-  const dataListBranch = [
-    {
-      value: 'PUSAT',
-      label: 'PUSAT',
-    },
-  ];
+  const dataListBranch: any = [];
   dataBranch.forEach((element: any) => {
     const row = {
       value: element.kode_cabang,

@@ -22,11 +22,20 @@ const FormAddDescription: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
       <div className='row'>
         <div className='col-lg-12'>
           <Field
-            name='description'
+            name='description_header'
             type='textarea'
             component={RenderTextArea}
-            label='Description'
-            placeHolder='Insert Description'
+            label='Description Header'
+            placeHolder='Insert Description Header'
+          />
+        </div>
+        <div className='col-lg-12'>
+          <Field
+            name='description_footer'
+            type='textarea'
+            component={RenderTextArea}
+            label='Description Footer'
+            placeHolder='Insert Description Footer'
           />
         </div>
       </div>

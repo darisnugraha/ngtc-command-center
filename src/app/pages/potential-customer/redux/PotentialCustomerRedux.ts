@@ -82,6 +82,7 @@ export const actions = {
           'kode_cabang',
           'tanggal',
           'no_calon_customer',
+          'tipe_toko',
         ]);
         const dataSave: any = [];
         let no = 1;
@@ -179,16 +180,16 @@ export const actions = {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
       const onSendData = {
-        kode_toko: data.store_code,
-        nama_toko: data.store_name,
+        kode_toko: data.store_code || '-',
+        nama_toko: data.store_name || '-',
         kode_cabang: 'PUSAT',
         nama_cabang: 'PUSAT',
-        nama_customer: data.customer_name,
-        alamat: data.address,
-        alamat_korespondensi: data.correspondence_address,
-        kota: data.city,
-        telepon: data.telephone,
-        email: data.email,
+        nama_customer: data.customer_name || '-',
+        alamat: data.address || '-',
+        alamat_korespondensi: data.correspondence_address || '-',
+        kota: data.city || '-',
+        telepon: data.telephone || '-',
+        email: data.email || '-',
       };
       AxiosPost('applicant', onSendData)
         .then(() => {

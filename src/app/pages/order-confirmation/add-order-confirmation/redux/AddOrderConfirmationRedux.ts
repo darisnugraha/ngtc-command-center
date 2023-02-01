@@ -9,6 +9,7 @@ import { doDecryptData, getLocal, saveLocal } from '../../../../../setup/encrypt
 import { listProductModel } from '../model/AddOrderConfirmationModel';
 import * as modal from '../../../../modules/modal/GlobalModalRedux';
 import * as utility from '../../../../../setup/redux/UtilityRedux';
+import * as customerRedux from './AddOrderConfirmationCustomerRedux';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -633,166 +634,179 @@ export const actions = {
   postAddOC: () => {
     // eslint-disable-next-line
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch(utility.actions.showLoadingButton());
       getLocal('dataCustomer').then((resCust) => {
         if (resCust.length === 0) {
           toast.error('Fill Customer Data First !');
         } else {
           getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((resProd) => {
-            if (resProd.length === 0) {
-              toast.error('Fill Product Data First !');
-            } else {
-              getLocal('listDiscount').then((resDisc) => {
-                getLocal('type_oc').then((resType) => {
-                  if (resType.length === 0) {
-                    toast.error('Fill Product Data First !');
-                  } else {
-                    getLocal('listSupport').then((resSupp) => {
-                      getLocal('listProduction').then((resProdServ) => {
-                        const ProductSoftware = resProd.filter(
-                          (value: any) => value.tipe_produk === 'SOFTWARE'
-                        );
-                        const ProductHardware = resProd.filter(
-                          (value: any) => value.tipe_produk === 'HARDWARE'
-                        );
-                        const ProductConsumable = resProd.filter(
-                          (value: any) => value.tipe_produk === 'CONSUMABLE'
-                        );
-                        const DiscountSoftware = resDisc.filter((value: any) =>
-                          value.nama_diskon.includes('SOFTWARE')
-                        );
-                        const DiscountHardware = resDisc.filter((value: any) =>
-                          value.nama_diskon.includes('HARDWARE')
-                        );
-                        const DiscountConsumable = resDisc.filter((value: any) =>
-                          value.nama_diskon.includes('CONSUMABLE')
-                        );
-                        const totalSoftware = ProductSoftware.reduce(
-                          (a: any, b: any) => a + b.harga * b.qty,
-                          0
-                        );
-                        const totalHardware = ProductHardware.reduce(
-                          (a: any, b: any) => a + b.harga * b.qty,
-                          0
-                        );
-                        const totalConsumable = ProductConsumable.reduce(
-                          (a: any, b: any) => a + b.harga * b.qty,
-                          0
-                        );
+            getLocal('listDiscount').then((resDisc) => {
+              getLocal('type_oc').then((resType) => {
+                if (resType.length === 0) {
+                  toast.error('Fill Product Data First !');
+                } else {
+                  getLocal('listSupport').then((resSupp) => {
+                    getLocal('listProduction').then((resProdServ) => {
+                      const ProductSoftware = resProd.filter(
+                        (value: any) => value.tipe_produk === 'SOFTWARE'
+                      );
+                      const ProductHardware = resProd.filter(
+                        (value: any) => value.tipe_produk === 'HARDWARE'
+                      );
+                      const ProductConsumable = resProd.filter(
+                        (value: any) => value.tipe_produk === 'CONSUMABLE'
+                      );
+                      const DiscountSoftware = resDisc.filter((value: any) =>
+                        value.nama_diskon.includes('SOFTWARE')
+                      );
+                      const DiscountHardware = resDisc.filter((value: any) =>
+                        value.nama_diskon.includes('HARDWARE')
+                      );
+                      const DiscountConsumable = resDisc.filter((value: any) =>
+                        value.nama_diskon.includes('CONSUMABLE')
+                      );
+                      const totalSoftware = ProductSoftware.reduce(
+                        (a: any, b: any) => a + b.harga * b.qty,
+                        0
+                      );
+                      const totalHardware = ProductHardware.reduce(
+                        (a: any, b: any) => a + b.harga * b.qty,
+                        0
+                      );
+                      const totalConsumable = ProductConsumable.reduce(
+                        (a: any, b: any) => a + b.harga * b.qty,
+                        0
+                      );
 
-                        const totalDiscountSoftwareRp = DiscountSoftware.reduce(
-                          (a: any, b: any) => a + b.diskon_rp,
-                          0
-                        );
-                        const totalDiscountHardwareRp = DiscountHardware.reduce(
-                          (a: any, b: any) => a + b.diskon_rp,
-                          0
-                        );
-                        const totalDiscountConsumableRp = DiscountConsumable.reduce(
-                          (a: any, b: any) => a + b.diskon_rp,
-                          0
-                        );
-                        const SoftwarePersen = DiscountSoftware.reduce(
-                          (a: any, b: any) => a + b.persentase,
-                          0
-                        );
-                        const HardwarePersen = DiscountHardware.reduce(
-                          (a: any, b: any) => a + b.persentase,
-                          0
-                        );
-                        const ConsumablePersen = DiscountConsumable.reduce(
-                          (a: any, b: any) => a + b.persentase,
-                          0
-                        );
+                      const totalDiscountSoftwareRp = DiscountSoftware.reduce(
+                        (a: any, b: any) => a + b.diskon_rp,
+                        0
+                      );
+                      const totalDiscountHardwareRp = DiscountHardware.reduce(
+                        (a: any, b: any) => a + b.diskon_rp,
+                        0
+                      );
+                      const totalDiscountConsumableRp = DiscountConsumable.reduce(
+                        (a: any, b: any) => a + b.diskon_rp,
+                        0
+                      );
+                      const SoftwarePersen = DiscountSoftware.reduce(
+                        (a: any, b: any) => a + b.persentase,
+                        0
+                      );
+                      const HardwarePersen = DiscountHardware.reduce(
+                        (a: any, b: any) => a + b.persentase,
+                        0
+                      );
+                      const ConsumablePersen = DiscountConsumable.reduce(
+                        (a: any, b: any) => a + b.persentase,
+                        0
+                      );
 
-                        const subTotalSoftware =
-                          totalSoftware -
-                            (totalDiscountSoftwareRp + totalSoftware * (SoftwarePersen / 100)) || 0;
-                        const subTotalHardware =
-                          totalHardware -
-                            (totalDiscountHardwareRp + totalHardware * (HardwarePersen / 100)) || 0;
-                        const subTotalConsumable =
-                          totalConsumable -
-                            (totalDiscountConsumableRp +
-                              totalConsumable * (ConsumablePersen / 100)) || 0;
+                      const subTotalSoftware =
+                        totalSoftware -
+                          (totalDiscountSoftwareRp + totalSoftware * (SoftwarePersen / 100)) || 0;
+                      const subTotalHardware =
+                        totalHardware -
+                          (totalDiscountHardwareRp + totalHardware * (HardwarePersen / 100)) || 0;
+                      const subTotalConsumable =
+                        totalConsumable -
+                          (totalDiscountConsumableRp +
+                            totalConsumable * (ConsumablePersen / 100)) || 0;
 
-                        const grandTotal =
-                          subTotalSoftware +
-                          subTotalHardware +
-                          subTotalConsumable +
-                          (resSupp[0]?.total_harga || 0) +
-                          (resProdServ[0]?.total_harga || 0);
+                      const grandTotal =
+                        subTotalSoftware +
+                        subTotalHardware +
+                        subTotalConsumable +
+                        (resSupp[0]?.total_harga || 0) +
+                        (resProdServ[0]?.total_harga || 0);
 
-                        const dataProd: {
-                          kode_produk: any;
-                          nama_produk: any;
-                          jenis_produk: any;
-                          satuan: any;
-                          qty: any;
-                          harga: any;
-                          sub_total: any;
-                        }[] = [];
-                        resProd.forEach((element: any) => {
-                          const row = {
-                            kode_produk: element.kode_produk,
-                            nama_produk: element.nama_produk,
-                            jenis_produk: element.tipe_produk,
-                            satuan: element.satuan,
-                            qty: element.qty,
-                            harga: element.harga,
-                            sub_total: element.sub_total,
-                          };
-                          dataProd.push(row);
-                        });
-                        const dataDisc: {
-                          kode_diskon: any;
-                          nama_diskon: any;
-                          persentase: any;
-                          sub_total: any;
-                        }[] = [];
-                        resDisc.forEach((element: any) => {
-                          const row = {
-                            kode_diskon: element.kode_diskon,
-                            nama_diskon: element.nama_diskon,
-                            persentase: element.persentase / 100,
-                            sub_total: element.diskon_rp,
-                          };
-                          dataDisc.push(row);
-                        });
-                        const onSendData = {
-                          kode_toko: resCust.central_store_code,
-                          nama_toko: resCust.central_store_name,
-                          kode_cabang: resCust.branch_store_code,
-                          nama_cabang: resCust.branch_store_name,
-                          nama_customer: resCust.customer_name || '-',
-                          alamat_cabang: resCust.address,
-                          alamat_korespondensi: resCust.correspondence_address,
-                          kota: resCust.city || '-',
-                          telepon: resCust.telephone || '-',
-                          email: resCust.email || '-',
-                          kode_staff: resCust.staff,
-                          biaya_reseller: resCust.reseller_fee || 0,
-                          jenis_ok: resType[0],
-                          detail_produk: dataProd,
-                          detail_diskon: dataDisc,
-                          no_support_service: resSupp[0]?.no_support_service || '-',
-                          no_production_service: resProdServ[0]?.no_production_service || '-',
-                          total_harga: grandTotal,
-                          deskripsi: '-',
+                      const dataProd: {
+                        kode_produk: any;
+                        nama_produk: any;
+                        jenis_produk: any;
+                        satuan: any;
+                        qty: any;
+                        harga: any;
+                        sub_total: any;
+                      }[] = [];
+                      resProd.forEach((element: any) => {
+                        const row = {
+                          kode_produk: element.kode_produk,
+                          nama_produk: element.nama_produk,
+                          jenis_produk: element.tipe_produk,
+                          satuan: element.satuan,
+                          qty: element.qty,
+                          harga: element.harga,
+                          sub_total: element.sub_total,
                         };
-                        // eslint-disable-next-line
-                        console.log(onSendData);
-
-                        dispatch({
-                          type: actionTypes.SaveData,
-                          payload: { dataSend: onSendData },
-                        });
-                        dispatch(modal.actions.show());
+                        dataProd.push(row);
                       });
+                      const dataDisc: {
+                        kode_diskon: any;
+                        nama_diskon: any;
+                        persentase: any;
+                        sub_total: any;
+                      }[] = [];
+                      resDisc.forEach((element: any) => {
+                        const row = {
+                          kode_diskon: element.kode_diskon,
+                          nama_diskon: element.nama_diskon,
+                          persentase: element.persentase / 100,
+                          sub_total: element.diskon_rp,
+                        };
+                        dataDisc.push(row);
+                      });
+                      const onSendData = {
+                        kode_toko: resCust.central_store_code,
+                        nama_toko: resCust.central_store_name,
+                        kode_cabang: resCust.branch_store_code,
+                        nama_cabang: resCust.branch_store_name,
+                        nama_customer: resCust.customer_name || '-',
+                        alamat_cabang: resCust.address,
+                        alamat_korespondensi: resCust.correspondence_address,
+                        kota: resCust.city || '-',
+                        telepon: resCust.telephone || '-',
+                        email: resCust.email || '-',
+                        kode_staff: resCust.staff,
+                        biaya_reseller: resCust.reseller_fee || 0,
+                        jenis_ok: resType[0],
+                        detail_produk: dataProd,
+                        detail_diskon: dataDisc,
+                        no_support_service: resSupp[0]?.no_support_service || '-',
+                        no_production_service: resProdServ[0]?.no_production_service || '-',
+                        total_harga: grandTotal,
+                        deskripsi_header: '-',
+                        deskripsi_footer: '-',
+                      };
+                      AxiosPost('order-confirmation', onSendData)
+                        .then(() => {
+                          localStorage.removeItem('dataCustomer');
+                          localStorage.removeItem('listProduct');
+                          localStorage.removeItem('listDiscount');
+                          localStorage.removeItem('type_oc');
+                          localStorage.removeItem('listSupport');
+                          localStorage.removeItem('listProduction');
+                          dispatch(modal.actions.hide());
+                          dispatch(utility.actions.hideLoading());
+                          toast.success('Success Add Data !');
+                          dispatch(customerRedux.actions.PrevCustomer());
+                        })
+                        .catch((error) => {
+                          dispatch(utility.actions.hideLoading());
+                          const dataErr = error.response.data;
+                          toast.error(dataErr.message || 'Failed Add Data !');
+                        });
+                      // dispatch({
+                      //   type: actionTypes.SaveData,
+                      //   payload: { dataSend: onSendData },
+                      // });
+                      // dispatch(modal.actions.show());
                     });
-                  }
-                });
+                  });
+                }
               });
-            }
+            });
           });
         }
       });
@@ -829,7 +843,8 @@ export const actions = {
       dispatch(utility.actions.showLoadingButton());
       const state = getState();
       const sendData = state.addorderconfirmation.dataSend;
-      sendData.deskripsi = data.description;
+      sendData.deskripsi_header = data.description_header;
+      sendData.deskripsi_footer = data.description_footer;
       AxiosPost('order-confirmation', sendData)
         .then(() => {
           localStorage.removeItem('dataCustomer');

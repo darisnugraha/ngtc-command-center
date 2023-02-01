@@ -8,6 +8,7 @@ import TableListProduct from './component/TableListProduct';
 import * as reduxDiscount from '../../master/discount/redux/DiscountRedux';
 import * as redux from './redux/AddOrderConfirmationRedux';
 import * as reduxService from './redux/AddOrderConfirmationServiceRedux';
+import * as reduxCustomer from './redux/AddOrderConfirmationCustomerRedux';
 import { KTSVG } from '../../../../_metronic/helpers';
 import FormAddSupportServiceOC from './component/FormAddSupportServiceOC';
 import FormAddProductionServiceOC from './component/FormAddProductionServiceOC';
@@ -30,6 +31,7 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
     dispatch(reduxService.actions.getProductionService());
     dispatch(reduxService.actions.getSupportLocal());
     dispatch(reduxService.actions.getProductionLocal());
+    dispatch(reduxCustomer.actions.getCustomerLocal());
   }, [dispatch]);
 
   const isPackage = useSelector<RootState>(

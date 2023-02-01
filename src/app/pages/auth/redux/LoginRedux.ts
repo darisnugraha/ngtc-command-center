@@ -107,8 +107,8 @@ export const actions = {
                 });
               })
               .catch((err) => {
-                const dataErr = err.response.data;
-                toast.error(dataErr.message);
+                const dataErr = err.response?.data;
+                toast.error(dataErr.message || 'Error');
                 dispatch({ type: actionTypes.Logout, payload: {} });
                 localStorage.clear();
               });

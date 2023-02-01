@@ -33,8 +33,7 @@ const Topbar: FC = function () {
         </div>
       </div> */}
       {/* Quick links */}
-      <div className={clsx('d-flex align-items-center', toolbarButtonMarginClass)}>
-        {/* begin::Menu wrapper */}
+      {/* <div className={clsx('d-flex align-items-center', toolbarButtonMarginClass)}>
         <div
           className={clsx('btn btn-icon btn-active-light-primary', toolbarButtonHeightClass)}
           data-kt-menu-trigger='click'
@@ -48,8 +47,7 @@ const Topbar: FC = function () {
           />
         </div>
         <QuickLinks />
-        {/* end::Menu wrapper */}
-      </div>
+      </div> */}
 
       {/* CHAT */}
       {/* <div className={clsx('d-flex align-items-center', toolbarButtonMarginClass)}>
@@ -102,7 +100,7 @@ const Topbar: FC = function () {
           data-kt-menu-placement='bottom-end'
           data-kt-menu-flip='bottom'
         >
-          <img src={toAbsoluteUrl('/media/avatars/150-26.jpg')} alt='metronic' />
+          <img src={toAbsoluteUrl('/media/avatars/blank.png')} alt='metronic' />
         </div>
         <HeaderUserMenu />
         {/* end::Toggle */}

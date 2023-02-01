@@ -94,85 +94,38 @@ export const actions = {
   },
   getBranchDetailByCode: (code: String, name: String) => {
     return async (
-      dispatch: ThunkDispatch<{}, {}, AnyAction>
-      // getState: () => any
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
     ): Promise<void> => {
-      // if (code === 'PUSAT') {
-      //   const state = getState();
-      //   const storeCode = state.form.FormAddCustomerOC.values.central_store_code;
-      //   AxiosGet(`store/by-kode/${storeCode}`).then((res) => {
-      //     const dataDecrypt = doDecryptData(res.data, [
-      //       'kode_staff',
-      //       'status',
-      //       '_id',
-      //       'input_date',
-      //       'kode_divisi',
-      //     ]);
-      //     dispatch(change('FormAddCustomerOC', 'branch_store_name', name));
-      //     dispatch(change('FormAddCustomerOC', 'address', dataDecrypt[0]?.alamat));
-      //     dispatch(change('FormAddCustomerOC', 'city', dataDecrypt[0]?.kota));
-      //     dispatch(
-      //       change(
-      //         'FormAddCustomerOC',
-      //         'correspondence_address',
-      //         dataDecrypt[0]?.alamat_korespondensi
-      //       )
-      //     );
-      //     dispatch(change('FormAddCustomerOC', 'email', dataDecrypt[0]?.email));
-      //     dispatch(change('FormAddCustomerOC', 'telephone', dataDecrypt[0]?.telepon));
-      //   });
-      // } else {
-      //   AxiosGet(`branch/by-kode-cabang/${code}`).then((res) => {
-      //     const dataDecrypt = doDecryptData(res.data, [
-      //       'kode_toko',
-      //       'status',
-      //       '_id',
-      //       'input_date',
-      //       'kode_cabang',
-      //     ]);
-      //     dispatch({
-      //       type: actionTypes.GetBranchStoreDetail,
-      //       payload: { branchDetail: dataDecrypt },
-      //     });
-      //     dispatch(change('FormAddCustomerOC', 'branch_store_name', name));
-      //     dispatch(change('FormAddCustomerOC', 'address', dataDecrypt[0]?.alamat_cabang));
-      //     dispatch(change('FormAddCustomerOC', 'city', dataDecrypt[0]?.kota));
-      //     dispatch(
-      //       change(
-      //         'FormAddCustomerOC',
-      //         'correspondence_address',
-      //         dataDecrypt[0]?.alamat_korespondensi
-      //       )
-      //     );
-      //     dispatch(change('FormAddCustomerOC', 'email', dataDecrypt[0]?.email));
-      //     dispatch(change('FormAddCustomerOC', 'telephone', dataDecrypt[0]?.telepon));
-      //   });
-      // }
-      AxiosGet(`branch/by-kode-cabang/${code}`).then((res) => {
-        const dataDecrypt = doDecryptData(res.data, [
-          'kode_toko',
-          'status',
-          '_id',
-          'input_date',
-          'kode_cabang',
-        ]);
-        dispatch({
-          type: actionTypes.GetBranchStoreDetail,
-          payload: { branchDetail: dataDecrypt },
-        });
-        dispatch(change('FormAddCustomerOC', 'branch_store_name', name));
-        dispatch(change('FormAddCustomerOC', 'address', dataDecrypt[0]?.alamat_cabang));
-        dispatch(change('FormAddCustomerOC', 'city', dataDecrypt[0]?.kota));
-        dispatch(
-          change(
-            'FormAddCustomerOC',
-            'correspondence_address',
-            dataDecrypt[0]?.alamat_korespondensi
-          )
-        );
-        dispatch(change('FormAddCustomerOC', 'email', dataDecrypt[0]?.email));
-        dispatch(change('FormAddCustomerOC', 'telephone', dataDecrypt[0]?.telepon));
-      });
+      const state = getState();
+      const storeCode = state.form.FormAddCustomerOC.values.central_store_code;
+      AxiosGet(`branch/by-kode-cabang-kode-toko?kode_cabang=${code}&kode_toko=${storeCode}`).then(
+        (res) => {
+          const dataDecrypt = doDecryptData(res.data, [
+            'kode_toko',
+            'status',
+            '_id',
+            'input_date',
+            'kode_cabang',
+          ]);
+          dispatch({
+            type: actionTypes.GetBranchStoreDetail,
+            payload: { branchDetail: dataDecrypt },
+          });
+          dispatch(change('FormAddCustomerOC', 'branch_store_name', name));
+          dispatch(change('FormAddCustomerOC', 'address', dataDecrypt[0]?.alamat_cabang));
+          dispatch(change('FormAddCustomerOC', 'city', dataDecrypt[0]?.kota));
+          dispatch(
+            change(
+              'FormAddCustomerOC',
+              'correspondence_address',
+              dataDecrypt[0]?.alamat_korespondensi
+            )
+          );
+          dispatch(change('FormAddCustomerOC', 'email', dataDecrypt[0]?.email));
+          dispatch(change('FormAddCustomerOC', 'telephone', dataDecrypt[0]?.telepon));
+        }
+      );
     };
   },
   getStaffDetailByCode: (code: String) => {

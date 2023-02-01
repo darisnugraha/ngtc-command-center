@@ -98,28 +98,44 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
       headerClasses: 'ps-4 min-w-100px rounded-end',
       formatter: (cell, row) => {
         return (
-          <>
-            <button
-              type='button'
-              onClick={() => {
-                // eslint-disable-next-line
-                dispatch(redux.actions.getDataImplementationByID(row._id));
-              }}
-              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-            >
-              <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
-            </button>
-            <button
-              type='button'
-              onClick={() => {
-                // eslint-disable-next-line
-                dispatch(redux.actions.deleteImplementation(row._id));
-              }}
-              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-            >
-              <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
-            </button>
-          </>
+          <div className='row'>
+            <div className='col-lg-4'>
+              <button
+                type='button'
+                onClick={() => {
+                  // eslint-disable-next-line
+                  dispatch(redux.actions.validateImplementation(row.no_implementasi));
+                }}
+                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              >
+                <KTSVG path='/media/icons/duotune/general/gen043.svg' className='svg-icon-3' />
+              </button>
+            </div>
+            <div className='col-lg-4'>
+              <button
+                type='button'
+                onClick={() => {
+                  // eslint-disable-next-line
+                  dispatch(redux.actions.getDataImplementationByID(row._id));
+                }}
+                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              >
+                <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
+              </button>
+            </div>
+            <div className='col-lg-4'>
+              <button
+                type='button'
+                onClick={() => {
+                  // eslint-disable-next-line
+                  dispatch(redux.actions.deleteImplementation(row._id));
+                }}
+                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              >
+                <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
+              </button>
+            </div>
+          </div>
         );
       },
     },

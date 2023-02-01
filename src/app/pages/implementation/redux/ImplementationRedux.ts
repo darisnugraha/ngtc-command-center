@@ -406,4 +406,20 @@ export const actions = {
     // eslint-disable-next-line
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {};
   },
+  // eslint-disable-next-line
+  validateImplementation: (no_implementasi: String) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      // eslint-disable-next-line
+      const onSendData = { no_implementasi: no_implementasi };
+      AxiosPost('implementation/validate', onSendData)
+        .then(() => {
+          toast.success('Success Validate Data !');
+          dispatch(actions.getImplementation());
+        })
+        .catch((err) => {
+          const dataErr = err.response?.data;
+          toast.error(dataErr.message || 'Error');
+        });
+    };
+  },
 };

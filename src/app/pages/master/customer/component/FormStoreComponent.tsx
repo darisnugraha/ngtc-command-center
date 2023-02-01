@@ -5,7 +5,7 @@ import { RootState } from '../../../../../setup';
 import SubmitButton from '../../../../modules/button';
 import { RenderField, RenderTextArea } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
-import AddStoreValidation from '../validasi/AddStoreValidation';
+// import AddStoreValidation from '../validasi/AddStoreValidation';
 
 interface Props {}
 
@@ -153,6 +153,6 @@ const form = reduxForm<{}, Props>({
   forceUnregisterOnUnmount: true,
   form: 'FormStoreComponent',
   touchOnChange: true,
-  validate: AddStoreValidation,
+  // validate: AddStoreValidation,
 })(FormStoreComponent);
 export default connect(mapState, null)(form);

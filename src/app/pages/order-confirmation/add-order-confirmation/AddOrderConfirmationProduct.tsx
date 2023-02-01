@@ -49,28 +49,55 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
           }}
         />
       </GlobalModal>
-      <div className='card mb-5 mb-xl-8'>
-        <div className='card-header border-0 pt-5'>
-          <h3 className='card-title align-items-start flex-column'>
-            <span className='card-label fw-bolder fs-3 mb-1'>Add Order Confirmation - Product</span>
-          </h3>
-        </div>
-      </div>
-      <div className='card mb-5 mb-xl-8'>
-        <div className='card-body py-3'>
-          <div className='row'>
-            <div className='col-lg-12'>
+      <div className='accordion' id='kt_accordion_1'>
+        <div className='accordion-item'>
+          <h2 className='accordion-header' id='kt_accordion_1_product'>
+            <button
+              className='accordion-button fs-4 fw-bold collapsed'
+              type='button'
+              data-bs-toggle='collapse'
+              data-bs-target='#kt_accordion_1_product_body_1'
+              aria-expanded='false'
+              aria-controls='kt_accordion_1_product_body_1'
+            >
+              Add Order Confirmation - Product
+            </button>
+          </h2>
+          <div
+            id='kt_accordion_1_product_body_1'
+            className='accordion-collapse collapse show'
+            aria-labelledby='kt_accordion_1_product'
+            data-bs-parent='#kt_accordion_1'
+          >
+            <div className='accordion-body'>
               <FormAddProduct
                 onSubmit={(data: any) => {
                   dispatch(redux.actions.addDataProduct(data, data.oc_type));
                 }}
               />
             </div>
-            <div className='col-lg-12'>
-              <hr />
-              <h3>Add Discount</h3>
-            </div>
-            <div className='col-lg-12'>
+          </div>
+        </div>
+        <div className='accordion-item'>
+          <h2 className='accordion-header' id='kt_accordion_1_discount'>
+            <button
+              className='accordion-button fs-4 fw-bold collapsed'
+              type='button'
+              data-bs-toggle='collapse'
+              data-bs-target='#kt_accordion_1_body_discount'
+              aria-expanded='false'
+              aria-controls='kt_accordion_1_body_discount'
+            >
+              Add Discount
+            </button>
+          </h2>
+          <div
+            id='kt_accordion_1_body_discount'
+            className='accordion-collapse collapse'
+            aria-labelledby='kt_accordion_1_discount'
+            data-bs-parent='#kt_accordion_1'
+          >
+            <div className='accordion-body'>
               <FormAddDiscount
                 onSubmit={(data: any) => {
                   // eslint-disable-next-line
@@ -78,11 +105,28 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
                 }}
               />
             </div>
-            <div className='col-lg-12'>
-              <hr />
-              <h3>Add Support Service</h3>
-            </div>
-            <div className='col-lg-12'>
+          </div>
+        </div>
+        <div className='accordion-item'>
+          <h2 className='accordion-header' id='kt_accordion_1_support'>
+            <button
+              className='accordion-button fs-4 fw-bold collapsed'
+              type='button'
+              data-bs-toggle='collapse'
+              data-bs-target='#kt_accordion_1_body_support'
+              aria-expanded='false'
+              aria-controls='kt_accordion_1_body_support'
+            >
+              Add Support Service
+            </button>
+          </h2>
+          <div
+            id='kt_accordion_1_body_support'
+            className='accordion-collapse collapse'
+            aria-labelledby='kt_accordion_1_support'
+            data-bs-parent='#kt_accordion_1'
+          >
+            <div className='accordion-body'>
               <FormAddSupportServiceOC
                 onSubmit={(data: any) => {
                   // eslint-disable-next-line
@@ -90,11 +134,28 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
                 }}
               />
             </div>
-            <div className='col-lg-12'>
-              <hr />
-              <h3>Add Production Service</h3>
-            </div>
-            <div className='col-lg-12'>
+          </div>
+        </div>
+        <div className='accordion-item'>
+          <h2 className='accordion-header' id='kt_accordion_1_support'>
+            <button
+              className='accordion-button fs-4 fw-bold collapsed'
+              type='button'
+              data-bs-toggle='collapse'
+              data-bs-target='#kt_accordion_1_body_production'
+              aria-expanded='false'
+              aria-controls='kt_accordion_1_body_production'
+            >
+              Add Production Service
+            </button>
+          </h2>
+          <div
+            id='kt_accordion_1_body_production'
+            className='accordion-collapse collapse'
+            aria-labelledby='kt_accordion_1_support'
+            data-bs-parent='#kt_accordion_1'
+          >
+            <div className='accordion-body'>
               <FormAddProductionServiceOC
                 onSubmit={(data: any) => {
                   // eslint-disable-next-line
@@ -102,10 +163,18 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
                 }}
               />
             </div>
-            <div className='col-lg-12'>
-              <hr />
-              <h3>List Product</h3>
-            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className='card mb-5 mb-xl-8 mt-10'>
+        <div className='card-header border-0 pt-5'>
+          <h3 className='card-title align-items-start flex-column'>
+            <span className='card-label fw-bolder fs-3 mb-1'>List Product</span>
+          </h3>
+        </div>
+        <div className='card-body py-3'>
+          <div className='row'>
             <div className='col-lg-12'>
               <TableListProduct />
             </div>
@@ -129,10 +198,17 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
             <div className='col-lg-12'>
               <TableListDiscount />
             </div>
-            <div className='col-lg-12'>
-              <hr />
-              <h3>List Service</h3>
-            </div>
+          </div>
+        </div>
+      </div>
+      <div className='card mb-5 mb-xl-8 mt-10'>
+        <div className='card-header border-0 pt-5'>
+          <h3 className='card-title align-items-start flex-column'>
+            <span className='card-label fw-bolder fs-3 mb-1'>List Service</span>
+          </h3>
+        </div>
+        <div className='card-body py-3'>
+          <div className='row'>
             <div className='col-lg-12'>
               <TableSupportService />
             </div>

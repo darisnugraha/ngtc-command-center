@@ -20,7 +20,7 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
     dispatch(reduxCustomer.actions.getCustomerLocal());
   }, [dispatch]);
 
-  const dataCustomer = useSelector<RootState>(
+  const dataCustomer: any = useSelector<RootState>(
     ({ addorderconfirmationcustomer }) => addorderconfirmationcustomer.feedback
   );
 
@@ -31,19 +31,25 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
           <div className='card mb-5 mb-xl-8'>
             <div className='card-header border-0 pt-5'>
               <h3 className='card-title align-items-start flex-column'>
-                <span className='card-label fw-bolder fs-3 mb-1'>Add Order Confirmation</span>
+                <span className='card-label fw-bolder fs-3 mb-1'>
+                  Add Order Confirmation -{' '}
+                  {dataCustomer !== undefined
+                    ? `${dataCustomer.central_store_name} - ${dataCustomer.branch_store_name}`
+                    : ''}
+                </span>
               </h3>
             </div>
           </div>
-          <div className='card mb-5 mb-xl-8'>
-            <div className='card-body py-3'>
-              {dataCustomer !== undefined ? (
-                <AddOrderConfirmationProduct />
-              ) : (
+
+          {dataCustomer !== undefined ? (
+            <AddOrderConfirmationProduct />
+          ) : (
+            <div className='card mb-5 mb-xl-8'>
+              <div className='card-body py-3'>
                 <AddOrderConfirmationCustomer />
-              )}
+              </div>
             </div>
-          </div>
+          )}
         </>
       );
     case 2:
@@ -56,11 +62,10 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
               </h3>
             </div>
           </div>
-          <div className='card mb-5 mb-xl-8'>
-            <div className='card-body py-3'>
-              <AddOrderConfirmationProduct />
-            </div>
-          </div>
+          {/* <div className='card mb-5 mb-xl-8'>
+            <div className='card-body py-3'></div>
+          </div> */}
+          <AddOrderConfirmationProduct />
         </>
       );
 
@@ -74,15 +79,15 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
               </h3>
             </div>
           </div>
-          <div className='card mb-5 mb-xl-8'>
-            <div className='card-body py-3'>
-              {dataCustomer !== undefined ? (
-                <AddOrderConfirmationProduct />
-              ) : (
+          {dataCustomer !== undefined ? (
+            <AddOrderConfirmationProduct />
+          ) : (
+            <div className='card mb-5 mb-xl-8'>
+              <div className='card-body py-3'>
                 <AddOrderConfirmationCustomer />
-              )}
+              </div>
             </div>
-          </div>
+          )}
         </>
       );
   }

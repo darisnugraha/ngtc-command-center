@@ -71,12 +71,12 @@ export const actions = {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
       const onSendData = {
-        kode_toko: data.store_code,
-        nama_toko: data.store_name,
-        nama_customer: data.customer_name,
-        kota: data.city,
-        alamat: data.address,
-        alamat_korespondensi: data.correspondence_address,
+        kode_toko: data.store_code || '-',
+        nama_toko: data.store_name || '-',
+        nama_customer: data.customer_name || '-',
+        kota: data.city || '-',
+        alamat: data.address || '-',
+        alamat_korespondensi: data.correspondence_address || '-',
         telepon: data.telephone || '-',
         email: data.email || '-',
       };
@@ -127,14 +127,14 @@ export const actions = {
       const onSendData = {
         cabang_detail: [
           {
-            kode_cabang: data.branch_store_code,
-            nama_cabang: data.branch_store_name,
-            kode_toko: data.central_store_code,
-            email: data.email,
-            telepon: data.telephone,
-            kota: data.city,
-            alamat_cabang: data.address,
-            alamat_korespondensi: data.correspondence_address,
+            kode_cabang: data.branch_store_code || '-',
+            nama_cabang: data.branch_store_name || '-',
+            kode_toko: data.central_store_code || '-',
+            email: data.email || '-',
+            telepon: data.telephone || '-',
+            kota: data.city || '-',
+            alamat_cabang: data.address || '-',
+            alamat_korespondensi: data.correspondence_address || '-',
           },
         ],
       };

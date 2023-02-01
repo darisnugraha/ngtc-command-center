@@ -5,7 +5,7 @@ import { RootState } from '../../../../../setup';
 import SubmitButton from '../../../../modules/button';
 import { RenderField, RenderTextArea } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
-import AddBranchValidation from '../validasi/AddBranchValidation';
+// import AddBranchValidation from '../validasi/AddBranchValidation';
 
 interface Props {}
 
@@ -163,6 +163,6 @@ const form = reduxForm<{}, Props>({
   forceUnregisterOnUnmount: true,
   form: 'FormBranchComponent',
   touchOnChange: true,
-  validate: AddBranchValidation,
+  // validate: AddBranchValidation,
 })(FormBranchComponent);
 export default connect(mapState, null)(form);

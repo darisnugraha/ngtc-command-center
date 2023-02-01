@@ -120,7 +120,9 @@ const OCPDF = (data, head) => {
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
-  tableRows.push(discountSoftware);
+  if (PersentaseSoftware !== 0 || DiskonSubTotal !== 0) {
+    tableRows.push(discountSoftware);
+  }
 
   const dataDiscountHardware = data[0].detail_diskon.find((element) =>
     element.nama_diskon.includes('HARDWARE')
@@ -159,7 +161,9 @@ const OCPDF = (data, head) => {
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
-  tableRows.push(discountHardware);
+  if (PersentaseHardware !== 0 || DiskonSubTotalHardware !== 0) {
+    tableRows.push(discountHardware);
+  }
 
   const dataDiscountConsumable = data[0].detail_diskon.find((element) =>
     element.nama_diskon.includes('CONSUMABLE')
@@ -199,7 +203,9 @@ const OCPDF = (data, head) => {
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
-  tableRows.push(discountConsumable);
+  if (PersentaseConsumable !== 0 || DiskonSubTotalConsumable !== 0) {
+    tableRows.push(discountConsumable);
+  }
   const total = [
     {
       content: 'Total',

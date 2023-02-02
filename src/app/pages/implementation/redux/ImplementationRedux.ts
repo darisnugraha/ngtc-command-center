@@ -78,7 +78,7 @@ export const reducer = persistReducer(
 export const actions = {
   getImplementation: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      AxiosGet('implementation/open').then((res) => {
+      AxiosGet('implementation').then((res) => {
         const dataDecrypt = doDecryptData(res.data, [
           '_id',
           'no_implementasi',

@@ -262,8 +262,7 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
         <div className='card-header border-0 pt-5'>
           <FormSearchOC
             onSubmit={(data: any) => {
-              // eslint-disable-next-line
-              console.log(data);
+              dispatch(redux.actions.searchAction(data));
             }}
           />
         </div>

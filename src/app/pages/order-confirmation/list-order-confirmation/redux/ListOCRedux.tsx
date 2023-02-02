@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import { change } from 'redux-form';
+import moment from 'moment';
 import { AxiosGet } from '../../../../../setup';
 import { doDecryptData, getLocal, saveLocal } from '../../../../../setup/encrypt.js';
 import { ListOCModel } from '../model/ListOCModel';
@@ -87,7 +88,7 @@ export const reducer = persistReducer(
 export const actions = {
   getListOC: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      AxiosGet('order-confirmation/open').then((res) => {
+      AxiosGet('order-confirmation').then((res) => {
         const dataDecrypt = doDecryptData(res.data, [
           'status',
           '_id',
@@ -569,6 +570,56 @@ export const actions = {
           dispatch(change('FormEditProduct', 'type', dataDecrypt[0].type || '-'));
         });
       }
+    };
+  },
+  searchAction: (data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+      const onSendData = {
+        startDate: moment(data.date[0]).format('yyyy-MM-DD'),
+        endDate: moment(data.date[1]).format('yyyy-MM-DD'),
+        kode_staff: data.staff_name,
+        no_order_konfirmasi: data.no_oc,
+        kode_toko: data.central_store_name,
+        status: data.status_payment,
+      };
+      AxiosGet(
+        `order-confirmation/filter?startDate=${onSendData.startDate}&endDate=${onSendData.endDate}&no_order_konfirmasi=${onSendData.no_order_konfirmasi}&kode_toko=${onSendData.kode_toko}&kode_staff=${onSendData.kode_staff}&status=${onSendData.status}`
+      )
+        .then((res) => {
+          const dataDecrypt = doDecryptData(res.data, [
+            'status',
+            '_id',
+            'input_date',
+            'no_order_konfirmasi',
+            'kode_toko',
+            'kode_cabang',
+            'tanggal_order_konfirmasi',
+            'total_harga',
+            'kode_produk',
+            'satuan',
+            'harga',
+            'sub_total',
+            'qty',
+            'kode_diskon',
+            'nama_diskon',
+            'persentase',
+            'jenis_ok',
+            'jenis_produk',
+          ]);
+          const dataSave: any = [];
+          let no = 1;
+          dataDecrypt.forEach((element: any) => {
+            // eslint-disable-next-line
+            element.key = no;
+            dataSave.push(element);
+            no += 1;
+          });
+          dispatch({ type: actionTypes.GetListOC, payload: { feedback: dataSave } });
+        })
+        .catch((err) => {
+          const dataErr = err.response?.data;
+          toast.error(dataErr.message || 'Error');
+        });
     };
   },
 };

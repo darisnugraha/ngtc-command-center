@@ -21,6 +21,7 @@ const mapState = (state: RootState) => {
         realization_date: state.implementation.feedbackID.tanggal_realisasi,
         implementation_type: state.implementation.feedbackID.tipe_implementasi,
         duration: state.implementation.feedbackID.lama_implementasi,
+        no_oc_edit: state.implementation.feedbackID.no_order_konfirmasi,
       },
     };
   }
@@ -37,6 +38,8 @@ const FormImplementation: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
   const dataStaff: any = useSelector<RootState>(
     ({ implementation }) => implementation.feedbackStaff
   );
+
+  const isEdit: any = useSelector<RootState>(({ implementation }) => implementation.isEdit);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -76,20 +79,32 @@ const FormImplementation: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
           <hr />
         </div>
         <div className='col-lg-6'>
-          <Field
-            name='no_oc'
-            type='text'
-            component={RenderFieldSelect}
-            options={dataOC.map((element: any) => {
-              const option = {
-                label: element.no_order_konfirmasi,
-                value: element.no_order_konfirmasi,
-              };
-              return option;
-            })}
-            label='No OC'
-            placeHolder='Select No OC'
-          />
+          {isEdit ? (
+            <Field
+              name='no_oc_edit'
+              type='text'
+              component={RenderField}
+              label='No OC'
+              placeHolder='Insert No OC'
+              isEdit={isEdit}
+              readOnly={isEdit}
+            />
+          ) : (
+            <Field
+              name='no_oc'
+              type='text'
+              component={RenderFieldSelect}
+              options={dataOC.map((element: any) => {
+                const option = {
+                  label: element.no_order_konfirmasi,
+                  value: element.no_order_konfirmasi,
+                };
+                return option;
+              })}
+              label='No OC'
+              placeHolder='Select No OC'
+            />
+          )}
         </div>
         <div className='col-lg-6' />
         <div className='col-lg-6'>

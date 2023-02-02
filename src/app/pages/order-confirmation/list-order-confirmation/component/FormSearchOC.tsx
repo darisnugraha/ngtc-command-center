@@ -30,11 +30,46 @@ const FormSearchOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   };
 
   const dataStaff: any = useSelector<RootState>(({ staff }) => staff.feedback);
+  const listStaff = [
+    {
+      value: 'all',
+      label: 'All',
+    },
+  ];
+  dataStaff?.forEach((element: any) => {
+    const row = { value: element.kode_staff, label: element.nama_staff };
+    listStaff.push(row);
+  });
   const dataStore: any = useSelector<RootState>(({ customer }) => customer.feedback);
+  const listStore = [
+    {
+      value: 'all',
+      label: 'All',
+    },
+  ];
+  dataStore?.forEach((element: any) => {
+    const row = { value: element.kode_toko, label: element.nama_toko };
+    listStore.push(row);
+  });
   const dataOC: any = useSelector<RootState>(
     ({ listorderconfirmation }) => listorderconfirmation.feedback
   );
+  const listOC = [
+    {
+      value: 'all',
+      label: 'All',
+    },
+  ];
+  dataOC?.forEach((element: any) => {
+    const row = { value: element.no_order_konfirmasi, label: element.no_order_konfirmasi };
+    listOC.push(row);
+  });
+
   const StatusPayment = [
+    {
+      value: 'all',
+      label: 'All',
+    },
     {
       value: 'OPEN',
       label: 'OPEN',
@@ -74,13 +109,7 @@ const FormSearchOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             name='staff_name'
             type='text'
             component={RenderFieldSelect}
-            options={dataStaff.map((element: any) => {
-              const option = {
-                label: element.nama_staff,
-                value: element.kode_staff,
-              };
-              return option;
-            })}
+            options={listStaff}
             label='Staff Name'
             placeHolder='Select Staff Name'
           />
@@ -90,13 +119,7 @@ const FormSearchOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             name='no_oc'
             type='text'
             component={RenderFieldSelect}
-            options={dataOC.map((element: any) => {
-              const option = {
-                label: element.no_order_konfirmasi,
-                value: element.no_order_konfirmasi,
-              };
-              return option;
-            })}
+            options={listOC}
             label='No OC'
             placeHolder='Select No OC'
           />
@@ -106,13 +129,7 @@ const FormSearchOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             name='central_store_name'
             type='text'
             component={RenderFieldSelect}
-            options={dataStore.map((element: any) => {
-              const option = {
-                label: element.nama_toko,
-                value: element.kode_toko,
-              };
-              return option;
-            })}
+            options={listStore}
             label='Central Store'
             placeHolder='Select Central Store'
           />

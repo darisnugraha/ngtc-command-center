@@ -107,6 +107,7 @@ export const actions = {
         alamat_korespondensi: data.correspondence_address,
         telepon: data.telephone || '-',
         email: data.email || '-',
+        tipe_toko: data.type_store || '-',
       };
 
       AxiosPut(`store/${data.id}`, onSendData)
@@ -166,6 +167,7 @@ export const actions = {
         kota: data.city,
         alamat_cabang: data.address,
         alamat_korespondensi: data.correspondence_address,
+        tipe_cabang: data.type_branch || '-',
       };
 
       AxiosPut(`branch/${data.id}`, onSendData)

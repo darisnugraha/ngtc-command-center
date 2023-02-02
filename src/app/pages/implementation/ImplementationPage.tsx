@@ -92,6 +92,14 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
       },
     },
     {
+      dataField: 'status',
+      text: 'Status',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+      },
+    },
+    {
       dataField: '',
       text: 'Action',
       align: 'center',

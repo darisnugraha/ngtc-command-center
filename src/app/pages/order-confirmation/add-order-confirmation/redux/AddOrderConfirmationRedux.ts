@@ -8,8 +8,10 @@ import { AxiosGet, AxiosPost } from '../../../../../setup';
 import { doDecryptData, getLocal, saveLocal } from '../../../../../setup/encrypt.js';
 import { listProductModel } from '../model/AddOrderConfirmationModel';
 import * as modal from '../../../../modules/modal/GlobalModalRedux';
+import * as modalSecond from '../../../../modules/modal/ModalSecondRedux';
 import * as utility from '../../../../../setup/redux/UtilityRedux';
 import * as customerRedux from './AddOrderConfirmationCustomerRedux';
+import { NumberOnly } from '../../../../../setup/function.js';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -93,6 +95,13 @@ export const actions = {
   setTypeOC: (type: String) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch({ type: actionTypes.SetTypeOC, payload: { typeOC: type } });
+    };
+  },
+  getTypeOC: () => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      getLocal('type_oc').then((type) => {
+        dispatch(actions.setTypeOC(type[0]));
+      });
     };
   },
   getProduct: (type: String) => {
@@ -323,7 +332,7 @@ export const actions = {
                         key: no,
                         harga: element.harga,
                         nama_produk: element.nama_produk,
-                        qty: 1,
+                        qty: element.qty,
                         satuan: element.satuan,
                         sub_total: element.harga,
                         tipe_produk: element.jenis_produk || typeProd,
@@ -331,6 +340,7 @@ export const actions = {
                       dataArr.push(row);
                       no += 1;
                     });
+
                     saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
                       saveLocal('dataPackage', true).then(() => {
                         toast.success('Success Add Data !');
@@ -347,7 +357,7 @@ export const actions = {
                         key: no,
                         harga: element.harga,
                         nama_produk: element.nama_produk,
-                        qty: 1,
+                        qty: element.qty,
                         satuan: element.satuan,
                         sub_total: element.harga,
                         tipe_produk: element.jenis_produk || typeProd,
@@ -434,7 +444,7 @@ export const actions = {
                       key: no,
                       harga: element.harga,
                       nama_produk: element.nama_produk,
-                      qty: 1,
+                      qty: element.qty,
                       satuan: element.satuan,
                       sub_total: element.harga,
                       tipe_produk: element.jenis_produk || typeProd,
@@ -458,7 +468,7 @@ export const actions = {
                       key: no,
                       harga: element.harga,
                       nama_produk: element.nama_produk,
-                      qty: 1,
+                      qty: element.qty,
                       satuan: element.satuan,
                       sub_total: element.harga,
                       tipe_produk: element.jenis_produk || typeProd,
@@ -583,6 +593,62 @@ export const actions = {
             });
           });
         }
+      });
+    };
+  },
+  editProduct: (id: String) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
+        const dataFind = res.find((element: any) => element.key === id);
+        dispatch(change('FormEditProduct', 'product_name', dataFind.nama_produk));
+        dispatch(change('FormEditProduct', 'product_type', dataFind.tipe_produk));
+        dispatch(change('FormEditProduct', 'qty', dataFind.qty || 1));
+        dispatch(change('FormEditProduct', 'unit', dataFind.satuan));
+        dispatch(change('FormEditProduct', 'price', dataFind.harga));
+        dispatch(change('FormEditProduct', 'sub_total', dataFind.sub_total));
+        dispatch(modalSecond.actions.show());
+      });
+    };
+  },
+  saveEditProduct: (data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch(utility.actions.showLoadingButton());
+      getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
+        const dataFind = res.filter((element: any) => element.nama_produk !== data.product_name);
+        const dataArr: listProductModel[] = [];
+        let no = 1;
+        dataFind.forEach((element: any) => {
+          const row: listProductModel = {
+            // eslint-disable-next-line
+            key: no,
+            harga: element.harga,
+            nama_produk: element.nama_produk,
+            qty: element.qty || 1,
+            satuan: element.satuan,
+            sub_total: element.harga,
+            tipe_produk: element.jenis_produk || element.tipe_produk,
+          };
+          dataArr.push(row);
+          no += 1;
+        });
+        const row: listProductModel = {
+          // eslint-disable-next-line
+          key: dataArr.length + 1,
+          harga: data.price,
+          nama_produk: data.product_name,
+          qty: data.qty,
+          satuan: data.unit,
+          sub_total: data.sub_total,
+          tipe_produk: data.product_type,
+        };
+        dataArr.push(row);
+        saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+          toast.success('Success Add Data !');
+          dispatch(reset('FormEditProduct'));
+          dispatch(actions.getDataProductLocal());
+          dispatch(utility.actions.hideLoading());
+          dispatch(modalSecond.actions.hide());
+        });
       });
     };
   },
@@ -902,6 +968,48 @@ export const actions = {
       // eslint-disable-next-line
       const total = parseInt(qty) * parseInt(price);
       dispatch(change('FormAddProductOC', 'sub_total', total));
+    };
+  },
+  setSubTotalEdit: (qty: any) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const data = state.form.FormEditProduct.values;
+      // eslint-disable-next-line
+      const price = data.price;
+      // eslint-disable-next-line
+      const total = parseInt(qty) * parseInt(price);
+      dispatch(change('FormEditProduct', 'sub_total', total));
+    };
+  },
+  setSubTotalRp: (harga: any) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const data = state.form.FormAddProductOC.values;
+      // eslint-disable-next-line
+      const qty = data.qty;
+      // eslint-disable-next-line
+      const total = parseInt(qty) * NumberOnly(harga);
+      dispatch(change('FormAddProductOC', 'sub_total', total));
+    };
+  },
+  setSubTotalRpEdit: (harga: any) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const data = state.form.FormEditProduct.values;
+      // eslint-disable-next-line
+      const qty = data.qty;
+      // eslint-disable-next-line
+      const total = parseInt(qty) * NumberOnly(harga);
+      dispatch(change('FormEditProduct', 'sub_total', total));
     };
   },
 };

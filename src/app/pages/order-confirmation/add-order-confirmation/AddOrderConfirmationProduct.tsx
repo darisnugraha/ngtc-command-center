@@ -17,6 +17,9 @@ import TableProductionService from './component/TableProductionService';
 import GlobalModal from '../../../modules/modal/GlobalModal';
 import FormAddDeskripsi from './component/FormAddDeskripsi';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
+import * as modalsecond from '../../../modules/modal/ModalSecondRedux';
+import ModalSecond from '../../../modules/modal/ModalSecond';
+import FormEditProduct from './component/FormEditProduct';
 
 interface Props {}
 
@@ -24,6 +27,7 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(redux.actions.getTypeOC());
     dispatch(reduxDiscount.actions.getDiscount());
     dispatch(redux.actions.getDataProductLocal());
     dispatch(redux.actions.getDataDiscountLocal());
@@ -42,6 +46,10 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
     dispatch(modal.actions.hide());
   };
 
+  const handleCloseEdit = () => {
+    dispatch(modalsecond.actions.hide());
+  };
+
   return (
     <>
       <GlobalModal title='Description' onClose={() => handleClose()}>
@@ -51,6 +59,13 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
           }}
         />
       </GlobalModal>
+      <ModalSecond title='Edit Product' onClose={() => handleCloseEdit()}>
+        <FormEditProduct
+          onSubmit={(data: any) => {
+            dispatch(redux.actions.saveEditProduct(data));
+          }}
+        />
+      </ModalSecond>
       <div className='accordion' id='kt_accordion_1'>
         <div className='accordion-item'>
           <h2 className='accordion-header' id='kt_accordion_1_product'>

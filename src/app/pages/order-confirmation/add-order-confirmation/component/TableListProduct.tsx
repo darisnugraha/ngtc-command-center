@@ -83,20 +83,35 @@ const TableListProduct: FC = () => {
       headerClasses: 'ps-4 min-w-100px rounded-end',
       formatter: (cell, row) => {
         return (
-          <button
-            type='button'
-            onClick={() => {
-              // eslint-disable-next-line
-              dispatch(redux.actions.deleteProduct(row.key));
-            }}
-            className={
-              isPackage === 'true'
-                ? 'd-none'
-                : 'btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-            }
-          >
-            <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
-          </button>
+          <>
+            <button
+              type='button'
+              onClick={() => {
+                dispatch(redux.actions.editProduct(row.key));
+              }}
+              className={
+                isPackage !== 'true'
+                  ? 'd-none'
+                  : 'btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              }
+            >
+              <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
+            </button>
+            <button
+              type='button'
+              onClick={() => {
+                dispatch(redux.actions.deleteProduct(row.key));
+              }}
+              // className={
+              //   isPackage === 'true'
+              //     ? 'd-none'
+              //     : 'btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              // }
+              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+            >
+              <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
+            </button>
+          </>
         );
       },
     },

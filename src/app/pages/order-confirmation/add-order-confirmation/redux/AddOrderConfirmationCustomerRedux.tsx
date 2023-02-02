@@ -112,6 +112,7 @@ export const actions = {
             type: actionTypes.GetBranchStoreDetail,
             payload: { branchDetail: dataDecrypt },
           });
+          dispatch(change('FormAddCustomerOC', 'customer_name', dataDecrypt[0]?.nama_customer));
           dispatch(change('FormAddCustomerOC', 'branch_store_name', name));
           dispatch(change('FormAddCustomerOC', 'address', dataDecrypt[0]?.alamat_cabang));
           dispatch(change('FormAddCustomerOC', 'city', dataDecrypt[0]?.kota));

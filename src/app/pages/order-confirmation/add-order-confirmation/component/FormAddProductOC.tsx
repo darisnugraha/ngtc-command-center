@@ -12,11 +12,7 @@ import AddProductValidation from '../validasi/AddProductValidation';
 interface Props {}
 
 // eslint-disable-next-line
-const mapState = (state: RootState) => {
-  return {
-    initialValues: {},
-  };
-};
+const mapState = (state: RootState) => {};
 
 const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const dispatch = useDispatch();
@@ -41,6 +37,11 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
 
   const typeOC = useSelector<RootState>(({ addorderconfirmation }) => addorderconfirmation.typeOC);
 
+  const defaultType = [];
+  if (typeOC !== undefined) {
+    defaultType.push({ value: typeOC, label: typeOC });
+  }
+
   const dataProduct: any = useSelector<RootState>(
     ({ addorderconfirmation }) => addorderconfirmation.dataProduct
   );
@@ -49,9 +50,9 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
     ({ addorderconfirmation }) => addorderconfirmation.typeProduct
   );
 
-  const typeProductList = useSelector<RootState>(
-    ({ addorderconfirmation }) => addorderconfirmation.isPackage
-  );
+  // const typeProductList = useSelector<RootState>(
+  //   ({ addorderconfirmation }) => addorderconfirmation.isPackage
+  // );
 
   return (
     <form onSubmit={handleSubmit}>
@@ -68,6 +69,7 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
             label='OC Type'
             placeHolder='Select OC Type'
             onChange={(e: any) => dispatch(redux.actions.setTypeOC(e.value))}
+            defaultValue={typeOC !== undefined ? defaultType : ''}
           />
         </div>
         <div className='col-lg-4'>
@@ -149,6 +151,7 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
             label='Price'
             placeHolder='Insert Price'
             {...currencyMask}
+            onChange={(e: any) => dispatch(redux.actions.setSubTotalRp(e.target.value))}
           />
         </div>
         <div className='col-lg-2'>
@@ -166,7 +169,8 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
       </div>
       <div className='row justify-content-end mt-5'>
         <div className='col-lg-3 d-grid'>
-          <SubmitButton title='Add Data' imagePath='' disable={typeProductList === 'true'} />
+          {/* <SubmitButton title='Add Data' imagePath='' disable={typeProductList === 'true'} /> */}
+          <SubmitButton title='Add Data' imagePath='' />
         </div>
       </div>
     </form>

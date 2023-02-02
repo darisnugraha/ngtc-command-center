@@ -30,7 +30,6 @@ const AddOrderConfirmationCustomer: FC<Props> = () => {
         <div className='card-body py-3'>
           <FormAddCustomer
             onSubmit={(data: any) => {
-              // eslint-disable-next-line
               dispatch(redux.actions.addCustomer(data));
             }}
           />

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import BootstrapTable, { ColumnDescription } from 'react-bootstrap-table-next';
 import { KTSVG } from '../../../../../_metronic/helpers';
 import { RootState } from '../../../../../setup';
+import * as redux from '../redux/AddOrderConfirmationRedux';
 
 const TableListDiscount: FC = () => {
   const dispatch = useDispatch();
@@ -52,12 +53,12 @@ const TableListDiscount: FC = () => {
       text: 'Action',
       align: 'center',
       headerClasses: 'ps-4 min-w-100px rounded-end',
-      formatter: () => {
+      formatter: (cell, row) => {
         return (
           <button
             type='button'
             onClick={() => {
-              // eslint-disable-next-line
+              dispatch(redux.actions.deleteDiscount(row.key));
             }}
             className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
           >

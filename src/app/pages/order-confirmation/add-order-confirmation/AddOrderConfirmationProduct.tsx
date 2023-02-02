@@ -102,7 +102,6 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
             <div className='accordion-body'>
               <FormAddDiscount
                 onSubmit={(data: any) => {
-                  // eslint-disable-next-line
                   dispatch(redux.actions.addDataDiscount(data));
                 }}
               />

@@ -577,9 +577,36 @@ export const actions = {
               // eslint-disable-next-line
               return object.key !== id;
             });
-            saveLocal('listProduct', newArr).then(() => {
+            saveLocal('listProduct', newArr, ['sub_total', 'qty', 'harga']).then(() => {
               toast.success('Success Delete Data !');
               dispatch(actions.getDataProductLocal());
+            });
+          });
+        }
+      });
+    };
+  },
+  deleteDiscount: (id: String) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You wont be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          getLocal('listDiscount', ['persentase', 'diskon_rp']).then((res) => {
+            const newArr = res.filter((object: any) => {
+              return object.key !== id;
+            });
+            console.log(newArr);
+
+            saveLocal('listDiscount', newArr, ['persentase', 'diskon_rp']).then(() => {
+              toast.success('Success Delete Data !');
+              dispatch(actions.getDataDiscountLocal());
             });
           });
         }

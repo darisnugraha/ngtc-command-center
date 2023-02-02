@@ -38,7 +38,7 @@ export function postImageResi(file: any, name: string) {
 export function postPDF(file: any, name: string) {
   return new Promise((resolve, reject) => {
     const storage = firebase.storage();
-    let storageRef = storage.ref('NSIPIC/InvoicePDF/' + name + '.pdf');
+    let storageRef = storage.ref('NSIPIC/OkPDF/' + name + '.pdf');
     storageRef
       .put(file)
       .then((res: any) => {

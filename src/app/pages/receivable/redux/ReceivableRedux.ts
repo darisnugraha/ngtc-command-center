@@ -9,9 +9,11 @@ import { AxiosGet, AxiosPost } from '../../../../setup';
 import { AxiosDelete } from '../../../../setup/axios/AxiosDelete';
 import { getImage, postImage } from '../../../../setup/axios/Firebase';
 import { doDecryptData } from '../../../../setup/encrypt.js';
+import { dataURLtoFile } from '../../../../setup/function.js';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
 import * as modalSecond from '../../../modules/modal/ModalSecondRedux';
 import KwitansiPDF from '../component/KwitansiPDF.jsx';
+import * as utility from '../../../../setup/redux/UtilityRedux';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -912,8 +914,8 @@ export const actions = {
     };
   },
   addPayment: (data: any) => {
-    // eslint-disable-next-line
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch(utility.actions.showLoadingButton());
       const onSendData = {
         tanggal: moment(data.date).format('yyyy-MM-DD'),
         no_order_konfirmasi: data.no_order_confirmation,
@@ -924,28 +926,28 @@ export const actions = {
         bayar_rp: parseInt(data.nominal),
         deskripsi: data.description,
       };
-      postImage(
+      const foto = dataURLtoFile(
         data.foto,
         `${onSendData.no_order_konfirmasi.replace(/\//g, '_')}-${onSendData.tanggal}`
-      )
+      );
+      postImage(foto, `${onSendData.no_order_konfirmasi.replace(/\//g, '_')}-${onSendData.tanggal}`)
         .then(() => {
           AxiosPost('receivable', onSendData)
-            .then((res) => {
-              // eslint-disable-next-line
-              console.log(res);
+            .then(() => {
               toast.success('Success Add Data !');
-              window.location.reload();
+              dispatch(actions.getReceivable());
+              dispatch(utility.actions.hideLoading());
             })
-            .catch((error) => {
-              // eslint-disable-next-line
-              console.log(error);
+            .catch(() => {
               toast.error('Failed To Add Data !');
+              dispatch(utility.actions.hideLoading());
             });
         })
         .catch((err) => {
           // eslint-disable-next-line
           console.log(err);
           toast.error('Failed To Add Photo !');
+          dispatch(utility.actions.hideLoading());
         });
     };
   },

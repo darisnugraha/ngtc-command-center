@@ -11,7 +11,9 @@ import * as modal from '../../../../modules/modal/GlobalModalRedux';
 import * as modalSecond from '../../../../modules/modal/ModalSecondRedux';
 import * as utility from '../../../../../setup/redux/UtilityRedux';
 import * as customerRedux from './AddOrderConfirmationCustomerRedux';
-import { NumberOnly } from '../../../../../setup/function.js';
+import { dataURLtoPDFFile, NumberOnly } from '../../../../../setup/function.js';
+import OC from '../component/OC.jsx';
+import { postPDF } from '../../../../../setup/axios/Firebase';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -871,17 +873,71 @@ export const actions = {
                         deskripsi_footer: '-',
                       };
                       AxiosPost('order-confirmation', onSendData)
-                        .then(() => {
-                          localStorage.removeItem('dataCustomer');
-                          localStorage.removeItem('listProduct');
-                          localStorage.removeItem('listDiscount');
-                          localStorage.removeItem('type_oc');
-                          localStorage.removeItem('listSupport');
-                          localStorage.removeItem('listProduction');
-                          dispatch(modal.actions.hide());
-                          dispatch(utility.actions.hideLoading());
-                          toast.success('Success Add Data !');
-                          dispatch(customerRedux.actions.PrevCustomer());
+                        .then((res: any) => {
+                          // eslint-disable-next-line
+                          AxiosGet(`order-confirmation/by-no?no_order_konfirmasi=${res._id}`).then(
+                            (resDetail) => {
+                              const dataDecrypt = doDecryptData(resDetail.data, [
+                                'status',
+                                '_id',
+                                'input_date',
+                                'no_order_konfirmasi',
+                                'kode_toko',
+                                'kode_cabang',
+                                'tanggal_order_konfirmasi',
+                                'total_harga',
+                                'kode_produk',
+                                'satuan',
+                                'harga',
+                                'sub_total',
+                                'qty',
+                                'kode_diskon',
+                                'nama_diskon',
+                                'persentase',
+                                'jenis_ok',
+                                'jenis_produk',
+                              ]);
+                              const desc = {
+                                header_desc:
+                                  'Sebelumnya kami ucapkan terima kasih atas kerjasama yang telah terjalin selama ini. Bersama ini kami sampaikan Order Konfirmasi Harga Software Nagatech Gold Store Solution web based (Online) dengan kondisi sbb :',
+                                footer_desc:
+                                  'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan',
+                              };
+                              const pdf64 = OC(dataDecrypt, desc);
+                              const file = dataURLtoPDFFile(
+                                pdf64,
+                                `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+                              );
+                              postPDF(
+                                file,
+                                `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+                              )
+                                .then(() => {
+                                  localStorage.removeItem('dataCustomer');
+                                  localStorage.removeItem('listProduct');
+                                  localStorage.removeItem('listDiscount');
+                                  localStorage.removeItem('type_oc');
+                                  localStorage.removeItem('listSupport');
+                                  localStorage.removeItem('listProduction');
+                                  dispatch(modal.actions.hide());
+                                  dispatch(utility.actions.hideLoading());
+                                  toast.success('Success Add Data !');
+                                  dispatch(customerRedux.actions.PrevCustomer());
+                                })
+                                .catch(() => {
+                                  localStorage.removeItem('dataCustomer');
+                                  localStorage.removeItem('listProduct');
+                                  localStorage.removeItem('listDiscount');
+                                  localStorage.removeItem('type_oc');
+                                  localStorage.removeItem('listSupport');
+                                  localStorage.removeItem('listProduction');
+                                  dispatch(modal.actions.hide());
+                                  dispatch(utility.actions.hideLoading());
+                                  toast.success('Success Add Data !');
+                                  dispatch(customerRedux.actions.PrevCustomer());
+                                });
+                            }
+                          );
                         })
                         .catch((error) => {
                           dispatch(utility.actions.hideLoading());

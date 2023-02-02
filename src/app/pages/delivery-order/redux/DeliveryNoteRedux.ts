@@ -11,6 +11,7 @@ import * as utility from '../../../../setup/redux/UtilityRedux';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
 import PDFDeliveryOrder from '../component/PDFDeliveryOrder.jsx';
 import { postImageResi } from '../../../../setup/axios/Firebase';
+import { dataURLtoFile } from '../../../../setup/function.js';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -469,7 +470,8 @@ export const actions = {
         ongkos_kirim: parseInt(data.ongkos_kirim),
         ditagihkan: data.ditagihkan,
       };
-      postImageResi(data.foto, data.no_surat_jalan)
+      const foto = dataURLtoFile(data.foto, data.no_surat_jalan);
+      postImageResi(foto, data.no_surat_jalan)
         .then(() => {
           AxiosPost('delivery-order/send-product', onSendData)
             .then(() => {

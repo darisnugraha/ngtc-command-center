@@ -13,6 +13,9 @@ import { AxiosDelete } from '../../../../../setup/axios/AxiosDelete';
 import * as utility from '../../../../../setup/redux/UtilityRedux';
 import OCPDF from '../component/OCPDF.jsx';
 import { AxiosPut } from '../../../../../setup/axios/AxiosPut';
+import OC from '../../add-order-confirmation/component/OC.jsx';
+import { dataURLtoPDFFile } from '../../../../../setup/function.js';
+import { postPDF } from '../../../../../setup/axios/Firebase';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -309,8 +312,8 @@ export const actions = {
     };
   },
   printPDF: (data: any) => {
-    // eslint-disable-next-line
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch(utility.actions.showLoadingButton());
       AxiosGet(`order-confirmation/by-no?no_order_konfirmasi=${data.id}`).then((res) => {
         const dataDecrypt = doDecryptData(res.data, [
           'status',
@@ -332,7 +335,20 @@ export const actions = {
           'jenis_ok',
           'jenis_produk',
         ]);
-        OCPDF(dataDecrypt, data);
+        const pdf64 = OC(dataDecrypt, data);
+        const file = dataURLtoPDFFile(
+          pdf64,
+          `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+        );
+        postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
+          .then(() => {
+            OCPDF(dataDecrypt, data);
+            dispatch(utility.actions.hideLoading());
+          })
+          .catch(() => {
+            OCPDF(dataDecrypt, data);
+            dispatch(utility.actions.hideLoading());
+          });
       });
     };
   },

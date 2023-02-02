@@ -133,10 +133,12 @@ const DetailReceivable: FC = () => {
     dispatch(modal.actions.hide());
   };
 
+  const img: any = useSelector<RootState>(({ receivable }) => receivable.proofOfPaymentIMG);
+
   return (
     <>
       <ModalSecond title='Proof Of Payment' onClose={() => handleCloseModal()}>
-        Photo
+        <img src={img} alt='payment' />
       </ModalSecond>
       <BootstrapTable
         keyField='_id'

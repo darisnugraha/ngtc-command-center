@@ -90,6 +90,14 @@ const CustomerPage: FC<PropsFromRedux> = () => {
       },
     },
     {
+      dataField: 'tipe_toko',
+      text: 'Store Type',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;
+      },
+    },
+    {
       dataField: '',
       text: 'Action',
       align: 'center',
@@ -205,6 +213,14 @@ const CustomerPage: FC<PropsFromRedux> = () => {
         {
           dataField: 'email',
           text: 'Email',
+          align: 'center',
+          formatter: (cell) => {
+            return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+          },
+        },
+        {
+          dataField: 'tipe_cabang',
+          text: 'Branch Type',
           align: 'center',
           formatter: (cell) => {
             return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;

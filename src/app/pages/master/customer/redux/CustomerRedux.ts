@@ -195,6 +195,7 @@ export const actions = {
           'input_date',
           'kode_cabang',
           'tipe_toko',
+          'tipe_cabang',
         ]);
         const dataSave: any = [];
         let no = 1;

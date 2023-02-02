@@ -36,6 +36,17 @@ const FormUserComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) =
   return (
     <form onSubmit={handleSubmit}>
       <div className='row'>
+        <div className='col-lg-12 d-none'>
+          <Field
+            name='id'
+            type='text'
+            component={RenderField}
+            label='Id'
+            placeHolder='Insert Id'
+            isEdit={isEdit}
+            readOnly={isEdit}
+          />
+        </div>
         <div className='col-lg-12'>
           <Field
             name='user_id'

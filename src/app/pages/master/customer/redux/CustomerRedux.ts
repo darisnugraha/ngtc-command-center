@@ -131,6 +131,7 @@ export const actions = {
           {
             kode_cabang: data.branch_store_code || '-',
             nama_cabang: data.branch_store_name || '-',
+            nama_customer: data.customer_name || '-',
             kode_toko: data.central_store_code || '-',
             email: data.email || '-',
             telepon: data.telephone || '-',
@@ -161,6 +162,7 @@ export const actions = {
       const onSendData = {
         kode_cabang: data.branch_store_code,
         nama_cabang: data.branch_store_name,
+        nama_customer: data.customer_name,
         kode_toko: data.central_store_code,
         email: data.email,
         telepon: data.telephone,

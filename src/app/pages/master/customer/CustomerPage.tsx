@@ -57,7 +57,14 @@ const CustomerPage: FC<PropsFromRedux> = () => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
-
+    {
+      dataField: 'nama_customer',
+      text: 'Customer Name',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+      },
+    },
     {
       dataField: 'kota',
       text: 'City',
@@ -147,6 +154,15 @@ const CustomerPage: FC<PropsFromRedux> = () => {
         {
           dataField: 'nama_cabang',
           text: 'Branch Name',
+          align: 'center',
+          headerClasses: 'ps-4 min-w-100px rounded-start',
+          formatter: (cell) => {
+            return <p className='ps-4 text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+          },
+        },
+        {
+          dataField: 'nama_customer',
+          text: 'Customer Name',
           align: 'center',
           headerClasses: 'ps-4 min-w-100px rounded-start',
           formatter: (cell) => {
@@ -323,20 +339,20 @@ const CustomerPage: FC<PropsFromRedux> = () => {
               <div style={{ float: 'right' }}>
                 <button
                   type='button'
-                  className='btn btn-sm btn-light-primary'
-                  style={{ marginRight: '5px' }}
-                  onClick={() => handleClickBranch()}
-                >
-                  <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
-                  Add Branch
-                </button>
-                <button
-                  type='button'
                   className='btn btn-sm btn-light-warning'
+                  style={{ marginRight: '5px' }}
                   onClick={() => handleClickStore()}
                 >
                   <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
                   Add Store
+                </button>
+                <button
+                  type='button'
+                  className='btn btn-sm btn-light-primary'
+                  onClick={() => handleClickBranch()}
+                >
+                  <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
+                  Add Branch
                 </button>
               </div>
             </div>

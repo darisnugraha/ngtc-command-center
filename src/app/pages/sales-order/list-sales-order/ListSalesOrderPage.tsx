@@ -25,6 +25,7 @@ const ListSalesOrder: FC<PropsFromRedux> = () => {
     dispatch(reduxStaff.actions.getStaff());
     dispatch(reduxCustomer.actions.getStore());
     dispatch(redux.actions.getListSO());
+    dispatch(redux.actions.getDataListSO());
   }, [dispatch]);
 
   const dataTab: any = useSelector<RootState>(({ listso }) => listso.feedback);
@@ -206,8 +207,7 @@ const ListSalesOrder: FC<PropsFromRedux> = () => {
         <div className='card-header border-0 pt-5'>
           <FormSearchOC
             onSubmit={(data: any) => {
-              // eslint-disable-next-line
-              console.log(data);
+              dispatch(redux.actions.searchSO(data));
             }}
           />
         </div>

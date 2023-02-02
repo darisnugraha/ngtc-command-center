@@ -11,6 +11,7 @@ import FormDetailDeliveryNote from './component/FormDetailDeliveryNote';
 import * as redux from './redux/DeliveryNoteRedux';
 import FormSendProduct from './component/FormSendProduct';
 import FormValidation from './component/FormValidation';
+import TableDetailDelivery from './component/DetailDelivery';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
 const connector = connect(mapState);
@@ -25,6 +26,12 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
   }, [dispatch]);
 
   const dataTab: any = useSelector<RootState>(({ deliverynote }) => deliverynote.feedback);
+  const [dataSource, setDataSource] = useState(dataTab);
+  const [value, setValue] = useState('');
+  const [search, setSearch] = useState(false);
+
+  // eslint-disable-next-line
+  const dataTable = dataSource.length === 0 ? (search ? dataSource : dataTab) : dataSource;
 
   const [modalType, setModalType] = useState('');
 
@@ -159,6 +166,18 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
               <button
                 type='button'
                 onClick={() => {
+                  dispatch(redux.actions.getDataDeliveryByNo(row.no_surat_jalan));
+                  setModalType('DETAILDELIVERY');
+                }}
+                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              >
+                <i className='bi bi-eye-fill' />
+              </button>
+            </div>
+            <div className='col-lg-3'>
+              <button
+                type='button'
+                onClick={() => {
                   dispatch(redux.actions.printDeliveryOrder(row.no_surat_jalan));
                 }}
                 className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
@@ -174,7 +193,7 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
                   setModalType('SENDPRODUCT');
                 }}
                 className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-                disabled={row.status === 'DONE' || row.status === 'CANCEl' || row.status === 'LOST'}
+                disabled={row.status === 'DONE' || row.status === 'CANCEL' || row.status === 'LOST'}
               >
                 <KTSVG path='/media/icons/duotune/general/gen016.svg' className='svg-icon-3' />
               </button>
@@ -208,6 +227,9 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
       >
         {
           // eslint-disable-next-line
+          modalType === 'DETAILDELIVERY' ? (
+            <TableDetailDelivery />
+          ) : // eslint-disable-next-line
           modalType === 'VALIDATION' ? (
             <FormValidation
               onSubmit={(data: any) => {
@@ -261,6 +283,33 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
                   name='search'
                   placeholder='Search...'
                   data-kt-search-element='input'
+                  value={value}
+                  onChange={(e) => {
+                    const currValue = e.target.value;
+                    setValue(currValue);
+                    const filteredData = dataTab.filter(
+                      (entry: any) =>
+                        entry.no_surat_jalan?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.kode_surat_jalan?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.tanggal_surat_jalan
+                          ?.toUpperCase()
+                          .includes(currValue?.toUpperCase()) ||
+                        entry.ongkos_kirim
+                          ?.toString()
+                          ?.toUpperCase()
+                          .includes(currValue?.toUpperCase()) ||
+                        entry.no_order_konfirmasi
+                          ?.toUpperCase()
+                          .includes(currValue?.toUpperCase()) ||
+                        entry.nama_toko?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.nama_customer?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.no_resi?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.nama_ekspedisi?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.kode_cabang?.toUpperCase().includes(currValue?.toUpperCase())
+                    );
+                    setDataSource(filteredData);
+                    setSearch(true);
+                  }}
                 />
               </div>
             </div>
@@ -280,7 +329,7 @@ const DeliveryNote: FC<PropsFromRedux> = () => {
         </div>
         {/* begin::Body */}
       </div>
-      <DefaultTable className='mb-5 mb-xl-8' data={dataTab} columns={columns} />
+      <DefaultTable className='mb-5 mb-xl-8' data={dataTable} columns={columns} />
     </>
   );
 };

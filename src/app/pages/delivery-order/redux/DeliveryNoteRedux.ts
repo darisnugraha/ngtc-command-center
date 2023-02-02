@@ -9,8 +9,9 @@ import { doDecryptData, getLocal, saveLocal } from '../../../../setup/encrypt.js
 import { DeliveryNoteLocalModel } from '../model/DeliveryNoteModel';
 import * as utility from '../../../../setup/redux/UtilityRedux';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
+import * as modalSecond from '../../../modules/modal/ModalSecondRedux';
 import PDFDeliveryOrder from '../component/PDFDeliveryOrder.jsx';
-import { postImageResi } from '../../../../setup/axios/Firebase';
+import { getImageResi, postImageResi } from '../../../../setup/axios/Firebase';
 import { dataURLtoFile } from '../../../../setup/function.js';
 
 export interface ActionWithPayload<T> extends Action {
@@ -27,6 +28,7 @@ export const actionTypes = {
   setProduct: '[DELIVERYNOTE] Set Product',
   getDataDeliveryByNO: '[DELIVERYNOTE] Get Data Delivery By No',
   SetCamera: '[DELIVERYNOTE] Set Camera',
+  GetResi: '[DELIVERYNOTE] Get Resi img',
 };
 export interface IDeliveryNoteState {
   feedback?: Array<any>;
@@ -38,6 +40,7 @@ export interface IDeliveryNoteState {
   dataProduct?: Array<any>;
   feedbackNo?: any;
   setCameraVal?: String;
+  ResiIMG?: any;
 }
 
 const initialDeliveryNoteState: IDeliveryNoteState = {
@@ -50,6 +53,7 @@ const initialDeliveryNoteState: IDeliveryNoteState = {
   dataProduct: [],
   feedbackNo: undefined,
   setCameraVal: '-',
+  ResiIMG: undefined,
 };
 
 export const reducer = persistReducer(
@@ -89,6 +93,10 @@ export const reducer = persistReducer(
       case actionTypes.SetCamera: {
         const data = action.payload?.setCameraVal;
         return { ...state, setCameraVal: data };
+      }
+      case actionTypes.GetResi: {
+        const data = action.payload?.ResiIMG;
+        return { ...state, ResiIMG: data };
       }
 
       default:
@@ -470,8 +478,8 @@ export const actions = {
         ongkos_kirim: parseInt(data.ongkos_kirim),
         ditagihkan: data.ditagihkan,
       };
-      const foto = dataURLtoFile(data.foto, data.no_surat_jalan);
-      postImageResi(foto, data.no_surat_jalan)
+      const foto = dataURLtoFile(data.foto, data.no_resi);
+      postImageResi(foto, data.no_resi)
         .then(() => {
           AxiosPost('delivery-order/send-product', onSendData)
             .then(() => {
@@ -516,6 +524,20 @@ export const actions = {
         .catch((err) => {
           const dataErr = err.response.data;
           toast.error(dataErr.message);
+        });
+    };
+  },
+  getResi: (noResi: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      getImageResi(noResi)
+        .then((res) => {
+          dispatch({ type: actionTypes.GetResi, payload: { ResiIMG: res } });
+          dispatch(modalSecond.actions.show());
+        })
+        .catch((err) => {
+          // eslint-disable-next-line
+          console.log(err);
+          toast.error(err.message || 'Not Found !');
         });
     };
   },

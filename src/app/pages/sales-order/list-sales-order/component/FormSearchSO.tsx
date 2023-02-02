@@ -30,9 +30,54 @@ const FormSearchSO: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   };
 
   const dataStaff: any = useSelector<RootState>(({ staff }) => staff.feedback);
+  const listStaff = [
+    {
+      value: 'all',
+      label: 'All',
+    },
+  ];
+  dataStaff.forEach((element: any) => {
+    listStaff.push({ value: element.kode_staff, label: element.nama_staff });
+  });
   const dataStore: any = useSelector<RootState>(({ customer }) => customer.feedback);
-  const dataOC: any = useSelector<RootState>(({ listso }) => listso.feedback);
+  const listStore = [
+    {
+      value: 'all',
+      label: 'All',
+    },
+  ];
+  dataStore.forEach((element: any) => {
+    listStore.push({ value: element.kode_toko, label: element.nama_toko });
+  });
+
+  const dataOC: any = useSelector<RootState>(({ listso }) => listso.feedbackData);
+  const listOC = [
+    {
+      value: 'all',
+      label: 'All',
+    },
+  ];
+  const listSO = [
+    {
+      value: 'all',
+      label: 'All',
+    },
+  ];
+  dataOC.forEach((element: any) => {
+    listOC.push({
+      value: element.no_order_konfirmasi,
+      label: element.no_order_konfirmasi,
+    });
+    listSO.push({
+      value: element.no_sales_order,
+      label: element.no_sales_order,
+    });
+  });
   const StatusPayment = [
+    {
+      value: 'all',
+      label: 'All',
+    },
     {
       value: 'OPEN',
       label: 'OPEN',
@@ -72,13 +117,7 @@ const FormSearchSO: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             name='staff_name'
             type='text'
             component={RenderFieldSelect}
-            options={dataStaff.map((element: any) => {
-              const option = {
-                label: element.nama_staff,
-                value: element.kode_staff,
-              };
-              return option;
-            })}
+            options={listStaff}
             label='Staff Name'
             placeHolder='Select Staff Name'
           />
@@ -88,15 +127,19 @@ const FormSearchSO: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             name='no_oc'
             type='text'
             component={RenderFieldSelect}
-            options={dataOC.map((element: any) => {
-              const option = {
-                label: element.no_order_konfirmasi,
-                value: element.no_order_konfirmasi,
-              };
-              return option;
-            })}
+            options={listOC}
             label='No OC'
             placeHolder='Select No OC'
+          />
+        </div>
+        <div className='col-lg-6'>
+          <Field
+            name='no_so'
+            type='text'
+            component={RenderFieldSelect}
+            options={listSO}
+            label='No SO'
+            placeHolder='Select No SO'
           />
         </div>
         <div className='col-lg-6'>
@@ -104,13 +147,7 @@ const FormSearchSO: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             name='central_store_name'
             type='text'
             component={RenderFieldSelect}
-            options={dataStore.map((element: any) => {
-              const option = {
-                label: element.nama_toko,
-                value: element.kode_toko,
-              };
-              return option;
-            })}
+            options={listStore}
             label='Central Store'
             placeHolder='Select Central Store'
           />

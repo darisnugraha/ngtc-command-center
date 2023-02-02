@@ -87,7 +87,12 @@ export const actions = {
   getSupplier: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       AxiosGet('supplier/open').then((res) => {
-        const dataDecrypt = doDecryptData(res.data, ['status', '_id', 'input_date']);
+        const dataDecrypt = doDecryptData(res.data, [
+          'status',
+          '_id',
+          'input_date',
+          'kode_supplier',
+        ]);
         const dataSave: any = [];
         let no = 1;
         dataDecrypt.forEach((element: any) => {
@@ -103,7 +108,12 @@ export const actions = {
   getSupplierByID: (id: string) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       AxiosGet(`supplier/by-id/${id}`).then((res: any) => {
-        const dataDecrypt = doDecryptData(res.data, ['_id']);
+        const dataDecrypt = doDecryptData(res.data, [
+          '_id',
+          'status',
+          'input_date',
+          'kode_supplier',
+        ]);
         dispatch({
           type: actionTypes.GetSupplierByID,
           payload: { feedbackID: dataDecrypt, isEdit: true },

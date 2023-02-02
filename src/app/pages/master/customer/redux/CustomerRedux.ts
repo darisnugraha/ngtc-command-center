@@ -235,7 +235,7 @@ export const actions = {
           '_id',
           'input_date',
           'kode_cabang',
-          'tipe_toko',
+          'tipe_cabang',
         ]);
 
         dispatch({

@@ -23,7 +23,7 @@ const mapState = (state: RootState) => {
         customer_name: state.customer.feedbackIDStore.nama_customer || '-',
         city: state.customer.feedbackIDStore.kota || '-',
         email: state.customer.feedbackIDStore.email || '-',
-        telephone: state.customer.feedbackIDStore.telephone || '-',
+        telephone: state.customer.feedbackIDStore.telepon || '-',
         type_store: state.customer.feedbackIDStore.tipe_toko,
       },
     };

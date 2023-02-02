@@ -220,6 +220,7 @@ const CustomerPage: FC<PropsFromRedux> = () => {
                     dispatch(redux.actions.deleteBranch(rowdata._id));
                   }}
                   className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+                  disabled={rowdata.kode_cabang === 'PUSAT'}
                 >
                   <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
                 </button>

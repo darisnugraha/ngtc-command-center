@@ -602,8 +602,6 @@ export const actions = {
             const newArr = res.filter((object: any) => {
               return object.key !== id;
             });
-            console.log(newArr);
-
             saveLocal('listDiscount', newArr, ['persentase', 'diskon_rp']).then(() => {
               toast.success('Success Delete Data !');
               dispatch(actions.getDataDiscountLocal());

@@ -141,7 +141,7 @@ const FormBranchComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any)
         <div className='col-lg-6'>
           <Field
             name='telephone'
-            type='text'
+            type='number'
             component={RenderField}
             label='Telephone'
             placeHolder='Insert Telephone'

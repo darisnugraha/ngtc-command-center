@@ -1,6 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BootstrapTable, { ColumnDescription } from 'react-bootstrap-table-next';
+import { Image } from 'react-bootstrap-v5';
 import { RootState } from '../../../../setup';
 import { KTSVG } from '../../../../_metronic/helpers';
 import ModalSecond from '../../../modules/modal/ModalSecond';
@@ -138,7 +139,7 @@ const DetailReceivable: FC = () => {
   return (
     <>
       <ModalSecond title='Proof Of Payment' onClose={() => handleCloseModal()}>
-        <img src={img} alt='payment' />
+        <Image src={img} fluid />
       </ModalSecond>
       <BootstrapTable
         keyField='_id'

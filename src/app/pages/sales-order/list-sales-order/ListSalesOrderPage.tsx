@@ -101,14 +101,14 @@ const ListSalesOrder: FC<PropsFromRedux> = () => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;
       },
     },
-    // {
-    //   dataField: 'status',
-    //   text: 'Status Payment',
-    //   align: 'center',
-    //   formatter: (cell) => {
-    //     return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
-    //   },
-    // },
+    {
+      dataField: 'status_implementasi',
+      text: 'Implementation Status',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+      },
+    },
     {
       dataField: '',
       text: 'Action',

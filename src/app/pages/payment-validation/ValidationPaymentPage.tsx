@@ -139,7 +139,7 @@ const ValidationPayment: FC<PropsFromRedux> = () => {
   return (
     <>
       <ModalSecond title='Proof Of Payment' onClose={() => handleCloseModal()}>
-        <Image src={dataGambar} />
+        <Image src={dataGambar} fluid />
       </ModalSecond>
       <div className='card mb-5 mb-xl-8'>
         <div className='card-header border-0 pt-5'>

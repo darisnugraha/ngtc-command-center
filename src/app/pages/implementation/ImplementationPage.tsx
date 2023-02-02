@@ -92,7 +92,7 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
       },
     },
     {
-      dataField: 'status',
+      dataField: 'status_implementasi',
       text: 'Status',
       align: 'center',
       formatter: (cell) => {

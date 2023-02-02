@@ -113,17 +113,22 @@ export const actions = {
             nama_customer: '',
             nama_cabang: '',
             alamat_cabang: '',
+            status_implementasi: '',
           };
           AxiosGet(
             `sales-order/by-no-implementasi/?no_implementasi=${element.no_implementasi}`
           ).then((resSO) => {
-            const dataDecryptSO = doDecryptData(resSO.data, ['no_order_konfirmasi']);
+            const dataDecryptSO = doDecryptData(resSO.data, [
+              'no_order_konfirmasi',
+              'status_implementasi',
+            ]);
             obj.no_order_konfirmasi = dataDecryptSO[0]?.no_order_konfirmasi;
             obj.kota = dataDecryptSO[0]?.kota;
             obj.nama_toko = dataDecryptSO[0]?.nama_toko;
             obj.nama_customer = dataDecryptSO[0]?.nama_customer;
             obj.nama_cabang = dataDecryptSO[0]?.nama_cabang;
             obj.alamat_cabang = dataDecryptSO[0]?.alamat_cabang;
+            obj.status_implementasi = dataDecryptSO[0]?.status_implementasi;
             dataSave.push(obj);
             no += 1;
             dispatch({ type: actionTypes.GetImplementation, payload: { feedback: dataSave } });

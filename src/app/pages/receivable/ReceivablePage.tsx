@@ -11,6 +11,7 @@ import * as modal from '../../modules/modal/GlobalModalRedux';
 import FormSearchReceivable from './component/FormSearchReceivable';
 import DetailReceivable from './component/DetailReceivable';
 import * as redux from './redux/ReceivableRedux';
+import * as reduxOC from '../order-confirmation/list-order-confirmation/redux/ListOCRedux';
 import FormPaymentReceivable from './component/FormPaymentReceivable';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
@@ -25,6 +26,7 @@ const ReceivablePage: FC<PropsFromRedux> = () => {
     dispatch(reduxCustomer.actions.getStore());
     dispatch(redux.actions.getReceivable());
     dispatch(redux.actions.getListBank());
+    dispatch(reduxOC.actions.getListOC());
   }, [dispatch]);
 
   const dataTab: any = useSelector<RootState>(({ receivable }) => receivable.feedback);
@@ -204,8 +206,7 @@ const ReceivablePage: FC<PropsFromRedux> = () => {
         <div className='card-header border-0 pt-5'>
           <FormSearchReceivable
             onSubmit={(data: any) => {
-              // eslint-disable-next-line
-              console.log(data);
+              dispatch(redux.actions.searchReceivable(data));
             }}
           />
         </div>

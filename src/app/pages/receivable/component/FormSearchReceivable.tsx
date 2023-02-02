@@ -32,6 +32,19 @@ const FormSearchReceivable: React.FC<InjectedFormProps<{}, Props>> = (props: any
   const dataOC: any = useSelector<RootState>(
     ({ listorderconfirmation }) => listorderconfirmation.feedback
   );
+  const listOC = [
+    {
+      value: 'all',
+      label: 'All',
+    },
+  ];
+  dataOC.forEach((element: any) => {
+    const option = {
+      label: element.no_order_konfirmasi,
+      value: element.no_order_konfirmasi,
+    };
+    listOC.push(option);
+  });
 
   return (
     <form onSubmit={handleSubmit}>
@@ -54,13 +67,7 @@ const FormSearchReceivable: React.FC<InjectedFormProps<{}, Props>> = (props: any
             name='no_oc'
             type='text'
             component={RenderFieldSelect}
-            options={dataOC.map((element: any) => {
-              const option = {
-                label: element.no_order_konfirmasi,
-                value: element.no_order_konfirmasi,
-              };
-              return option;
-            })}
+            options={listOC}
             label='No OC'
             placeHolder='Select No OC'
           />

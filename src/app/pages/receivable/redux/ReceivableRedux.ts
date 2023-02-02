@@ -1028,4 +1028,45 @@ export const actions = {
       });
     };
   },
+  searchReceivable: (data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      const onSendData = {
+        startDate: moment(data.date[0]).format('YYYY-MM-DD'),
+        endDate: moment(data.date[1]).format('YYYY-MM-DD'),
+        no_order_konfirmasi: data.no_oc,
+      };
+      AxiosGet(`order-confirmation/filter?startDate=${onSendData.startDate}&endDate=${onSendData.endDate}&no_order_konfirmasi=${onSendData.no_order_konfirmasi}&status=all&kode_toko=all&kode_staff=all
+      `).then((res) => {
+        const dataDecrypt = doDecryptData(res.data, [
+          'status',
+          '_id',
+          'input_date',
+          'no_order_konfirmasi',
+          'kode_cabang',
+          'tanggal_order_konfirmasi',
+          'total_harga',
+          'kode_produk',
+          'satuan',
+          'harga',
+          'sub_total',
+          'qty',
+          'kode_diskon',
+          'nama_diskon',
+          'persentase',
+          'jenis_ok',
+          'sisa_bayar',
+          'kode_toko',
+        ]);
+        const dataSave: any = [];
+        let no = 1;
+        dataDecrypt.forEach((element: any) => {
+          // eslint-disable-next-line
+          element.key = no;
+          dataSave.push(element);
+          no += 1;
+        });
+        dispatch({ type: actionTypes.GetDataReceivable, payload: { feedback: dataSave } });
+      });
+    };
+  },
 };

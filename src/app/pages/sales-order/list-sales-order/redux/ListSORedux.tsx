@@ -78,6 +78,7 @@ export const actions = {
           'nama_diskon',
           'persentase',
           'jenis_ok',
+          'status_implementasi',
         ]);
         const dataSave: any = [];
         let no = 1;
@@ -113,6 +114,7 @@ export const actions = {
           'persentase',
           'jenis_ok',
           'no_implementasi',
+          'status_implementasi',
         ]);
         AxiosGet(`implementation/by-no/${dataDecrypt[0].no_implementasi}`).then((resIm) => {
           const dataDecryptImplement = doDecryptData(resIm.data, [

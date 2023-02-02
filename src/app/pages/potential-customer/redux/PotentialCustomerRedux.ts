@@ -7,6 +7,7 @@ import { AxiosGet, AxiosPost } from '../../../../setup';
 import { doDecryptData } from '../../../../setup/encrypt.js';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
 import * as utility from '../../../../setup/redux/UtilityRedux';
+import * as redux from '../../master/customer/redux/CustomerRedux';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -213,9 +214,11 @@ export const actions = {
         .then(() => {
           toast.success('Validation Data Success!');
           dispatch(actions.getPotentialCustomer());
+          dispatch(redux.actions.getStore());
         })
-        .catch(() => {
-          toast.error('Error Validation Data !');
+        .catch((err) => {
+          const dataErr = err.response?.data;
+          toast.error(dataErr.message || 'Error');
         });
     };
   },

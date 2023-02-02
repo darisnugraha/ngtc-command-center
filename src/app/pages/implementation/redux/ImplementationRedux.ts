@@ -7,6 +7,7 @@ import storage from 'redux-persist/lib/storage';
 import Swal from 'sweetalert2';
 import { AxiosGet, AxiosPost, RootState } from '../../../../setup';
 import { AxiosDelete } from '../../../../setup/axios/AxiosDelete';
+import { AxiosPut } from '../../../../setup/axios/AxiosPut';
 import { doDecryptData, getLocal, saveLocal } from '../../../../setup/encrypt.js';
 import * as utility from '../../../../setup/redux/UtilityRedux';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
@@ -380,13 +381,20 @@ export const actions = {
           dataStaff.push(row);
           no += 1;
         });
-        saveLocal('dataStaff', dataStaff).then(() => {
-          dispatch({
-            type: actionTypes.GetImplementationByID,
-            payload: { feedbackID: dataDecrypt, isEdit: true },
+        AxiosGet(
+          `sales-order/by-no-implementasi/?no_implementasi=${dataDecrypt.no_implementasi}`
+        ).then((ressales) => {
+          const dataDecryptSales = doDecryptData(ressales.data, ['no_order_konfirmasi']);
+          dataDecrypt.no_order_konfirmasi = dataDecryptSales[0]?.no_order_konfirmasi;
+
+          saveLocal('dataStaff', dataStaff).then(() => {
+            dispatch({
+              type: actionTypes.GetImplementationByID,
+              payload: { feedbackID: dataDecrypt, isEdit: true },
+            });
+            dispatch(actions.getStaffLocal());
+            dispatch(modal.actions.show());
           });
-          dispatch(actions.getStaffLocal());
-          dispatch(modal.actions.show());
         });
       });
     };
@@ -401,10 +409,40 @@ export const actions = {
       dispatch(modal.actions.hide());
     };
   },
-  // eslint-disable-next-line
-  updateImplementation: (id: String) => {
-    // eslint-disable-next-line
-    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {};
+  updateImplementation: (data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch(utility.actions.showLoadingButton());
+      getLocal('dataStaff').then((res) => {
+        const detailStaff: any = [];
+        res.forEach((element: any) => {
+          const row = {
+            kode_helpdesk: element.kode_helpdesk,
+            nama_helpdesk: element.nama_helpdesk,
+          };
+          detailStaff.push(row);
+        });
+        const onSendData = {
+          tanggal_implementasi: moment(data.implementation_date).format('YYYY-MM-DD'),
+          tanggal_realisasi: moment(data.realization_date).format('YYYY-MM-DD'),
+          detail_staff: detailStaff,
+          tipe_implementasi: data.implementation_type,
+          // eslint-disable-next-line
+          lama_implementasi: parseInt(data.duration),
+        };
+        AxiosPut(`implementation/${data.id}`, onSendData)
+          .then(() => {
+            toast.success('Success Edit Data !');
+            dispatch(actions.getImplementation());
+            dispatch(utility.actions.hideLoading());
+            dispatch(actions.closeModal());
+          })
+          .catch((err) => {
+            const dataErr = err.response?.data;
+            dispatch(utility.actions.hideLoading());
+            toast.error(dataErr.message || 'Error');
+          });
+      });
+    };
   },
   // eslint-disable-next-line
   validateImplementation: (no_implementasi: String) => {

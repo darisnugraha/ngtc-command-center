@@ -115,6 +115,7 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
                   dispatch(redux.actions.validateImplementation(row.no_implementasi));
                 }}
                 className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+                disabled={row.status !== 'OPEN'}
               >
                 <KTSVG path='/media/icons/duotune/general/gen043.svg' className='svg-icon-3' />
               </button>
@@ -127,6 +128,7 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
                   dispatch(redux.actions.getDataImplementationByID(row._id));
                 }}
                 className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+                disabled={row.status !== 'OPEN'}
               >
                 <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
               </button>
@@ -207,8 +209,11 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
       >
         <FormImplementation
           onSubmit={(data: any) => {
-            // eslint-disable-next-line
-            dispatch(redux.actions.addImplementation(data));
+            if (isEdit) {
+              dispatch(redux.actions.updateImplementation(data));
+            } else {
+              dispatch(redux.actions.addImplementation(data));
+            }
           }}
         />
       </GlobalModal>

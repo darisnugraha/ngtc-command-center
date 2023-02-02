@@ -123,6 +123,7 @@ export default function AsideMenuMain() {
         />
         <AsideMenuItem to='/report/report-receivable' title='Report Receivable' hasBullet />
         <AsideMenuItem to='/report/report-implementation' title='Report Implementation' hasBullet />
+        <AsideMenuItem to='/report/report-delivery' title='Report Delivery Order' hasBullet />
       </AsideMenuItemWithSub>
       {/* <AsideMenuItem
         to='/builder'

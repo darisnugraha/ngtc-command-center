@@ -54,6 +54,9 @@ export const PrivateRoutes = () => {
   const ImplementationReportPage = lazy(
     () => import('../pages/report/implementation-report/ImplementationReport')
   );
+  const DeliveryOrderReportPage = lazy(
+    () => import('../pages/report/delivery-order-report/DeliveryOrderReport')
+  );
 
   return (
     <Suspense fallback={<FallbackView />}>
@@ -97,6 +100,7 @@ export const PrivateRoutes = () => {
         <Route path='/report/report-receivable' component={ReceivableReportPage} />
         <Route path='/report/report-order-confirmation' component={OCReportPage} />
         <Route path='/report/report-implementation' component={ImplementationReportPage} />
+        <Route path='/report/report-delivery' component={DeliveryOrderReportPage} />
         {/* end report */}
         <Redirect from='/auth' to='/dashboard' />
         <Redirect exact from='/' to='/dashboard' />

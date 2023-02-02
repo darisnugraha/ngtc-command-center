@@ -33,6 +33,7 @@ import * as serialnumber from '../../app/pages/serial-number/redux/SerialNumberR
 import * as reportreceivable from '../../app/pages/report/receivable-report/redux/ReceivableReportRedux';
 import * as reportoc from '../../app/pages/report/oc-report/redux/OCReportRedux';
 import * as reportimplementation from '../../app/pages/report/implementation-report/redux/ImplementationReportRedux';
+import * as reportdelivery from '../../app/pages/report/delivery-order-report/redux/DeliveryReportRedux';
 import * as utility from './UtilityRedux';
 
 export const rootReducer = combineReducers({
@@ -69,6 +70,7 @@ export const rootReducer = combineReducers({
   reportreceivable: reportreceivable.reducer,
   reportoc: reportoc.reducer,
   reportimplementation: reportimplementation.reducer,
+  reportdelivery: reportdelivery.reducer,
   utility: utility.reducer,
   form: reducerForm,
 });

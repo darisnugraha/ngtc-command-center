@@ -124,39 +124,46 @@ const ReceivablePage: FC<PropsFromRedux> = () => {
       headerClasses: 'ps-4 min-w-100px rounded-end',
       formatter: (cell, row) => {
         return (
-          <>
-            <button
-              type='button'
-              onClick={() => {
-                dispatch(redux.actions.getReceivableByNoOC(row.no_order_konfirmasi));
-                setTypeModal('DETAIL');
-              }}
-              className='btn btn-icon btn-active-color-dark btn-color-primary btn-sm me-1'
-            >
-              <i className='bi bi-eye-fill' />
-            </button>
-            <button
-              type='button'
-              onClick={() => {
-                // eslint-disable-next-line
-                dispatch(redux.actions.getDetailOCByN0OC(row.no_order_konfirmasi));
-                setTypeModal('PAYMENT');
-              }}
-              className='btn btn-icon btn-active-color-dark btn-color-warning btn-sm me-1'
-              disabled={row.status === 'DONE'}
-            >
-              <KTSVG path='/media/icons/duotune/finance/fin002.svg' className='svg-icon-3' />
-            </button>
-            <button
-              type='button'
-              onClick={() => {
-                // eslint-disable-next-line
-              }}
-              className='btn btn-icon btn-active-color-dark btn-color-danger btn-sm me-1'
-            >
-              <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
-            </button>
-          </>
+          <div className='row'>
+            <div className='col-lg-6'>
+              <button
+                type='button'
+                onClick={() => {
+                  dispatch(redux.actions.getReceivableByNoOC(row.no_order_konfirmasi));
+                  setTypeModal('DETAIL');
+                }}
+                className='btn btn-icon btn-active-color-dark btn-color-primary btn-sm me-1'
+              >
+                <i className='bi bi-eye-fill' />
+              </button>
+            </div>
+            <div className='col-lg-6'>
+              <button
+                type='button'
+                onClick={() => {
+                  // eslint-disable-next-line
+                  dispatch(redux.actions.getDetailOCByN0OC(row.no_order_konfirmasi));
+                  setTypeModal('PAYMENT');
+                }}
+                className='btn btn-icon btn-active-color-dark btn-color-warning btn-sm me-1'
+                disabled={row.status === 'DONE'}
+              >
+                <KTSVG path='/media/icons/duotune/finance/fin002.svg' className='svg-icon-3' />
+              </button>
+            </div>
+            <div className='col-lg-4 d-none'>
+              <button
+                type='button'
+                onClick={() => {
+                  // eslint-disable-next-line
+                  dispatch(redux.actions.deleteReceivable(row._id));
+                }}
+                className='btn btn-icon btn-active-color-dark btn-color-danger btn-sm me-1'
+              >
+                <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
+              </button>
+            </div>
+          </div>
         );
       },
     },

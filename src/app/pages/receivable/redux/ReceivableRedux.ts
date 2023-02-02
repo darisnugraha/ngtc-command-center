@@ -4,7 +4,9 @@ import { toast } from 'react-toastify';
 import { change } from 'redux-form';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import Swal from 'sweetalert2';
 import { AxiosGet, AxiosPost } from '../../../../setup';
+import { AxiosDelete } from '../../../../setup/axios/AxiosDelete';
 import { getImage, postImage } from '../../../../setup/axios/Firebase';
 import { doDecryptData } from '../../../../setup/encrypt.js';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
@@ -996,6 +998,31 @@ export const actions = {
           ]);
           KwitansiPDF(dataDecrypt, dataDecryptStore);
         });
+      });
+    };
+  },
+  deleteReceivable: (id: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You wont be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          AxiosDelete(`receivable/${id}`)
+            .then(() => {
+              toast.success('Success Delete Data !');
+              dispatch(actions.getReceivable());
+            })
+            .catch((err) => {
+              const dataErr = err.response?.data;
+              toast.error(dataErr.message || 'Error');
+            });
+        }
       });
     };
   },

@@ -179,6 +179,7 @@ export const actions = {
           dispatch(actions.getStore());
           dispatch(utility.actions.hideLoading());
           dispatch(actions.closeModal());
+          window.location.reload();
         })
         .catch(() => {
           toast.error('Failed Edit Data !');

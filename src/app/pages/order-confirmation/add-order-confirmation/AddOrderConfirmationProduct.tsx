@@ -50,6 +50,8 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
     dispatch(modalsecond.actions.hide());
   };
 
+  const isLoading = useSelector<RootState, boolean>(({ utility }) => utility.isLoadingButton);
+
   return (
     <>
       <GlobalModal title='Description' onClose={() => handleClose()}>
@@ -237,7 +239,6 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
                   <button
                     type='button'
                     onClick={() => {
-                      // eslint-disable-next-line
                       dispatch(redux.actions.cancelOC());
                     }}
                     className='btn btn-sm btn-danger'
@@ -249,11 +250,19 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
                   <button
                     type='button'
                     onClick={() => {
-                      // eslint-disable-next-line
                       dispatch(redux.actions.postAddOC());
                     }}
                     className='btn btn-sm btn-primary'
+                    disabled={isLoading}
                   >
+                    {isLoading ? (
+                      <span
+                        className='spinner-border spinner-border-sm'
+                        style={{ marginRight: '10px' }}
+                        role='status'
+                        aria-hidden='true'
+                      />
+                    ) : null}
                     Save
                   </button>
                 </div>

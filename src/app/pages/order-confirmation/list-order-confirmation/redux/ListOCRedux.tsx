@@ -179,6 +179,7 @@ export const actions = {
             'persentase',
             'jenis_ok',
             'jenis_produk',
+            'type',
           ]);
           saveLocal('dataProduct', dataDecrypt[0].detail_produk, [
             'qty',
@@ -287,6 +288,33 @@ export const actions = {
               toast.error('Failed Delete Data !');
               dispatch(utility.actions.hideLoading());
             });
+        }
+      });
+    };
+  },
+  deleteProduct: (kode: string) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You wont be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          getLocal('dataProduct', ['qty', 'sub_total', 'harga']).then((res) => {
+            const dataFill = res.filter((element: any) => element.kode_produk !== kode);
+            saveLocal('dataProduct', dataFill, ['qty', 'sub_total', 'harga'])
+              .then(() => {
+                toast.success('Success Delete Data !');
+                dispatch(actions.getLocalProd());
+              })
+              .catch(() => {
+                toast.error('Failed Delete Data !');
+              });
+          });
         }
       });
     };

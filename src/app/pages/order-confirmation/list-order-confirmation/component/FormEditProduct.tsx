@@ -102,8 +102,6 @@ const FormEditProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
         </div>
         <div className='col-lg-2'>
           <Field
-            isEdit={typeProduct === 'PACKAGE'}
-            readOnly={typeProduct === 'PACKAGE'}
             name='qty'
             type='text'
             component={RenderField}
@@ -124,8 +122,6 @@ const FormEditProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
         </div>
         <div className='col-lg-2'>
           <Field
-            isEdit={typeProduct === 'PACKAGE'}
-            readOnly={typeProduct === 'PACKAGE'}
             name='price'
             type='text'
             component={RenderField}
@@ -136,8 +132,6 @@ const FormEditProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
         </div>
         <div className='col-lg-2'>
           <Field
-            isEdit={typeProduct === 'PACKAGE'}
-            readOnly={typeProduct === 'PACKAGE'}
             name='sub_total'
             type='text'
             component={RenderField}

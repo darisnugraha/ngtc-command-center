@@ -28,9 +28,9 @@ const AddProductValidation = (values: productModel): FormErrors<productModel> =>
     errors.unit = 'Unit required';
   }
 
-  if (!values.sub_total) {
-    errors.sub_total = 'Sub Total required';
-  }
+  // if (!values.sub_total) {
+  //   errors.sub_total = 'Sub Total required';
+  // }
 
   return errors;
 };

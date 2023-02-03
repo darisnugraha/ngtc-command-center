@@ -1,9 +1,10 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-expressions */
 import clsx from 'clsx';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
 export const RenderField: FC = (field: any) => {
+  const [value, setValue] = useState('');
   return (
     <div className='row mb-6'>
       <label htmlFor='' className='text-black mb-3'>
@@ -15,6 +16,55 @@ export const RenderField: FC = (field: any) => {
           type={field.type}
           id={field.label}
           style={{ textTransform: 'uppercase' }}
+          onInput={(e: any) => e.target.value.toUpperCase()}
+          value={value}
+          onChange={(event) => setValue(event.target.value.toUpperCase())}
+          className={
+            field.isEdit
+              ? clsx(
+                  'form-control form-control-sm form-control-solid',
+                  { 'is-invalid': field.meta.touched && field.meta.error },
+                  {
+                    'is-valid': field.meta.touched && !field.meta.error,
+                  }
+                )
+              : clsx(
+                  'form-control form-control-sm',
+                  { 'is-invalid': field.meta.touched && field.meta.error },
+                  {
+                    'is-valid': field.meta.touched && !field.meta.error,
+                  }
+                )
+          }
+          readOnly={field.readOnly}
+          placeholder={field.placeHolder}
+          onKeyPress={(e) => {
+            e.key === 'Enter' && e.preventDefault();
+          }}
+        />
+        {field.meta.touched &&
+          ((field.meta.error && (
+            <div className='fv-plugins-message-container mt-1'>
+              <div className='fv-help-block text-danger'>{field.meta.error}</div>
+            </div>
+          )) ||
+            (field.meta.warning && <p>{field.meta.warning}</p>))}
+      </div>
+    </div>
+  );
+};
+
+export const RenderFieldLogin: FC = (field: any) => {
+  return (
+    <div className='row mb-6'>
+      <label htmlFor='' className='text-black mb-3'>
+        {field.label}
+      </label>
+      <div className='col-lg-12 fv-row'>
+        <input
+          {...field.input}
+          type={field.type}
+          id={field.label}
           className={
             field.isEdit
               ? clsx(

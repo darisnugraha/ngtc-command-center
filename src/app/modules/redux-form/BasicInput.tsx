@@ -1,10 +1,10 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-expressions */
 import clsx from 'clsx';
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 
 export const RenderField: FC = (field: any) => {
-  const [value, setValue] = useState('');
+  // const [value, setValue] = useState('');
   return (
     <div className='row mb-6'>
       <label htmlFor='' className='text-black mb-3'>
@@ -16,9 +16,9 @@ export const RenderField: FC = (field: any) => {
           type={field.type}
           id={field.label}
           style={{ textTransform: 'uppercase' }}
-          onInput={(e: any) => e.target.value.toUpperCase()}
-          value={value}
-          onChange={(event) => setValue(event.target.value.toUpperCase())}
+          // onInput={(e: any) => e.target.value.toUpperCase()}
+          // value={value}
+          // onChange={(event) => setValue(event.target.value.toUpperCase())}
           className={
             field.isEdit
               ? clsx(

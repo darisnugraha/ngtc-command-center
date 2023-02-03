@@ -29,9 +29,6 @@ const mapState = (state: RootState) => {
       },
     };
   }
-  return {
-    initialValues: {},
-  };
 };
 
 const FormBranchComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {

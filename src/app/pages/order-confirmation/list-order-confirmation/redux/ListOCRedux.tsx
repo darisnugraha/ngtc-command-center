@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import { change } from 'redux-form';
 import moment from 'moment';
-import { AxiosGet } from '../../../../../setup';
+import { AxiosGet, AxiosPost } from '../../../../../setup';
 import { doDecryptData, getLocal, saveLocal } from '../../../../../setup/encrypt.js';
 import { ListOCModel } from '../model/ListOCModel';
 import * as modal from '../../../../modules/modal/GlobalModalRedux';
@@ -372,8 +372,13 @@ export const actions = {
         );
         postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
           .then(() => {
-            OCPDF(dataDecrypt, data);
-            dispatch(utility.actions.hideLoading());
+            const send = {
+              no_order_konfirmasi: data.id,
+            };
+            AxiosPost('order-confirmation/send-ok', send).finally(() => {
+              OCPDF(dataDecrypt, data);
+              dispatch(utility.actions.hideLoading());
+            });
           })
           .catch(() => {
             OCPDF(dataDecrypt, data);

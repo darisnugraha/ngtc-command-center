@@ -34,7 +34,7 @@ const OCPDF = (data, head) => {
   doc.text('Dengan Hormat ,', 23, final + 65);
   const headerDesc = head.header_desc;
   const jumlah_header_desc = headerDesc.length;
-  if (jumlah_header_desc > 127) {
+  if (jumlah_header_desc > 0) {
     doc.text(headerDesc.slice(0, 127), 26, final + 70);
   }
   if (jumlah_header_desc > 157) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm, submit } from 'redux-form';
-import { RenderField } from '../../../modules/redux-form/BasicInput';
+import { RenderFieldLogin } from '../../../modules/redux-form/BasicInput';
 import * as auth from '../redux/LoginRedux';
 import LoginFormValidation from '../validate/LoginFormValidation';
 
@@ -21,7 +21,7 @@ const LoginForm: React.FC<InjectedFormProps<{}, Props>> = (props) => {
         <Field
           name='user_id'
           type='text'
-          component={RenderField}
+          component={RenderFieldLogin}
           label='Username'
           placeHolder='Masukan Username'
         />
@@ -30,7 +30,7 @@ const LoginForm: React.FC<InjectedFormProps<{}, Props>> = (props) => {
         <Field
           name='password'
           type='password'
-          component={RenderField}
+          component={RenderFieldLogin}
           label='Password'
           placeHolder='Masukan Password'
         />

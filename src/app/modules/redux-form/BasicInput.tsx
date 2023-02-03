@@ -14,6 +14,7 @@ export const RenderField: FC = (field: any) => {
           {...field.input}
           type={field.type}
           id={field.label}
+          style={{ textTransform: 'uppercase' }}
           className={
             field.isEdit
               ? clsx(

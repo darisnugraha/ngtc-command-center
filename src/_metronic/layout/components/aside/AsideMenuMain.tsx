@@ -69,39 +69,39 @@ export default function AsideMenuMain() {
           hasBullet
         />
       </AsideMenuItemWithSub>
-      <AsideMenuItem
+      {/* <AsideMenuItem
         to='/receivable'
         icon='/media/icons/duotune/finance/fin002.svg'
         title='Receivable'
         fontIcon='bi-app-indicator'
-      />
+      /> */}
       <AsideMenuItem
         to='/validation-payment'
         icon='/media/icons/duotune/general/gen048.svg'
         title='Validation Payment'
         fontIcon='bi-app-indicator'
       />
-      <AsideMenuItemWithSub
+      {/* <AsideMenuItemWithSub
         to='/sales-order'
         title='Sales Order'
         icon='/media/icons/duotune/ecommerce/ecm002.svg'
         fontIcon='bi-archive'
       >
         <AsideMenuItem to='/sales-order/list-sales-order' title='List Sales Order' hasBullet />
-      </AsideMenuItemWithSub>
-      <AsideMenuItem
+      </AsideMenuItemWithSub> */}
+      {/* <AsideMenuItem
         to='/implementation'
         icon='/media/icons/duotune/general/gen016.svg'
         title='Implementation'
         fontIcon='bi-app-indicator'
-      />
-      <AsideMenuItem
+      /> */}
+      {/* <AsideMenuItem
         to='/delivery-order'
         icon='/media/icons/duotune/ecommerce/ecm006.svg'
         title='Delivery Order'
         fontIcon='bi-app-indicator'
-      />
-      <AsideMenuItemWithSub
+      /> */}
+      {/* <AsideMenuItemWithSub
         to='/invoice'
         title='Invoice'
         icon='/media/icons/duotune/general/gen032.svg'
@@ -109,7 +109,7 @@ export default function AsideMenuMain() {
       >
         <AsideMenuItem to='/invoice/list-invoice' title='List Invoice' hasBullet />
         <AsideMenuItem to='/invoice/serial-number' title='Serial Number' hasBullet />
-      </AsideMenuItemWithSub>
+      </AsideMenuItemWithSub> */}
       <AsideMenuItemWithSub
         to='/report'
         title='Report'
@@ -121,90 +121,10 @@ export default function AsideMenuMain() {
           title='Report Order Confirmation'
           hasBullet
         />
-        <AsideMenuItem to='/report/report-receivable' title='Report Receivable' hasBullet />
+        {/* <AsideMenuItem to='/report/report-receivable' title='Report Receivable' hasBullet />
         <AsideMenuItem to='/report/report-implementation' title='Report Implementation' hasBullet />
-        <AsideMenuItem to='/report/report-delivery' title='Report Delivery Order' hasBullet />
+        <AsideMenuItem to='/report/report-delivery' title='Report Delivery Order' hasBullet /> */}
       </AsideMenuItemWithSub>
-      {/* <AsideMenuItem
-        to='/builder'
-        icon='/media/icons/duotune/general/gen019.svg'
-        title='Layout Builder'
-        fontIcon='bi-layers'
-      /> */}
-      {/* <AsideMenuItemWithSub
-        to='/crafted/pages'
-        title='Pages'
-        fontIcon='bi-archive'
-        icon='/media/icons/duotune/general/gen022.svg'
-      >
-        <AsideMenuItemWithSub to='/crafted/pages/profile' title='Profile' hasBullet>
-          <AsideMenuItem to='/crafted/pages/profile/overview' title='Overview' hasBullet />
-          <AsideMenuItem to='/crafted/pages/profile/projects' title='Projects' hasBullet />
-          <AsideMenuItem to='/crafted/pages/profile/campaigns' title='Campaigns' hasBullet />
-          <AsideMenuItem to='/crafted/pages/profile/documents' title='Documents' hasBullet />
-          <AsideMenuItem to='/crafted/pages/profile/connections' title='Connections' hasBullet />
-        </AsideMenuItemWithSub>
-
-        <AsideMenuItemWithSub to='/crafted/pages/wizards' title='Wizards' hasBullet>
-          <AsideMenuItem to='/crafted/pages/wizards/horizontal' title='Horizontal' hasBullet />
-          <AsideMenuItem to='/crafted/pages/wizards/vertical' title='Vertical' hasBullet />
-        </AsideMenuItemWithSub>
-      </AsideMenuItemWithSub>
-
-      <AsideMenuItemWithSub
-        to='/error'
-        title='Errors'
-        fontIcon='bi-sticky'
-        icon='/media/icons/duotune/general/gen040.svg'
-      >
-        <AsideMenuItem to='/error/404' title='Error 404' hasBullet />
-        <AsideMenuItem to='/error/500' title='Error 500' hasBullet />
-      </AsideMenuItemWithSub>
-      <AsideMenuItemWithSub
-        to='/crafted/widgets'
-        title='Widgets'
-        icon='/media/icons/duotune/general/gen025.svg'
-        fontIcon='bi-layers'
-      >
-        <AsideMenuItem to='/crafted/widgets/lists' title='Lists' hasBullet />
-        <AsideMenuItem to='/crafted/widgets/statistics' title='Statistics' hasBullet />
-        <AsideMenuItem to='/crafted/widgets/charts' title='Charts' hasBullet />
-        <AsideMenuItem to='/crafted/widgets/mixed' title='Mixed' hasBullet />
-        <AsideMenuItem to='/crafted/widgets/tables' title='Tables' hasBullet />
-        <AsideMenuItem to='/crafted/widgets/feeds' title='Feeds' hasBullet />
-      </AsideMenuItemWithSub>
-      <div className='menu-item'>
-        <div className='menu-content pt-8 pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Apps</span>
-        </div>
-      </div>
-      <AsideMenuItemWithSub
-        to='/apps/chat'
-        title='Chat'
-        fontIcon='bi-chat-left'
-        icon='/media/icons/duotune/communication/com012.svg'
-      >
-        <AsideMenuItem to='/apps/chat/private-chat' title='Private Chat' hasBullet />
-        <AsideMenuItem to='/apps/chat/group-chat' title='Group Chart' hasBullet />
-        <AsideMenuItem to='/apps/chat/drawer-chat' title='Drawer Chart' hasBullet />
-      </AsideMenuItemWithSub>
-      <div className='menu-item'>
-        <div className='menu-content'>
-          <div className='separator mx-1 my-4' />
-        </div>
-      </div>
-      <div className='menu-item'>
-        <a
-          target='_blank'
-          className='menu-link'
-          href={`${process.env.REACT_APP_PREVIEW_DOCS_URL}/docs/changelog`}
-        >
-          <span className='menu-icon'>
-            <KTSVG path='/media/icons/duotune/general/gen005.svg' className='svg-icon-2' />
-          </span>
-          <span className='menu-title'>Changelog {process.env.REACT_APP_VERSION}</span>
-        </a>
-      </div> */}
     </>
   );
 }

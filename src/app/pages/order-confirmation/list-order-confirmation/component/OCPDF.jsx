@@ -1,5 +1,6 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import moment from 'moment';
 import { toAbsoluteUrl } from '../../../../../_metronic/helpers';
 
 const OCPDF = (data, head) => {
@@ -11,6 +12,11 @@ const OCPDF = (data, head) => {
   doc.addImage(imgData, 'PNG', 0, 0, 215, 25);
   let final = 15;
   doc.setFontSize(8);
+  doc.text(
+    `Bandung, ${moment(data[0].tanggal_order_konfirmasi).format('DD MMMM YYYY')}`,
+    145,
+    final + 15
+  );
   doc.text('Kepada Yth : ', 15, final + 15);
   doc.setFont(undefined, 'bold');
   doc.text(data[0].nama_toko, 15, final + 20);
@@ -257,6 +263,7 @@ const OCPDF = (data, head) => {
   );
   doc.text('Hormat Kami, ', 50, finalY + 48);
   doc.text('Menyetujui, ', 140, finalY + 48);
+
   doc.text('Budi Kristiyanto', 48, finalY + 78);
   doc.text(data[0].nama_customer, 138, finalY + 78);
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { connect, useDispatch } from 'react-redux';
+import { change, Field, InjectedFormProps, reduxForm } from 'redux-form';
 import SubmitButton from '../../../modules/button';
 import { RenderField, RenderTextArea } from '../../../modules/redux-form/BasicInput';
 // import PotentialCustomerValidation from '../validasi/PotentialCustomerValidation';
@@ -9,6 +9,7 @@ interface Props {}
 
 const FormPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const { handleSubmit } = props;
+  const dispatch = useDispatch();
 
   return (
     <form onSubmit={handleSubmit}>
@@ -95,6 +96,9 @@ const FormPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: an
             component={RenderTextArea}
             label='Address'
             placeHolder='Insert Address'
+            onChange={(e: any) => {
+              dispatch(change('FormPotentialCustomer', 'correspondence_address', e.target.value));
+            }}
           />
         </div>
         <div className='col-lg-6'>

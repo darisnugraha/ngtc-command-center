@@ -116,6 +116,15 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
             placeHolder='Insert Product Name'
           />
         </div>
+        <div className='col-lg-2 d-none'>
+          <Field
+            name='type'
+            type='text'
+            component={RenderField}
+            label='Type'
+            placeHolder='Insert Type'
+          />
+        </div>
         <div className='col-lg-2'>
           <Field
             isEdit={typeProduct === 'PACKAGE'}

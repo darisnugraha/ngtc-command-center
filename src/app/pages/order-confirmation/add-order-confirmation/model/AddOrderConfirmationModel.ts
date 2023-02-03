@@ -40,11 +40,13 @@ export interface productionServiceModel {
 export interface listProductModel {
   key: number;
   nama_produk: string;
+  kode_produk: string;
   tipe_produk: string;
   qty: number;
   satuan: string;
   harga: number;
   sub_total: number;
+  type: string;
 }
 
 export interface branchModel {

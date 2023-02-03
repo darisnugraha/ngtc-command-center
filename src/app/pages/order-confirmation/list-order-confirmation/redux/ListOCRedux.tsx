@@ -112,6 +112,7 @@ export const actions = {
           'jenis_ok',
           'jenis_produk',
         ]);
+
         const dataSave: any = [];
         let no = 1;
         dataDecrypt.forEach((element: any) => {
@@ -141,12 +142,12 @@ export const actions = {
             'satuan',
             'harga',
             'sub_total',
-            'qty',
             'kode_diskon',
             'nama_diskon',
             'persentase',
             'jenis_ok',
             'jenis_produk',
+            'qty',
           ]);
           dispatch({ type: actionTypes.GetListOCByNo, payload: { feedbackNo: dataDecrypt } });
           dispatch({ type: actionTypes.setTypeOC, payload: { typeOC: dataDecrypt[0].jenis_ok } });
@@ -200,7 +201,8 @@ export const actions = {
           harga: data.price,
           kode_produk: data.product,
           nama_produk: data.product_name,
-          qty: data.qty,
+          // eslint-disable-next-line
+          qty: parseInt(data.qty),
           satuan: data.unit,
           sub_total: data.sub_total,
           jenis_produk: data.product_type,

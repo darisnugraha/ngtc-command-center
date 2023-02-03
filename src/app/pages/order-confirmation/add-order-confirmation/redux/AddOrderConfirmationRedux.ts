@@ -122,6 +122,7 @@ export const actions = {
             '_id',
             'input_date',
             'harga',
+            'type',
           ]);
           const dataSave: any = [];
           let no = 1;
@@ -146,6 +147,7 @@ export const actions = {
             '_id',
             'input_date',
             'harga',
+            'type',
           ]);
           const dataSave: any = [];
           let no = 1;
@@ -170,6 +172,7 @@ export const actions = {
             '_id',
             'input_date',
             'harga',
+            'type',
           ]);
           const dataSave: any = [];
           let no = 1;
@@ -196,6 +199,7 @@ export const actions = {
             'jenis_produk',
             'harga',
             'total_harga',
+            'type',
           ]);
           const dataSave: any = [];
           let no = 1;
@@ -229,6 +233,7 @@ export const actions = {
             '_id',
             'input_date',
             'harga',
+            'type',
           ]);
           dispatch({
             type: actionTypes.GetDetailDataProduct,
@@ -238,6 +243,7 @@ export const actions = {
           dispatch(change('FormAddProductOC', 'product_name', dataDecrypt[0].nama_produk));
           dispatch(change('FormAddProductOC', 'unit', dataDecrypt[0].satuan));
           dispatch(change('FormAddProductOC', 'price', dataDecrypt[0].harga));
+          dispatch(change('FormAddProductOC', 'type', dataDecrypt[0].type || '-'));
           dispatch(change('FormAddProductOC', 'sub_total', dataDecrypt[0].harga * 1));
         });
       } else if (type === 'CONSUMABLE') {
@@ -249,6 +255,7 @@ export const actions = {
             '_id',
             'input_date',
             'harga',
+            'type',
           ]);
           dispatch({
             type: actionTypes.GetDetailDataProduct,
@@ -258,6 +265,7 @@ export const actions = {
           dispatch(change('FormAddProductOC', 'product_name', dataDecrypt[0].nama_consumable));
           dispatch(change('FormAddProductOC', 'unit', dataDecrypt[0].satuan));
           dispatch(change('FormAddProductOC', 'price', dataDecrypt[0].harga));
+          dispatch(change('FormAddProductOC', 'type', dataDecrypt[0].type || '-'));
           dispatch(change('FormAddProductOC', 'sub_total', dataDecrypt[0].harga * 1));
         });
       } else if (type === 'HARDWARE') {
@@ -269,6 +277,7 @@ export const actions = {
             '_id',
             'input_date',
             'harga',
+            'type',
           ]);
           dispatch({
             type: actionTypes.GetDetailDataProduct,
@@ -278,6 +287,7 @@ export const actions = {
           dispatch(change('FormAddProductOC', 'product_name', dataDecrypt[0].nama_hardware));
           dispatch(change('FormAddProductOC', 'unit', dataDecrypt[0].satuan));
           dispatch(change('FormAddProductOC', 'price', dataDecrypt[0].harga));
+          dispatch(change('FormAddProductOC', 'type', dataDecrypt[0].type || '-'));
           dispatch(change('FormAddProductOC', 'sub_total', dataDecrypt[0].harga * 1));
         });
       } else {
@@ -291,6 +301,7 @@ export const actions = {
             'jenis_produk',
             'harga',
             'total_harga',
+            'type',
           ]);
           dispatch({
             type: actionTypes.GetDetailDataProduct,
@@ -300,6 +311,7 @@ export const actions = {
           dispatch(change('FormAddProductOC', 'unit', 'PACKAGE'));
           dispatch(change('FormAddProductOC', 'product_name', dataDecrypt[0].nama_paket));
           dispatch(change('FormAddProductOC', 'price', dataDecrypt[0].total_harga));
+          dispatch(change('FormAddProductOC', 'type', dataDecrypt[0].type || '-'));
           dispatch(change('FormAddProductOC', 'sub_total', dataDecrypt[0].total_harga * 1));
         });
       }
@@ -328,6 +340,7 @@ export const actions = {
                   'kode_produk',
                   'jenis_produk',
                   'harga',
+                  'type',
                 ]);
                 getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
                   if (res.length === 0) {
@@ -338,11 +351,13 @@ export const actions = {
                         // eslint-disable-next-line
                         key: no,
                         harga: element.harga,
+                        kode_produk: element.kode_produk,
                         nama_produk: element.nama_produk,
                         qty: element.qty || 1,
                         satuan: element.satuan,
                         sub_total: element.harga,
                         tipe_produk: element.jenis_produk || typeProd,
+                        type: element.type || '-',
                       };
                       dataArr.push(row);
                       no += 1;
@@ -363,11 +378,13 @@ export const actions = {
                         // eslint-disable-next-line
                         key: no,
                         harga: element.harga,
+                        kode_produk: element.kode_produk,
                         nama_produk: element.nama_produk,
                         qty: element.qty || 1,
                         satuan: element.satuan,
                         sub_total: element.harga,
                         tipe_produk: element.jenis_produk || typeProd,
+                        type: element.type || '-',
                       };
                       dataArr.push(row);
                       no += 1;
@@ -389,11 +406,13 @@ export const actions = {
                   const row: listProductModel = {
                     key: 1,
                     harga: data.price,
+                    kode_produk: data.product,
                     nama_produk: data.product_name,
                     qty: data.qty || 1,
                     satuan: data.unit,
                     sub_total: data.sub_total,
                     tipe_produk: data.product_type || typeProd,
+                    type: data.type || '-',
                   };
                   dataArr.push(row);
                   saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
@@ -410,11 +429,13 @@ export const actions = {
                     // eslint-disable-next-line
                     key: no,
                     harga: data.price,
+                    kode_produk: data.product,
                     nama_produk: data.product_name,
                     qty: data.qty || 1,
                     satuan: data.unit,
                     sub_total: data.sub_total,
                     tipe_produk: data.product_type || typeProd,
+                    type: data.type || '-',
                   };
                   dataArr.push(row);
                   saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
@@ -440,6 +461,7 @@ export const actions = {
                 'kode_produk',
                 'jenis_produk',
                 'harga',
+                'type',
               ]);
               getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
                 if (res.length === 0) {
@@ -450,11 +472,13 @@ export const actions = {
                       // eslint-disable-next-line
                       key: no,
                       harga: element.harga,
+                      kode_produk: element.kode_produk,
                       nama_produk: element.nama_produk,
                       qty: element.qty || 1,
                       satuan: element.satuan,
                       sub_total: element.harga,
                       tipe_produk: element.jenis_produk || typeProd,
+                      type: element.type || '-',
                     };
                     dataArr.push(row);
                     no += 1;
@@ -474,11 +498,13 @@ export const actions = {
                       // eslint-disable-next-line
                       key: no,
                       harga: element.harga,
+                      kode_produk: element.kode_produk,
                       nama_produk: element.nama_produk,
                       qty: element.qty || 1,
                       satuan: element.satuan,
                       sub_total: element.harga,
                       tipe_produk: element.jenis_produk || typeProd,
+                      type: element.type || '-',
                     };
                     dataArr.push(row);
                     no += 1;
@@ -500,11 +526,13 @@ export const actions = {
                 const row: listProductModel = {
                   key: 1,
                   harga: data.price,
+                  kode_produk: data.product,
                   nama_produk: data.product_name,
                   qty: data.qty || 1,
                   satuan: data.unit,
                   sub_total: data.sub_total,
                   tipe_produk: data.product_type || typeProd,
+                  type: data.type || '-',
                 };
                 dataArr.push(row);
                 saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
@@ -521,11 +549,13 @@ export const actions = {
                   // eslint-disable-next-line
                   key: no,
                   harga: data.price,
+                  kode_produk: data.product,
                   nama_produk: data.product_name,
                   qty: data.qty || 1,
                   satuan: data.unit,
                   sub_total: data.sub_total,
                   tipe_produk: data.product_type || typeProd,
+                  type: data.type || '-',
                 };
                 dataArr.push(row);
                 saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
@@ -629,11 +659,13 @@ export const actions = {
             // eslint-disable-next-line
             key: no,
             harga: element.harga,
+            kode_produk: element.kode_produk,
             nama_produk: element.nama_produk,
             qty: element.qty || 1,
             satuan: element.satuan,
             sub_total: element.harga,
             tipe_produk: element.jenis_produk || element.tipe_produk,
+            type: element.type || '-',
           };
           dataArr.push(row);
           no += 1;
@@ -642,11 +674,13 @@ export const actions = {
           // eslint-disable-next-line
           key: dataArr.length + 1,
           harga: data.price,
+          kode_produk: data.product,
           nama_produk: data.product_name,
           qty: data.qty || 1,
           satuan: data.unit,
           sub_total: data.sub_total,
           tipe_produk: data.product_type,
+          type: data.type || '-',
         };
         dataArr.push(row);
         saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
@@ -730,7 +764,6 @@ export const actions = {
     };
   },
   postAddOC: () => {
-    // eslint-disable-next-line
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
       getLocal('dataCustomer').then((resCust) => {
@@ -833,6 +866,7 @@ export const actions = {
                           qty: any;
                           harga: any;
                           sub_total: any;
+                          type: any;
                         }[] = [];
                         resProd.forEach((element: any) => {
                           const row = {
@@ -840,9 +874,11 @@ export const actions = {
                             nama_produk: element.nama_produk,
                             jenis_produk: element.tipe_produk,
                             satuan: element.satuan,
-                            qty: element.qty || 1,
+                            // eslint-disable-next-line
+                            qty: parseInt(element.qty) || 1,
                             harga: element.harga,
                             sub_total: element.sub_total,
+                            type: element.type || '-',
                           };
                           dataProd.push(row);
                         });
@@ -908,6 +944,7 @@ export const actions = {
                                 'persentase',
                                 'jenis_ok',
                                 'jenis_produk',
+                                'type',
                               ]);
                               const desc = {
                                 header_desc:

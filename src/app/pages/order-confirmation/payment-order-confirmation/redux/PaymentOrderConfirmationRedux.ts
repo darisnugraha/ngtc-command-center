@@ -10,6 +10,7 @@ import { doDecryptData } from '../../../../../setup/encrypt.js';
 import * as modal from '../../../../modules/modal/GlobalModalRedux';
 import * as modalSecond from '../../../../modules/modal/ModalSecondRedux';
 import * as utility from '../../../../../setup/redux/UtilityRedux';
+import { dataURLtoFile } from '../../../../../setup/function.js';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -934,10 +935,20 @@ export const actions = {
       };
 
       AxiosPost('receivable', onSendData)
-        .then((res: any) => {
+        .then(() => {
           // eslint-disable-next-line
-          console.log(res);
-          postImage(data.foto, res)
+          const foto = dataURLtoFile(
+            data.foto,
+            onSendData.no_order_konfirmasi.replace(/\//g, '_') +
+              onSendData.tanggal +
+              onSendData.bayar_rp
+          );
+          postImage(
+            foto,
+            onSendData.no_order_konfirmasi.replace(/\//g, '_') +
+              onSendData.tanggal +
+              onSendData.bayar_rp
+          )
             .then(() => {
               dispatch(utility.actions.hideLoading());
               toast.success('Success Add Data !');

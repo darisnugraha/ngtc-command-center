@@ -637,6 +637,7 @@ export const actions = {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
         const dataFind = res.find((element: any) => element.key === id);
+        dispatch(change('FormEditProduct', 'product_code', dataFind.kode_produk));
         dispatch(change('FormEditProduct', 'product_name', dataFind.nama_produk));
         dispatch(change('FormEditProduct', 'product_type', dataFind.tipe_produk));
         dispatch(change('FormEditProduct', 'qty', dataFind.qty || 1));
@@ -651,7 +652,7 @@ export const actions = {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
       getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
-        const dataFind = res.filter((element: any) => element.nama_produk !== data.product_name);
+        const dataFind = res.filter((element: any) => element.kode_produk !== data.product_code);
         const dataArr: listProductModel[] = [];
         let no = 1;
         dataFind.forEach((element: any) => {
@@ -674,7 +675,7 @@ export const actions = {
           // eslint-disable-next-line
           key: dataArr.length + 1,
           harga: data.price,
-          kode_produk: data.product,
+          kode_produk: data.product_code,
           nama_produk: data.product_name,
           qty: data.qty || 1,
           satuan: data.unit,

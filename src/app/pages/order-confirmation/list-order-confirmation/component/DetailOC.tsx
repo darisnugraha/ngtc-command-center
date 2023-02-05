@@ -187,12 +187,63 @@ const DetailOC: FC = () => {
       dataField: 'persentase',
       text: 'Percentage',
       align: 'center',
-      formatter: (cell) => {
+      formatter: (cell, row) => {
+        if (row.nama_diskon.includes('SOFTWARE')) {
+          const Produk = dataTab[0].detail_produk.filter(
+            (element: any) => element.jenis_produk === 'SOFTWARE'
+          );
+          const TotalProduk = Produk.reduce((a: any, b: any) => a + b.sub_total, 0);
+          if (row.persentase !== 0 && row.sub_total === 0) {
+            return <p className='text-hover-primary d-block mb-1 fs-6'>{cell * 100 || '-'} %</p>;
+          }
+          if (row.persentase === 0 && row.sub_total !== 0) {
+            const DiskonPersen = row.sub_total / TotalProduk;
+            return (
+              <p className='text-hover-primary d-block mb-1 fs-6'>
+                {(DiskonPersen * 100).toFixed(2) || '-'} %
+              </p>
+            );
+          }
+        }
+        if (row.nama_diskon.includes('HARDWARE')) {
+          const Produk = dataTab[0].detail_produk.filter(
+            (element: any) => element.jenis_produk === 'HARDWARE'
+          );
+          const TotalProduk = Produk.reduce((a: any, b: any) => a + b.sub_total, 0);
+          if (row.persentase !== 0 && row.sub_total === 0) {
+            return <p className='text-hover-primary d-block mb-1 fs-6'>{cell * 100 || '-'} %</p>;
+          }
+          if (row.persentase === 0 && row.sub_total !== 0) {
+            const DiskonPersen = row.sub_total / TotalProduk;
+            return (
+              <p className='text-hover-primary d-block mb-1 fs-6'>
+                {(DiskonPersen * 100).toFixed(2) || '-'} %
+              </p>
+            );
+          }
+        }
+        if (row.nama_diskon.includes('CONSUMABLE')) {
+          const Produk = dataTab[0].detail_produk.filter(
+            (element: any) => element.jenis_produk === 'CONSUMABLE'
+          );
+          const TotalProduk = Produk.reduce((a: any, b: any) => a + b.sub_total, 0);
+          if (row.persentase !== 0 && row.sub_total === 0) {
+            return <p className='text-hover-primary d-block mb-1 fs-6'>{cell * 100 || '-'} %</p>;
+          }
+          if (row.persentase === 0 && row.sub_total !== 0) {
+            const DiskonPersen = row.sub_total / TotalProduk;
+            return (
+              <p className='text-hover-primary d-block mb-1 fs-6'>
+                {(DiskonPersen * 100).toFixed(2) || '-'} %
+              </p>
+            );
+          }
+        }
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell * 100 || '-'} %</p>;
       },
       footerAlign: 'right',
       footer: () => {
-        return 'Grand Total';
+        return '';
       },
     },
     {
@@ -202,6 +253,88 @@ const DetailOC: FC = () => {
       formatter: (cell) => {
         return (
           <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell.toLocaleString() || '-'}</p>
+        );
+      },
+      footerAlign: 'right',
+      footer: () => {
+        return 'Grand Total';
+      },
+    },
+    {
+      dataField: '',
+      text: 'Diskon Total',
+      align: 'right',
+      formatter: (cell, row) => {
+        if (row.nama_diskon.includes('SOFTWARE')) {
+          const Produk = dataTab[0].detail_produk.filter(
+            (element: any) => element.jenis_produk === 'SOFTWARE'
+          );
+          const TotalProduk = Produk.reduce((a: any, b: any) => a + b.sub_total, 0);
+          if (row.persentase !== 0 && row.sub_total === 0) {
+            const GrandTotal = TotalProduk * row.persentase;
+            return (
+              <p className='text-hover-primary d-block mb-1 fs-6'>
+                Rp. {GrandTotal.toLocaleString() || '-'}
+              </p>
+            );
+          }
+          if (row.persentase === 0 && row.sub_total !== 0) {
+            const GrandTotal = row.sub_total;
+            return (
+              <p className='text-hover-primary d-block mb-1 fs-6'>
+                Rp. {GrandTotal.toLocaleString() || '-'}
+              </p>
+            );
+          }
+        }
+        if (row.nama_diskon.includes('HARDWARE')) {
+          const Produk = dataTab[0].detail_produk.filter(
+            (element: any) => element.jenis_produk === 'HARDWARE'
+          );
+          const TotalProduk = Produk.reduce((a: any, b: any) => a + b.sub_total, 0);
+          if (row.persentase !== 0 && row.sub_total === 0) {
+            const GrandTotal = TotalProduk * row.persentase;
+            return (
+              <p className='text-hover-primary d-block mb-1 fs-6'>
+                Rp. {GrandTotal.toLocaleString() || '-'}
+              </p>
+            );
+          }
+          if (row.persentase === 0 && row.sub_total !== 0) {
+            const GrandTotal = row.sub_total;
+            return (
+              <p className='text-hover-primary d-block mb-1 fs-6'>
+                Rp. {GrandTotal.toLocaleString() || '-'}
+              </p>
+            );
+          }
+        }
+        if (row.nama_diskon.includes('CONSUMABLE')) {
+          const Produk = dataTab[0].detail_produk.filter(
+            (element: any) => element.jenis_produk === 'CONSUMABLE'
+          );
+          const TotalProduk = Produk.reduce((a: any, b: any) => a + b.sub_total, 0);
+          if (row.persentase !== 0 && row.sub_total === 0) {
+            const GrandTotal = TotalProduk * row.persentase;
+            return (
+              <p className='text-hover-primary d-block mb-1 fs-6'>
+                Rp. {GrandTotal.toLocaleString() || '-'}
+              </p>
+            );
+          }
+          if (row.persentase === 0 && row.sub_total !== 0) {
+            const GrandTotal = row.sub_total;
+            return (
+              <p className='text-hover-primary d-block mb-1 fs-6'>
+                Rp. {GrandTotal.toLocaleString() || '-'}
+              </p>
+            );
+          }
+        }
+        return (
+          <p className='text-hover-primary d-block mb-1 fs-6'>
+            Rp. {row.sub_total.toLocaleString() || '-'}
+          </p>
         );
       },
       footerAlign: 'right',

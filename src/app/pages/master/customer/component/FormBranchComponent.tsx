@@ -2,6 +2,7 @@ import React from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { change, Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup';
+// import { upper } from '../../../../../setup/function.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField, RenderTextArea } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
@@ -89,6 +90,7 @@ const FormBranchComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any)
             component={RenderField}
             label='Branch Store Name'
             placeHolder='Insert Branch Store Name'
+            // normalize={upper}
           />
         </div>
         <div className='col-lg-6'>
@@ -108,9 +110,7 @@ const FormBranchComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any)
             label='Address'
             placeHolder='Insert Address'
             onChange={(e: any) => {
-              if (!isEdit) {
-                dispatch(change('FormBranchComponent', 'correspondence_address', e.target.value));
-              }
+              dispatch(change('FormBranchComponent', 'correspondence_address', e.target.value));
             }}
           />
         </div>

@@ -81,9 +81,7 @@ const FormStoreComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             label='Address'
             placeHolder='Insert Address'
             onChange={(e: any) => {
-              if (!isEdit) {
-                dispatch(change('FormStoreComponent', 'correspondence_address', e.target.value));
-              }
+              dispatch(change('FormStoreComponent', 'correspondence_address', e.target.value));
             }}
           />
         </div>

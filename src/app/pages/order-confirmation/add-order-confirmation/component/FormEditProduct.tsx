@@ -26,6 +26,17 @@ const FormEditProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
         </div>
         <div className='col-lg-4'>
           <Field
+            name='product_code'
+            type='text'
+            component={RenderField}
+            label='Product Name'
+            placeHolder='Insert Product Name'
+            isEdit={bool}
+            readOnly={bool}
+          />
+        </div>
+        <div className='col-lg-4'>
+          <Field
             name='product_name'
             type='text'
             component={RenderField}

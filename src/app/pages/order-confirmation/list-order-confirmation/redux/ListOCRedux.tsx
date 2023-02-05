@@ -14,7 +14,7 @@ import * as utility from '../../../../../setup/redux/UtilityRedux';
 import OCPDF from '../component/OCPDF.jsx';
 import { AxiosPut } from '../../../../../setup/axios/AxiosPut';
 import OC from '../../add-order-confirmation/component/OC.jsx';
-import { dataURLtoPDFFile } from '../../../../../setup/function.js';
+import { dataURLtoPDFFile, NumberOnly } from '../../../../../setup/function.js';
 import { postPDF } from '../../../../../setup/axios/Firebase';
 
 export interface ActionWithPayload<T> extends Action {
@@ -545,12 +545,12 @@ export const actions = {
             type: actionTypes.GetDetailDataProduct,
             payload: { detailProduct: dataDecrypt[0] },
           });
-          dispatch(change('FormEditProduct', 'qty', 1));
-          dispatch(change('FormEditProduct', 'product_name', dataDecrypt[0].nama_produk));
-          dispatch(change('FormEditProduct', 'unit', dataDecrypt[0].satuan));
-          dispatch(change('FormEditProduct', 'price', dataDecrypt[0].harga));
-          dispatch(change('FormEditProduct', 'sub_total', dataDecrypt[0].harga * 1));
-          dispatch(change('FormEditProduct', 'type', dataDecrypt[0].type || '-'));
+          dispatch(change('FormEditProductList', 'qty', 1));
+          dispatch(change('FormEditProductList', 'product_name', dataDecrypt[0].nama_produk));
+          dispatch(change('FormEditProductList', 'unit', dataDecrypt[0].satuan));
+          dispatch(change('FormEditProductList', 'price', dataDecrypt[0].harga));
+          dispatch(change('FormEditProductList', 'sub_total', dataDecrypt[0].harga * 1));
+          dispatch(change('FormEditProductList', 'type', dataDecrypt[0].type || '-'));
         });
       } else if (type === 'CONSUMABLE') {
         AxiosGet(`consumable/by-kode/${code}`).then((res) => {
@@ -567,12 +567,12 @@ export const actions = {
             type: actionTypes.GetDetailDataProduct,
             payload: { detailProduct: dataDecrypt[0] },
           });
-          dispatch(change('FormEditProduct', 'qty', 1));
-          dispatch(change('FormEditProduct', 'product_name', dataDecrypt[0].nama_consumable));
-          dispatch(change('FormEditProduct', 'unit', dataDecrypt[0].satuan));
-          dispatch(change('FormEditProduct', 'price', dataDecrypt[0].harga));
-          dispatch(change('FormEditProduct', 'sub_total', dataDecrypt[0].harga * 1));
-          dispatch(change('FormEditProduct', 'type', dataDecrypt[0].type || '-'));
+          dispatch(change('FormEditProductList', 'qty', 1));
+          dispatch(change('FormEditProductList', 'product_name', dataDecrypt[0].nama_consumable));
+          dispatch(change('FormEditProductList', 'unit', dataDecrypt[0].satuan));
+          dispatch(change('FormEditProductList', 'price', dataDecrypt[0].harga));
+          dispatch(change('FormEditProductList', 'sub_total', dataDecrypt[0].harga * 1));
+          dispatch(change('FormEditProductList', 'type', dataDecrypt[0].type || '-'));
         });
       } else if (type === 'HARDWARE') {
         AxiosGet(`hardware/by-kode/${code}`).then((res) => {
@@ -589,12 +589,12 @@ export const actions = {
             type: actionTypes.GetDetailDataProduct,
             payload: { detailProduct: dataDecrypt[0] },
           });
-          dispatch(change('FormEditProduct', 'qty', 1));
-          dispatch(change('FormEditProduct', 'product_name', dataDecrypt[0].nama_hardware));
-          dispatch(change('FormEditProduct', 'unit', dataDecrypt[0].satuan));
-          dispatch(change('FormEditProduct', 'price', dataDecrypt[0].harga));
-          dispatch(change('FormEditProduct', 'sub_total', dataDecrypt[0].harga * 1));
-          dispatch(change('FormEditProduct', 'type', dataDecrypt[0].type || '-'));
+          dispatch(change('FormEditProductList', 'qty', 1));
+          dispatch(change('FormEditProductList', 'product_name', dataDecrypt[0].nama_hardware));
+          dispatch(change('FormEditProductList', 'unit', dataDecrypt[0].satuan));
+          dispatch(change('FormEditProductList', 'price', dataDecrypt[0].harga));
+          dispatch(change('FormEditProductList', 'sub_total', dataDecrypt[0].harga * 1));
+          dispatch(change('FormEditProductList', 'type', dataDecrypt[0].type || '-'));
         });
       } else {
         AxiosGet(`bundle/by-kode/${code}`).then((res) => {
@@ -613,12 +613,12 @@ export const actions = {
             type: actionTypes.GetDetailDataProduct,
             payload: { detailProduct: dataDecrypt[0] },
           });
-          dispatch(change('FormEditProduct', 'qty', 1));
-          dispatch(change('FormEditProduct', 'unit', 'PACKAGE'));
-          dispatch(change('FormEditProduct', 'product_name', dataDecrypt[0].nama_paket));
-          dispatch(change('FormEditProduct', 'price', dataDecrypt[0].total_harga));
-          dispatch(change('FormEditProduct', 'sub_total', dataDecrypt[0].total_harga * 1));
-          dispatch(change('FormEditProduct', 'type', dataDecrypt[0].type || '-'));
+          dispatch(change('FormEditProductList', 'qty', 1));
+          dispatch(change('FormEditProductList', 'unit', 'PACKAGE'));
+          dispatch(change('FormEditProductList', 'product_name', dataDecrypt[0].nama_paket));
+          dispatch(change('FormEditProductList', 'price', dataDecrypt[0].total_harga));
+          dispatch(change('FormEditProductList', 'sub_total', dataDecrypt[0].total_harga * 1));
+          dispatch(change('FormEditProductList', 'type', dataDecrypt[0].type || '-'));
         });
       }
     };
@@ -671,6 +671,34 @@ export const actions = {
           const dataErr = err.response?.data;
           toast.error(dataErr.message || 'Error');
         });
+    };
+  },
+  setSubTotal: (qty: any) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const data = state.form.FormEditProductList.values;
+      // eslint-disable-next-line
+      const price = data.price;
+      // eslint-disable-next-line
+      const total = parseInt(qty) * parseInt(price);
+      dispatch(change('FormEditProductList', 'sub_total', total));
+    };
+  },
+  setSubTotalRp: (harga: any) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const data = state.form.FormEditProductList.values;
+      // eslint-disable-next-line
+      const qty = data.qty;
+      // eslint-disable-next-line
+      const total = parseInt(qty) * NumberOnly(harga);
+      dispatch(change('FormEditProductList', 'sub_total', total));
     };
   },
 };

@@ -19,7 +19,13 @@ const OCPDF = (data, head) => {
   );
   doc.text('Kepada Yth : ', 15, final + 15);
   doc.setFont(undefined, 'bold');
-  doc.text(data[0].nama_toko, 15, final + 20);
+  let toko = '';
+  if (data[0].nama_cabang === 'PUSAT') {
+    toko = data[0].nama_toko;
+  } else {
+    toko = data[0].nama_cabang;
+  }
+  doc.text(toko, 15, final + 20);
   doc.setFont(undefined, 'normal');
   doc.text(data[0].alamat_cabang, 15, final + 25);
   doc.text(data[0].kota, 15, final + 35);

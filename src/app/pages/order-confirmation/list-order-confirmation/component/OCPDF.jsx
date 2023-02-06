@@ -277,15 +277,9 @@ const OCPDF = (data, head) => {
   const pageWidth = doc.internal.pageSize.width;
   const pageHeight = doc.internal.pageSize.height;
   doc.setFontSize(10);
-  for (let j = 1; j < pages + 1; j += 1) {
-    const horizontalPos = pageWidth / 2;
-    const verticalPos = pageHeight - 10;
-    doc.setPage(j);
-    // doc.text(`${j} of ${pages}`, horizontalPos, verticalPos, {
-    //   align: 'center',
-    // });
-  }
-  let finalTableY = finalY + 78;
+  doc.setFont(undefined, 'bold');
+  doc.text('*Pembayaran dapat di transfer melalui rekening*',23, finalY + 78);
+  let finalTableY = finalY + 83;
 
   let tableRowsBank = [];
   let tableColumnBank = [];

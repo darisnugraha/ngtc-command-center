@@ -277,7 +277,9 @@ const OC = (data, head) => {
   const pageWidth = doc.internal.pageSize.width;
   const pageHeight = doc.internal.pageSize.height;
   doc.setFontSize(10);
-  let finalTableY = finalY + 78;
+  doc.setFont(undefined, 'bold');
+  doc.text('*Pembayaran dapat di transfer melalui rekening*', 23, finalY + 78);
+  let finalTableY = finalY + 83;
 
   let tableRowsBank = [];
   let tableColumnBank = [];

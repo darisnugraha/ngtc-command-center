@@ -219,18 +219,18 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
           </div>
         </div>
       </div>
-      <div className='card mb-5 mb-xl-8 mt-10 d-none'>
-        <div className='card-header border-0 pt-5'>
+      <div className='card mb-5 mb-xl-8 mt-10'>
+        <div className='card-header border-0 pt-5 d-none'>
           <h3 className='card-title align-items-start flex-column'>
             <span className='card-label fw-bolder fs-3 mb-1'>List Service</span>
           </h3>
         </div>
         <div className='card-body py-3'>
           <div className='row'>
-            <div className='col-lg-12'>
+            <div className='col-lg-12 d-none'>
               <TableSupportService />
             </div>
-            <div className='col-lg-12'>
+            <div className='col-lg-12 d-none'>
               <TableProductionService />
             </div>
             <div className='col-lg-12'>

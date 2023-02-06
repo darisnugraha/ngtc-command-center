@@ -963,30 +963,34 @@ export const actions = {
                                 `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
                               )
                                 .then(() => {
-                                  toast.success('Success Add Data !');
-                                  localStorage.removeItem('dataCustomer');
-                                  localStorage.removeItem('listProduct');
-                                  localStorage.removeItem('listDiscount');
-                                  localStorage.removeItem('type_oc');
-                                  localStorage.removeItem('listSupport');
-                                  localStorage.removeItem('listProduction');
-                                  dispatch(modal.actions.hide());
-                                  dispatch(utility.actions.hideLoading());
-                                  dispatch(customerRedux.actions.PrevCustomer());
-                                  window.location.reload();
+                                  Swal.fire('Good job!', 'Success Add Data !', 'success').then(
+                                    () => {
+                                      localStorage.removeItem('dataCustomer');
+                                      localStorage.removeItem('listProduct');
+                                      localStorage.removeItem('listDiscount');
+                                      localStorage.removeItem('type_oc');
+                                      localStorage.removeItem('listSupport');
+                                      localStorage.removeItem('listProduction');
+                                      dispatch(modal.actions.hide());
+                                      dispatch(utility.actions.hideLoading());
+                                      dispatch(customerRedux.actions.PrevCustomer());
+                                      window.location.reload();
+                                    }
+                                  );
                                 })
                                 .catch(() => {
-                                  toast.success('Success Add Data !');
-                                  localStorage.removeItem('dataCustomer');
-                                  localStorage.removeItem('listProduct');
-                                  localStorage.removeItem('listDiscount');
-                                  localStorage.removeItem('type_oc');
-                                  localStorage.removeItem('listSupport');
-                                  localStorage.removeItem('listProduction');
-                                  dispatch(modal.actions.hide());
-                                  dispatch(utility.actions.hideLoading());
-                                  dispatch(customerRedux.actions.PrevCustomer());
-                                  window.location.reload();
+                                  Swal.fire().then(() => {
+                                    localStorage.removeItem('dataCustomer');
+                                    localStorage.removeItem('listProduct');
+                                    localStorage.removeItem('listDiscount');
+                                    localStorage.removeItem('type_oc');
+                                    localStorage.removeItem('listSupport');
+                                    localStorage.removeItem('listProduction');
+                                    dispatch(modal.actions.hide());
+                                    dispatch(utility.actions.hideLoading());
+                                    dispatch(customerRedux.actions.PrevCustomer());
+                                    window.location.reload();
+                                  });
                                 });
                             });
                           })

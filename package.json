@@ -96,6 +96,7 @@
   "scripts": {
     "start": "react-scripts start",
     "local-dev": "export REACT_APP_BACKEND_URL=http://192.168.1.28:5555/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=http://192.168.1.28:5555/api/&& react-scripts start",
+    "local-dev2": "export REACT_APP_BACKEND_URL=http://10.20.30.105:5555/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=http://192.168.1.28:5555/api/&& react-scripts start",
     "local-qc": "export REACT_APP_BACKEND_URL=http://103.119.55.52:5555/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=http://103.119.55.52:5555/api/&& react-scripts start",
     "build-qc": "export REACT_APP_BACKEND_URL=http://103.119.55.52:5555/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=http://103.119.55.52:5555/api/&& react-scripts build",
     "build": "react-scripts build",

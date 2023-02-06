@@ -125,7 +125,7 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
             </div>
           </div>
         </div>
-        <div className='accordion-item'>
+        <div className='accordion-item d-none'>
           <h2 className='accordion-header' id='kt_accordion_1_support'>
             <button
               className='accordion-button fs-4 fw-bold collapsed'
@@ -154,7 +154,7 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
             </div>
           </div>
         </div>
-        <div className='accordion-item'>
+        <div className='accordion-item d-none'>
           <h2 className='accordion-header' id='kt_accordion_1_support'>
             <button
               className='accordion-button fs-4 fw-bold collapsed'
@@ -219,7 +219,7 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
           </div>
         </div>
       </div>
-      <div className='card mb-5 mb-xl-8 mt-10'>
+      <div className='card mb-5 mb-xl-8 mt-10 d-none'>
         <div className='card-header border-0 pt-5'>
           <h3 className='card-title align-items-start flex-column'>
             <span className='card-label fw-bolder fs-3 mb-1'>List Service</span>

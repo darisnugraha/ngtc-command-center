@@ -102,8 +102,8 @@ export const PrivateRoutes = () => {
         <Route path='/report/report-implementation' component={ImplementationReportPage} />
         <Route path='/report/report-delivery' component={DeliveryOrderReportPage} />
         {/* end report */}
-        <Redirect from='/auth' to='/dashboard' />
-        <Redirect exact from='/' to='/dashboard' />
+        <Redirect from='/auth' to='/potential-customer' />
+        <Redirect exact from='/' to='/potential-customer' />
         <Redirect to='error/404' />
       </Switch>
     </Suspense>

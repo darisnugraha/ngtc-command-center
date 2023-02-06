@@ -910,7 +910,7 @@ export const actions = {
                           telepon: resCust.telephone || '-',
                           email: resCust.email || '-',
                           kode_staff: resCust.staff,
-                          kode_reseller: resCust.referral || '-',
+                          // kode_reseller: resCust.referral || '-',
                           biaya_reseller: resCust.reseller_fee || 0,
                           jenis_ok: resType[0],
                           detail_produk: dataProd,

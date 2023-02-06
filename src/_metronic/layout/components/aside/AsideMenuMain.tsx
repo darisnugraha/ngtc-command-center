@@ -7,12 +7,12 @@ import { AsideMenuItem } from './AsideMenuItem';
 export default function AsideMenuMain() {
   return (
     <>
-      <AsideMenuItem
+      {/* <AsideMenuItem
         to='/dashboard'
         icon='/media/icons/duotune/general/gen001.svg'
         title='Dashboard'
         fontIcon='bi-app-indicator'
-      />
+      /> */}
       <AsideMenuItem
         to='/potential-customer'
         icon='/media/icons/duotune/communication/com006.svg'
@@ -38,7 +38,7 @@ export default function AsideMenuMain() {
         <AsideMenuItem to='/master/division' title='Master Division' hasBullet />
         <AsideMenuItem to='/master/discount' title='Master Discount' hasBullet />
       </AsideMenuItemWithSub>
-      <AsideMenuItemWithSub
+      {/* <AsideMenuItemWithSub
         to='/service'
         title='Service'
         icon='/media/icons/duotune/coding/cod009.svg'
@@ -46,7 +46,7 @@ export default function AsideMenuMain() {
       >
         <AsideMenuItem to='/service/support' title='Support Service' hasBullet />
         <AsideMenuItem to='/service/production' title='Production Service' hasBullet />
-      </AsideMenuItemWithSub>
+      </AsideMenuItemWithSub> */}
       <AsideMenuItemWithSub
         to='/order-confirmation'
         title='Order Confirmation'
@@ -121,9 +121,9 @@ export default function AsideMenuMain() {
           title='Report Order Confirmation'
           hasBullet
         />
-        {/* <AsideMenuItem to='/report/report-receivable' title='Report Receivable' hasBullet /> */}
-        {/* <AsideMenuItem to='/report/report-implementation' title='Report Implementation' hasBullet /> */}
-        {/* <AsideMenuItem to='/report/report-delivery' title='Report Delivery Order' hasBullet /> */}
+        {/* <AsideMenuItem to='/report/report-receivable' title='Report Receivable' hasBullet />
+        <AsideMenuItem to='/report/report-implementation' title='Report Implementation' hasBullet />
+        <AsideMenuItem to='/report/report-delivery' title='Report Delivery Order' hasBullet /> */}
       </AsideMenuItemWithSub>
     </>
   );

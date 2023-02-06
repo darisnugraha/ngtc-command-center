@@ -13,7 +13,7 @@ import * as modal from '../../../modules/modal/GlobalModalRedux';
 import DetailOC from './component/DetailOC';
 import FormPrintPDF from './component/FormPrintPDF';
 import FormEditCustomer from './component/FormEditCustomer';
-import FormEditProduct from './component/FormEditProduct';
+import FormEditProductList from './component/FormEditProductList';
 import TableDataProduct from './component/TableDataProduct';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
@@ -38,6 +38,8 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
   const handleCloseModal = () => {
     dispatch(modal.actions.hide());
   };
+
+  const isLoading = useSelector<RootState, boolean>(({ utility }) => utility.isLoadingButton);
 
   const columns: ColumnDescription[] = [
     {
@@ -226,7 +228,7 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
             />
           ) : (
             <>
-              <FormEditProduct
+              <FormEditProductList
                 onSubmit={(data: any) => {
                   dispatch(redux.actions.saveLocal(data));
                 }}
@@ -242,7 +244,16 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
                       dispatch(redux.actions.postProduct());
                     }}
                     className='btn btn-sm btn-primary'
+                    disabled={isLoading}
                   >
+                    {isLoading ? (
+                      <span
+                        className='spinner-border spinner-border-sm'
+                        style={{ marginRight: '10px' }}
+                        role='status'
+                        aria-hidden='true'
+                      />
+                    ) : null}
                     Save
                   </button>
                 </div>

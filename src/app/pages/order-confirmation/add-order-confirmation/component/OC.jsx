@@ -1,5 +1,6 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import moment from 'moment';
 import { toAbsoluteUrl } from '../../../../../_metronic/helpers';
 
 const OC = (data, head) => {
@@ -11,9 +12,20 @@ const OC = (data, head) => {
   doc.addImage(imgData, 'PNG', 0, 0, 215, 25);
   let final = 15;
   doc.setFontSize(8);
+  doc.text(
+    `Bandung, ${moment(data[0].tanggal_order_konfirmasi).format('DD MMMM YYYY')}`,
+    145,
+    final + 15
+  );
   doc.text('Kepada Yth : ', 15, final + 15);
   doc.setFont(undefined, 'bold');
-  doc.text(data[0].nama_toko, 15, final + 20);
+  let toko = '';
+  if (data[0].nama_cabang === 'PUSAT') {
+    toko = data[0].nama_toko;
+  } else {
+    toko = data[0].nama_cabang;
+  }
+  doc.text(toko, 15, final + 20);
   doc.setFont(undefined, 'normal');
   doc.text(data[0].alamat_cabang, 15, final + 25);
   doc.text(data[0].kota, 15, final + 35);
@@ -28,7 +40,7 @@ const OC = (data, head) => {
   doc.text('Dengan Hormat ,', 23, final + 65);
   const headerDesc = head.header_desc;
   const jumlah_header_desc = headerDesc.length;
-  if (jumlah_header_desc > 127) {
+  if (jumlah_header_desc > 0) {
     doc.text(headerDesc.slice(0, 127), 26, final + 70);
   }
   if (jumlah_header_desc > 157) {
@@ -257,23 +269,77 @@ const OC = (data, head) => {
   );
   doc.text('Hormat Kami, ', 50, finalY + 48);
   doc.text('Menyetujui, ', 140, finalY + 48);
-  doc.text('Budi Kristiyanto', 48, finalY + 78);
-  doc.text(data[0].nama_customer, 138, finalY + 78);
+
+  doc.text('Budi Kristiyanto', 48, finalY + 68);
+  doc.text(data[0].nama_customer, 138, finalY + 68);
 
   const pages = doc.internal.getNumberOfPages();
   const pageWidth = doc.internal.pageSize.width;
   const pageHeight = doc.internal.pageSize.height;
   doc.setFontSize(10);
+  let finalTableY = finalY + 78;
+
+  let tableRowsBank = [];
+  let tableColumnBank = [];
+
+  if (data[0].jenis_ok === 'INCLUDE SOFTWARE') {
+    tableColumnBank = [
+      [
+        { content: `BCA` },
+        { content: `7753 0151 18` },
+        { content: `PT. NAGATECH SISTEM INTEGRATOR` },
+      ],
+      [
+        { content: `BANK MANDIRI` },
+        { content: `132-00-6260-1688` },
+        { content: `PT. NAGATECH SISTEM INTEGRATOR` },
+      ],
+    ];
+    tableRowsBank.push();
+  } else {
+    tableColumnBank = [
+      [{ content: `BCA` }, { content: `7405557878` }, { content: `BUDI KRISTIYANTO SH` }],
+    ];
+    tableRowsBank.push();
+  }
+
+  doc.autoTable({
+    head: tableColumnBank,
+    body: tableRowsBank,
+    startY: finalTableY,
+    theme: 'grid',
+    pageBreak: 'auto',
+    rowPageBreak: 'avoid',
+    margin: { top: 10 },
+    bodyStyles: {
+      fontSize: 7,
+      halign: 'center',
+      valign: 'middle',
+    },
+    headStyles: {
+      fontSize: 7,
+      fillColor: '#fff',
+      textColor: '#000',
+      valign: 'middle',
+      halign: 'center',
+      lineWidth: 0.5,
+      lineColor: [0, 0, 0],
+    },
+  });
+  tableRowsBank = [];
+  tableColumnBank = [];
+  finalTableY = doc.lastAutoTable.finalY + 10;
+
   for (let j = 1; j < pages + 1; j += 1) {
     const horizontalPos = pageWidth / 2;
-    const verticalPos = pageHeight - 10;
+    const verticalPos = pageHeight - 32;
     doc.setPage(j);
     // doc.text(`${j} of ${pages}`, horizontalPos, verticalPos, {
     //   align: 'center',
     // });
+    var imgData = toAbsoluteUrl('/media/kop/footer.png');
+    doc.addImage(imgData, 'PNG', 0, verticalPos, pageWidth, 30);
   }
-  var imgData = toAbsoluteUrl('/media/kop/footer.png');
-  doc.addImage(imgData, 'PNG', 0, finalY + 95, pageWidth, 30);
   const string = doc.output('datauristring');
   return string;
   //   const x = window.open();

@@ -72,3 +72,5 @@ export const NumberOnly = (value, previousValue) => {
     return value;
   }
 };
+
+export const upper = (value) => value && value.toUpperCase();

@@ -3,6 +3,7 @@ import { change } from 'redux-form';
 import { toast } from 'react-toastify';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import Swal from 'sweetalert2';
 import { AxiosGet, AxiosPost } from '../../../../setup';
 import { doDecryptData } from '../../../../setup/encrypt.js';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
@@ -194,10 +195,9 @@ export const actions = {
       };
       AxiosPost('applicant', onSendData)
         .then(() => {
-          toast.success('Success Add Data !');
-          dispatch(utility.actions.hideLoading());
-          dispatch(actions.getPotentialCustomer());
-          dispatch(modal.actions.hide());
+          Swal.fire('Good job!', 'Success Add Data !', 'success').then(() => {
+            window.location.reload();
+          });
         })
         .catch(() => {
           toast.error('Error Add Data !');
@@ -212,9 +212,11 @@ export const actions = {
       };
       AxiosPost('applicant/validate', onSendData)
         .then(() => {
-          toast.success('Validation Data Success!');
-          dispatch(actions.getPotentialCustomer());
-          dispatch(redux.actions.getStore());
+          Swal.fire('Good job!', 'Validation Data Success !', 'success').then(() => {
+            dispatch(actions.getPotentialCustomer());
+            dispatch(redux.actions.getStore());
+            window.location.reload();
+          });
         })
         .catch((err) => {
           const dataErr = err.response?.data;

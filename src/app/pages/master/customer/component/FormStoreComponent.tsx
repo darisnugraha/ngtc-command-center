@@ -1,7 +1,8 @@
 import React from 'react';
-import { connect, useSelector } from 'react-redux';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import { change, Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup';
+import { upper } from '../../../../../setup/function.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField, RenderTextArea } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
@@ -35,6 +36,7 @@ const mapState = (state: RootState) => {
 
 const FormStoreComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const { handleSubmit } = props;
+  const dispatch = useDispatch();
 
   const isEdit: any = useSelector<RootState>(({ customer }) => customer.isEdit);
   const dataEdit: any = useSelector<RootState>(({ customer }) => customer.feedbackIDStore);
@@ -61,6 +63,7 @@ const FormStoreComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             component={RenderField}
             label='Store Code'
             placeHolder='Insert Store Code'
+            normalize={upper}
           />
         </div>
         <div className='col-lg-6'>
@@ -70,6 +73,7 @@ const FormStoreComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             component={RenderField}
             label='Store Name'
             placeHolder='Insert Store Name'
+            normalize={upper}
           />
         </div>
         <div className='col-lg-12'>
@@ -79,6 +83,9 @@ const FormStoreComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             component={RenderTextArea}
             label='Address'
             placeHolder='Insert Address'
+            onChange={(e: any) => {
+              dispatch(change('FormStoreComponent', 'correspondence_address', e.target.value));
+            }}
           />
         </div>
         <div className='col-lg-12'>
@@ -97,6 +104,7 @@ const FormStoreComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             component={RenderField}
             label='Customer Name'
             placeHolder='Insert Customer Name'
+            normalize={upper}
           />
         </div>
         <div className='col-lg-6'>
@@ -106,6 +114,7 @@ const FormStoreComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             component={RenderField}
             label='City'
             placeHolder='Insert City'
+            normalize={upper}
           />
         </div>
         <div className='col-lg-6'>

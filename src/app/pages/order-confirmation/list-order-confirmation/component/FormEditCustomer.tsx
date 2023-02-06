@@ -1,9 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { connect, useDispatch } from 'react-redux';
+import { change, Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup/index.js';
 import SubmitButton from '../../../../modules/button';
-import { RenderField } from '../../../../modules/redux-form/BasicInput';
+import { RenderField, RenderTextArea } from '../../../../modules/redux-form/BasicInput';
 
 interface Props {}
 
@@ -25,6 +25,7 @@ const mapState = (state: RootState) => {
 
 const FormEditCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const { handleSubmit } = props;
+  const dispatch = useDispatch();
 
   return (
     <form onSubmit={handleSubmit}>
@@ -36,16 +37,19 @@ const FormEditCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
           <Field
             name='alamat_cabang'
             type='text'
-            component={RenderField}
+            component={RenderTextArea}
             label='Address'
             placeHolder='Address'
+            onChange={(e: any) => {
+              dispatch(change('FormEditCustomer', 'alamat_korespondensi', e.target.value));
+            }}
           />
         </div>
         <div className='col-lg-6'>
           <Field
             name='alamat_korespondensi'
             type='text'
-            component={RenderField}
+            component={RenderTextArea}
             label='Correspondence Address'
             placeHolder='Correspondence Address'
           />

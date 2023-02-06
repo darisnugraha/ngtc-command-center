@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup';
+import { upper } from '../../../../../setup/function.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField } from '../../../../modules/redux-form/BasicInput';
 import AddBankValidation from '../validasi/AddBankValidation';
@@ -42,6 +43,7 @@ const FormBankComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) =
             component={RenderField}
             label='Bank Name'
             placeHolder='Insert Bank Name'
+            normalize={upper}
           />
         </div>
         <div className='col-lg-12'>
@@ -60,6 +62,7 @@ const FormBankComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) =
             component={RenderField}
             label='Account Name'
             placeHolder='Insert Account Name'
+            normalize={upper}
           />
         </div>
       </div>

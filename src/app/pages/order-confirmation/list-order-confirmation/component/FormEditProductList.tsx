@@ -13,7 +13,7 @@ interface Props {}
 // eslint-disable-next-line
 const mapState = (state: RootState) => {};
 
-const FormEditProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
+const FormEditProductList: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const { handleSubmit } = props;
   const dispatch = useDispatch();
 
@@ -107,6 +107,9 @@ const FormEditProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
             component={RenderField}
             label='Qty'
             placeHolder='Insert Qty'
+            onChange={(e: any) => {
+              dispatch(redux.actions.setSubTotal(e.target.value));
+            }}
           />
         </div>
         <div className='col-lg-2'>
@@ -128,6 +131,7 @@ const FormEditProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
             label='Price'
             placeHolder='Insert Price'
             {...currencyMask}
+            onChange={(e: any) => dispatch(redux.actions.setSubTotalRp(e.target.value))}
           />
         </div>
         <div className='col-lg-2'>
@@ -153,8 +157,8 @@ const FormEditProduct: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
 const form = reduxForm<{}, Props>({
   destroyOnUnmount: true,
   forceUnregisterOnUnmount: true,
-  form: 'FormEditProduct',
+  form: 'FormEditProductList',
   touchOnChange: true,
   //   validate: AddProductionServiceValidation,
-})(FormEditProduct);
+})(FormEditProductList);
 export default connect(mapState, null)(form);

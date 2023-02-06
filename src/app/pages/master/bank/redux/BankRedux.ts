@@ -70,10 +70,9 @@ export const actions = {
 
       AxiosPost('bank', onSendData)
         .then(() => {
-          toast.success('Success Add Data !');
-          dispatch(actions.getBank());
-          dispatch(utility.actions.hideLoading());
-          dispatch(actions.closeModal());
+          Swal.fire('Good job!', 'Success Add Data !', 'success').then(() => {
+            window.location.reload();
+          });
         })
         .catch(() => {
           toast.error('Failed Add Data !');
@@ -123,9 +122,9 @@ export const actions = {
         if (result.isConfirmed) {
           AxiosDelete(`bank/${id}`)
             .then(() => {
-              toast.success('Success Delete Data !');
-              dispatch(utility.actions.hideLoading());
-              dispatch(actions.getBank());
+              Swal.fire('Good job!', 'Success Delete Data !', 'success').then(() => {
+                window.location.reload();
+              });
             })
             .catch(() => {
               toast.error('Failed Delete Data !');
@@ -145,10 +144,9 @@ export const actions = {
       };
       AxiosPut(`bank/${data.id}`, onSendData)
         .then(() => {
-          toast.success('Success Edit Data !');
-          dispatch(actions.getBank());
-          dispatch(utility.actions.hideLoading());
-          dispatch(actions.closeModal());
+          Swal.fire('Good job!', 'Success Edit Data !', 'success').then(() => {
+            window.location.reload();
+          });
         })
         .catch(() => {
           toast.error('Failed Edit Data !');

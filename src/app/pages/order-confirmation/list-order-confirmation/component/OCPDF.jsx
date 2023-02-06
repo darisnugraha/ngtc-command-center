@@ -270,8 +270,8 @@ const OCPDF = (data, head) => {
   doc.text('Hormat Kami, ', 50, finalY + 48);
   doc.text('Menyetujui, ', 140, finalY + 48);
 
-  doc.text('Budi Kristiyanto', 48, finalY + 78);
-  doc.text(data[0].nama_customer, 138, finalY + 78);
+  doc.text('Budi Kristiyanto', 48, finalY + 68);
+  doc.text(data[0].nama_customer, 138, finalY + 68);
 
   const pages = doc.internal.getNumberOfPages();
   const pageWidth = doc.internal.pageSize.width;
@@ -285,8 +285,61 @@ const OCPDF = (data, head) => {
     //   align: 'center',
     // });
   }
+  let finalTableY = finalY + 78;
+
+  let tableRowsBank = [];
+  let tableColumnBank = [];
+
+  if (data[0].jenis_ok === 'INCLUDE SOFTWARE') {
+    tableColumnBank = [
+      [
+        { content: `BCA` },
+        { content: `7753 0151 18` },
+        { content: `PT. NAGATECH SISTEM INTEGRATOR` },
+      ],
+      [
+        { content: `BANK MANDIRI` },
+        { content: `132-00-6260-1688` },
+        { content: `PT. NAGATECH SISTEM INTEGRATOR` },
+      ],
+    ];
+    tableRowsBank.push();
+  } else {
+    tableColumnBank = [
+      [{ content: `BCA` }, { content: `7405557878` }, { content: `BUDI KRISTIYANTO SH` }],
+    ];
+    tableRowsBank.push();
+  }
+
+  doc.autoTable({
+    head: tableColumnBank,
+    body: tableRowsBank,
+    startY: finalTableY,
+    theme: 'grid',
+    pageBreak: 'auto',
+    rowPageBreak: 'avoid',
+    margin: { top: 10 },
+    bodyStyles: {
+      fontSize: 7,
+      halign: 'center',
+      valign: 'middle',
+    },
+    headStyles: {
+      fontSize: 7,
+      fillColor: '#fff',
+      textColor: '#000',
+      valign: 'middle',
+      halign: 'center',
+      lineWidth: 0.5,
+      lineColor: [0, 0, 0],
+    },
+  });
+  tableRowsBank = [];
+  tableColumnBank = [];
+  finalTableY = doc.lastAutoTable.finalY + 10;
+
   var imgData = toAbsoluteUrl('/media/kop/footer.png');
-  doc.addImage(imgData, 'PNG', 0, finalY + 95, pageWidth, 30);
+  doc.addImage(imgData, 'PNG', 0, finalTableY, pageWidth, 30);
   const string = doc.output('bloburl');
   const x = window.open();
   x.document.open();

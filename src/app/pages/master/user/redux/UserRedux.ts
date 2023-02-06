@@ -103,11 +103,9 @@ export const actions = {
       };
       AxiosPostLogin('auth/register', onSendData)
         .then(() => {
-          dispatch(actions.getUser());
-          toast.success('Success Add Data !');
-          dispatch(utility.actions.hideLoading());
-          dispatch(modal.actions.hide());
-          window.location.reload();
+          Swal.fire('Good job!', 'Success Add Data !', 'success').then(() => {
+            window.location.reload();
+          });
         })
         .catch((err) => {
           const dataErr = err.response.data;
@@ -126,10 +124,9 @@ export const actions = {
       AxiosPut(`users/${data.id}`, onSendData)
         .then(() => {
           dispatch(actions.getUser());
-          toast.success('Success Edit Data !');
-          dispatch(utility.actions.hideLoading());
-          dispatch(modal.actions.hide());
-          window.location.reload();
+          Swal.fire('Good job!', 'Success Edit Data !', 'success').then(() => {
+            window.location.reload();
+          });
         })
         .catch((err) => {
           const dataErr = err.response.data;
@@ -152,10 +149,9 @@ export const actions = {
         if (result.isConfirmed) {
           AxiosDelete(`users/${id}`)
             .then(() => {
-              toast.success('Success Delete Data !');
-              dispatch(utility.actions.hideLoading());
-              dispatch(actions.getUser());
-              window.location.reload();
+              Swal.fire('Good job!', 'Success Delete Data !', 'success').then(() => {
+                window.location.reload();
+              });
             })
             .catch(() => {
               toast.error('Failed Delete Data !');

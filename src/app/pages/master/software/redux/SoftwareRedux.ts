@@ -72,11 +72,9 @@ export const actions = {
 
       AxiosPost('product', onSendData)
         .then(() => {
-          toast.success('Success Add Data !');
-          dispatch(actions.getSoftware());
-          dispatch(utility.actions.hideLoading());
-          dispatch(actions.closeModal());
-          window.location.reload();
+          Swal.fire('Good job!', 'Success Add Data !', 'success').then(() => {
+            window.location.reload();
+          });
         })
         .catch(() => {
           toast.error('Failed Add Data !');
@@ -140,10 +138,9 @@ export const actions = {
         if (result.isConfirmed) {
           AxiosDelete(`product/${id}`)
             .then(() => {
-              toast.success('Success Delete Data !');
-              dispatch(utility.actions.hideLoading());
-              dispatch(actions.getSoftware());
-              window.location.reload();
+              Swal.fire('Good job!', 'Success Delete Data !', 'success').then(() => {
+                window.location.reload();
+              });
             })
             .catch(() => {
               toast.error('Failed Delete Data !');
@@ -165,11 +162,9 @@ export const actions = {
       };
       AxiosPut(`product/${data.id}`, onSendData)
         .then(() => {
-          toast.success('Success Edit Data !');
-          dispatch(actions.getSoftware());
-          dispatch(utility.actions.hideLoading());
-          dispatch(actions.closeModal());
-          window.location.reload();
+          Swal.fire('Good job!', 'Success Edit Data !', 'success').then(() => {
+            window.location.reload();
+          });
         })
         .catch(() => {
           toast.error('Failed Edit Data !');

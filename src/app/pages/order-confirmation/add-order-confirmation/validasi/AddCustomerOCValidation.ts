@@ -44,9 +44,9 @@ const AddCustomerValidation = (values: customerModel): FormErrors<customerModel>
     errors.email = 'Email required';
   }
 
-  if (!values.referral) {
-    errors.referral = 'Referral required';
-  }
+  // if (!values.referral) {
+  //   errors.referral = 'Referral required';
+  // }
 
   if (!values.staff) {
     errors.staff = 'Staff required';

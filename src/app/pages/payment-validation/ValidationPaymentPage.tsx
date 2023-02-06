@@ -22,6 +22,8 @@ const ValidationPayment: FC<PropsFromRedux> = () => {
     dispatch(redux.actions.getListBank());
   }, [dispatch]);
 
+  const isLoading = useSelector<RootState, boolean>(({ utility }) => utility.isLoadingButton);
+
   const columnsDP: ColumnDescription[] = [
     {
       dataField: 'key',
@@ -103,7 +105,16 @@ const ValidationPayment: FC<PropsFromRedux> = () => {
                 dispatch(redux.actions.getBuktiBayar(row.no_piutang));
               }}
               className='btn btn-bg-light btn-active-color-primary btn-sm me-1'
+              disabled={isLoading}
             >
+              {isLoading ? (
+                <span
+                  className='spinner-border spinner-border-sm'
+                  style={{ marginRight: '10px' }}
+                  role='status'
+                  aria-hidden='true'
+                />
+              ) : null}
               Proof Of Payment{' '}
               <KTSVG path='/media/icons/duotune/finance/fin002.svg' className='svg-icon-3' />
             </button>

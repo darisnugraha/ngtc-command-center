@@ -970,6 +970,7 @@ export const actions = {
   },
   getBuktiBayar: (noPiutang: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch(utility.actions.showLoadingButton());
       AxiosGet(`receivable/by-no/${noPiutang}`).then((response: any) => {
         const nama_file = `${response.data[0].no_order_konfirmasi.replace(/\//g, '_')}${
           response.data[0].tanggal
@@ -978,10 +979,10 @@ export const actions = {
           .then((res) => {
             dispatch({ type: actionTypes.GetProofOfPayment, payload: { proofOfPaymentIMG: res } });
             dispatch(modalSecond.actions.show());
+            dispatch(utility.actions.hideLoading());
           })
           .catch((err) => {
-            // eslint-disable-next-line
-            console.log(err);
+            dispatch(utility.actions.hideLoading());
             toast.error(err.message || 'Not Found !');
           });
       });

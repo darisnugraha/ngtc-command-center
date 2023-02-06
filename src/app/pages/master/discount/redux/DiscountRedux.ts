@@ -73,6 +73,7 @@ export const actions = {
           dispatch(actions.getDiscount());
           dispatch(utility.actions.hideLoading());
           dispatch(actions.closeModal());
+          window.location.reload();
         })
         .catch(() => {
           toast.error('Failed Add Data !');
@@ -125,6 +126,7 @@ export const actions = {
               toast.success('Success Delete Data !');
               dispatch(utility.actions.hideLoading());
               dispatch(actions.getDiscount());
+              window.location.reload();
             })
             .catch(() => {
               toast.error('Failed Delete Data !');
@@ -147,6 +149,7 @@ export const actions = {
           dispatch(actions.getDiscount());
           dispatch(utility.actions.hideLoading());
           dispatch(actions.closeModal());
+          window.location.reload();
         })
         .catch(() => {
           toast.error('Failed Edit Data !');

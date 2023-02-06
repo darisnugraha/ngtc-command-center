@@ -2,6 +2,7 @@ import React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup';
+import { upper } from '../../../../../setup/function.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
@@ -50,6 +51,7 @@ const FormStaffComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             component={RenderField}
             label='Staff Code'
             placeHolder='Insert Staff Code'
+            normalize={upper}
           />
         </div>
         <div className='col-lg-6'>
@@ -59,6 +61,7 @@ const FormStaffComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             component={RenderField}
             label='Staff Name'
             placeHolder='Insert Staff Name'
+            normalize={upper}
           />
         </div>
         <div className='col-lg-6'>

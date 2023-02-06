@@ -198,6 +198,7 @@ export const actions = {
           dispatch(utility.actions.hideLoading());
           dispatch(actions.getPotentialCustomer());
           dispatch(modal.actions.hide());
+          window.location.reload();
         })
         .catch(() => {
           toast.error('Error Add Data !');
@@ -215,6 +216,7 @@ export const actions = {
           toast.success('Validation Data Success!');
           dispatch(actions.getPotentialCustomer());
           dispatch(redux.actions.getStore());
+          window.location.reload();
         })
         .catch((err) => {
           const dataErr = err.response?.data;

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup';
+import { upper } from '../../../../../setup/function.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField, RenderTextArea } from '../../../../modules/redux-form/BasicInput';
 import AddSupplierValidation from '../validasi/AddSupplierValidation';
@@ -47,6 +48,7 @@ const FormSupplierComponent: React.FC<InjectedFormProps<{}, Props>> = (props: an
             component={RenderField}
             label='Supplier Code'
             placeHolder='Insert Supplier Code'
+            normalize={upper}
           />
         </div>
         <div className='col-lg-6'>
@@ -56,6 +58,7 @@ const FormSupplierComponent: React.FC<InjectedFormProps<{}, Props>> = (props: an
             component={RenderField}
             label='Supplier Name'
             placeHolder='Insert Supplier Name'
+            normalize={upper}
           />
         </div>
         <div className='col-lg-12'>

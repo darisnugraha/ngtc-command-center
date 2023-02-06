@@ -107,6 +107,7 @@ export const actions = {
           toast.success('Success Add Data !');
           dispatch(utility.actions.hideLoading());
           dispatch(modal.actions.hide());
+          window.location.reload();
         })
         .catch((err) => {
           const dataErr = err.response.data;
@@ -128,6 +129,7 @@ export const actions = {
           toast.success('Success Edit Data !');
           dispatch(utility.actions.hideLoading());
           dispatch(modal.actions.hide());
+          window.location.reload();
         })
         .catch((err) => {
           const dataErr = err.response.data;
@@ -153,6 +155,7 @@ export const actions = {
               toast.success('Success Delete Data !');
               dispatch(utility.actions.hideLoading());
               dispatch(actions.getUser());
+              window.location.reload();
             })
             .catch(() => {
               toast.error('Failed Delete Data !');

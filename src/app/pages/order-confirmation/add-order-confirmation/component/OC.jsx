@@ -277,14 +277,6 @@ const OC = (data, head) => {
   const pageWidth = doc.internal.pageSize.width;
   const pageHeight = doc.internal.pageSize.height;
   doc.setFontSize(10);
-  for (let j = 1; j < pages + 1; j += 1) {
-    const horizontalPos = pageWidth / 2;
-    const verticalPos = pageHeight - 10;
-    doc.setPage(j);
-    // doc.text(`${j} of ${pages}`, horizontalPos, verticalPos, {
-    //   align: 'center',
-    // });
-  }
   let finalTableY = finalY + 78;
 
   let tableRowsBank = [];
@@ -338,8 +330,16 @@ const OC = (data, head) => {
   tableColumnBank = [];
   finalTableY = doc.lastAutoTable.finalY + 10;
 
-  var imgData = toAbsoluteUrl('/media/kop/footer.png');
-  doc.addImage(imgData, 'PNG', 0, finalTableY, pageWidth, 30);
+  for (let j = 1; j < pages + 1; j += 1) {
+    const horizontalPos = pageWidth / 2;
+    const verticalPos = pageHeight - 32;
+    doc.setPage(j);
+    // doc.text(`${j} of ${pages}`, horizontalPos, verticalPos, {
+    //   align: 'center',
+    // });
+    var imgData = toAbsoluteUrl('/media/kop/footer.png');
+    doc.addImage(imgData, 'PNG', 0, verticalPos, pageWidth, 30);
+  }
   const string = doc.output('datauristring');
   return string;
   //   const x = window.open();

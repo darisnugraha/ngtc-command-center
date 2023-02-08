@@ -159,6 +159,10 @@ function doDecrypt(data, ignore = []) {
               doDecrypt(l, ignore);
             }
           });
+        } else if (typeof data[x] === 'object') {
+          if (data[x] !== null) {
+            doDecrypt(data[x], ignore);
+          }
         } else if (typeof data[x] === 'string') {
           data[x] = decryptascii(data[x]);
         } else if (typeof data[x] === 'number') {

@@ -3,19 +3,17 @@ import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
 import { ColumnDescription } from 'react-bootstrap-table-next';
 import { RootState } from '../../../../setup';
 import DefaultTable from '../../../modules/custom-table';
-import FormOCReport from './component/FormOCReport';
-import * as redux from './redux/OCReportRedux';
+import FormResellerPaymentReport from './component/FormResellerPaymentReport';
+import * as redux from './redux/ResellerPaymentReportRedux';
 import { getLocal } from '../../../../setup/encrypt.js';
-import OCRecapReportPDF from './component/OCRecapPDF.jsx';
-import OCRecapReportExcel from './component/OCRecapExcel.jsx';
-import OCDetailPDF from './component/OCDetailPDF.jsx';
-import OCDetailReportExcel from './component/OCDetailExcel.jsx';
+import ResellerPaymentReportPDF from './component/ResellerPaymentPDF.jsx';
+import ResellerPaymentReportExcel from './component/ResellerPaymentExcel.jsx';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
 const connector = connect(mapState);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const OCPage: FC<PropsFromRedux> = () => {
+const ResellerPaymentReport: FC<PropsFromRedux> = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,7 +21,9 @@ const OCPage: FC<PropsFromRedux> = () => {
     dispatch(redux.actions.getListStore());
   }, [dispatch]);
 
-  const dataTab: any = useSelector<RootState>(({ reportoc }) => reportoc.feedback);
+  const dataTab: any = useSelector<RootState>(
+    ({ reportresellerpayment }) => reportresellerpayment.feedback
+  );
 
   const columns: ColumnDescription[] = [
     {
@@ -34,10 +34,6 @@ const OCPage: FC<PropsFromRedux> = () => {
       formatter: (cell) => {
         return <p className='ps-4 text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
-      footerAlign: 'right',
-      footer: () => {
-        return '';
-      },
     },
     {
       dataField: 'no_order_konfirmasi',
@@ -46,74 +42,44 @@ const OCPage: FC<PropsFromRedux> = () => {
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
-      footerAlign: 'right',
-      footer: () => {
-        return '';
+    },
+    {
+      dataField: '',
+      text: 'Store Name',
+      align: 'center',
+      formatter: (cell, row) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{row.sales_order.nama_toko}</p>;
       },
     },
     {
-      dataField: 'jenis_ok',
-      text: 'Type OC',
+      dataField: '',
+      text: 'Branch Name',
+      align: 'center',
+      formatter: (cell, row) => {
+        return (
+          <p className='text-hover-primary d-block mb-1 fs-6'>{row.sales_order.nama_cabang}</p>
+        );
+      },
+    },
+    {
+      dataField: 'nama_reseller',
+      text: 'Reseller Name',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
-      footerAlign: 'right',
-      footer: () => {
-        return '';
-      },
     },
     {
-      dataField: 'nama_toko',
-      text: 'Store',
-      align: 'center',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
-      },
-      footerAlign: 'right',
-      footer: () => {
-        return '';
-      },
-    },
-    {
-      dataField: 'nama_cabang',
-      text: 'Branch Store',
-      align: 'center',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
-      },
-      footerAlign: 'right',
-      footer: () => {
-        return '';
-      },
-    },
-    {
-      dataField: 'nama_customer',
-      text: 'Customer Name',
-      align: 'center',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
-      },
-      footerAlign: 'right',
-      footer: () => {
-        return 'Grand Total';
-      },
-    },
-    {
-      dataField: 'total_harga',
-      text: 'Total',
+      dataField: 'biaya_reseller',
+      text: 'Reseller Fee',
       align: 'right',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell?.toLocaleString()}</p>;
       },
-      footerAlign: 'right',
-      footer: () => {
-        return `Rp. ${dataTab.reduce((a: any, b: any) => a + b.total_harga, 0).toLocaleString()}`;
-      },
     },
     {
       dataField: 'status',
-      text: 'Status',
+      text: 'Payment Status',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
@@ -121,39 +87,32 @@ const OCPage: FC<PropsFromRedux> = () => {
     },
   ];
 
-  const typeReport = useSelector<RootState>(({ reportoc }) => reportoc.typeReport);
-
   const handlePDFPrint = () => {
     getLocal('headDataReport', ['date']).then((res) => {
-      if (typeReport === 'DETAIL') {
-        OCDetailPDF(dataTab, res);
-      } else {
-        OCRecapReportPDF(dataTab, res);
-      }
+      ResellerPaymentReportPDF(dataTab, res);
     });
   };
 
   return (
     <>
       <div className='card mb-5 mb-xl-8'>
-        {/* begin::Header */}
         <div className='card-header border-0 pt-5'>
           <h3 className='card-title align-items-start flex-column'>
-            <span className='card-label fw-bolder fs-3 mb-1'>Report Order Confirmation</span>
-            {/* <span className='text-muted mt-1 fw-bold fs-7'>{subtitle}</span> */}
+            <span className='card-label fw-bolder fs-3 mb-1'>Report Reseller Payment</span>
           </h3>
         </div>
-        {/* end::Header */}
-        {/* begin::Body */}
         <div className='card-body py-3'>
-          <FormOCReport
-            onSubmit={(data: any) => {
-              // eslint-disable-next-line
-              dispatch(redux.actions.getReportOC(data));
-            }}
-          />
+          <div className='row'>
+            <div className='col-lg-12'>
+              <FormResellerPaymentReport
+                onSubmit={(data: any) => {
+                  // eslint-disable-next-line
+                  dispatch(redux.actions.getReportResellerPayment(data));
+                }}
+              />
+            </div>
+          </div>
         </div>
-        {/* begin::Body */}
       </div>
       <div className='row'>
         <div className='col-lg-12'>
@@ -175,11 +134,7 @@ const OCPage: FC<PropsFromRedux> = () => {
               </button>
             </div>
             <div className='col-lg-3 d-grid'>
-              {typeReport === 'DETAIL' ? (
-                <OCDetailReportExcel data={dataTab} />
-              ) : (
-                <OCRecapReportExcel data={dataTab} />
-              )}
+              <ResellerPaymentReportExcel data={dataTab} />
             </div>
           </div>
         </div>
@@ -188,4 +143,4 @@ const OCPage: FC<PropsFromRedux> = () => {
   );
 };
 
-export default connector(OCPage);
+export default connector(ResellerPaymentReport);

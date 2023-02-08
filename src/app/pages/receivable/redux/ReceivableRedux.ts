@@ -936,6 +936,7 @@ export const actions = {
             .then(() => {
               toast.success('Success Add Data !');
               dispatch(actions.getReceivable());
+              dispatch(modal.actions.hide());
               dispatch(utility.actions.hideLoading());
             })
             .catch(() => {

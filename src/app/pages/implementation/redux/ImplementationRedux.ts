@@ -94,46 +94,13 @@ export const actions = {
         const dataSave: any = [];
         let no = 1;
         dataDecrypt.forEach((element: any) => {
-          const obj = {
-            key: no,
-            // eslint-disable-next-line
-            _id: element._id,
-            no_implementasi: element.no_implementasi,
-            tanggal_implementasi: element.tanggal_implementasi,
-            tanggal_realisasi: element.tanggal_realisasi,
-            staff_implementasi: element.staff_implementasi,
-            tipe_implementasi: element.tipe_implementasi,
-            lama_implementasi: element.lama_implementasi,
-            status: element.status,
-            input_date: element.input_date,
-            __v: 0,
-            no_order_konfirmasi: '',
-            kota: '',
-            nama_toko: '',
-            nama_customer: '',
-            nama_cabang: '',
-            alamat_cabang: '',
-            status_implementasi: '',
-          };
-          AxiosGet(
-            `sales-order/by-no-implementasi/?no_implementasi=${element.no_implementasi}`
-          ).then((resSO) => {
-            const dataDecryptSO = doDecryptData(resSO.data, [
-              'no_order_konfirmasi',
-              'status_implementasi',
-            ]);
-            obj.no_order_konfirmasi = dataDecryptSO[0]?.no_order_konfirmasi;
-            obj.kota = dataDecryptSO[0]?.kota;
-            obj.nama_toko = dataDecryptSO[0]?.nama_toko;
-            obj.nama_customer = dataDecryptSO[0]?.nama_customer;
-            obj.nama_cabang = dataDecryptSO[0]?.nama_cabang;
-            obj.alamat_cabang = dataDecryptSO[0]?.alamat_cabang;
-            obj.status_implementasi = dataDecryptSO[0]?.status_implementasi;
-            dataSave.push(obj);
-            no += 1;
-            dispatch({ type: actionTypes.GetImplementation, payload: { feedback: dataSave } });
-          });
+          // eslint-disable-next-line
+          element.key = no;
+          dataSave.push(element);
+          no += 1;
         });
+
+        dispatch({ type: actionTypes.GetImplementation, payload: { feedback: dataSave } });
       });
     };
   },

@@ -12,33 +12,36 @@ export interface ActionWithPayload<T> extends Action {
 }
 
 export const actionTypes = {
-  GetReport: '[DELIVERYREPORT] Get Data Report Delivery',
-  GetSJ: '[DELIVERYREPORT] Get Data SJ',
-  GetStore: '[DELIVERYREPORT] Get Data Store',
+  GetReport: '[RESELLERPAYMENTREPORT] Get Data Report Reseller Payment',
+  GetOC: '[RESELLERPAYMENTREPORT] Get Data OC',
+  GetStore: '[RESELLERPAYMENTREPORT] Get Data Store',
 };
-export interface IDeliveryState {
+export interface IResellerPaymentState {
   feedback?: Array<any>;
-  listSJ?: Array<any>;
+  listOC?: Array<any>;
   listStore?: Array<any>;
 }
 
-const initialDeliveryState: IDeliveryState = {
+const initialResellerPaymentState: IResellerPaymentState = {
   feedback: [],
-  listSJ: [],
+  listOC: [],
   listStore: [],
 };
 
 export const reducer = persistReducer(
-  { storage, key: 'v100-demo1-delivery', whitelist: ['isSending'] },
-  (state: IDeliveryState = initialDeliveryState, action: ActionWithPayload<IDeliveryState>) => {
+  { storage, key: 'v100-demo1-reseller-payment', whitelist: ['isSending'] },
+  (
+    state: IResellerPaymentState = initialResellerPaymentState,
+    action: ActionWithPayload<IResellerPaymentState>
+  ) => {
     switch (action.type) {
       case actionTypes.GetReport: {
         const data = action.payload?.feedback;
         return { ...state, feedback: data };
       }
-      case actionTypes.GetSJ: {
-        const data = action.payload?.listSJ;
-        return { ...state, listSJ: data };
+      case actionTypes.GetOC: {
+        const data = action.payload?.listOC;
+        return { ...state, listOC: data };
       }
       case actionTypes.GetStore: {
         const data = action.payload?.listStore;
@@ -52,42 +55,44 @@ export const reducer = persistReducer(
 );
 
 export const actions = {
-  getReportDelivery: (data: any) => {
+  getReportResellerPayment: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
       const dataHead = {
         startDate: moment(data.date[0]).format('yyyy-MM-DD'),
         endDate: moment(data.date[1]).format('yyyy-MM-DD'),
-        no_surat_jalan: data.no_sj,
+        no_order_konfirmasi: data.no_order_confirmation,
         kode_toko: data.central_store,
-        status: data.status_validation,
+        kode_reseller: data.reseller_code,
+        status: data.status,
       };
 
-      AxiosGet(`delivery-order/report?startDate=${dataHead.startDate}&endDate=${dataHead.endDate}&no_surat_jalan=${dataHead.no_surat_jalan}&kode_toko=${dataHead.kode_toko}&status=${dataHead.status}
+      AxiosGet(`reseller/report?startDate=${dataHead.startDate}&endDate=${dataHead.endDate}&no_order_konfirmasi=${dataHead.no_order_konfirmasi}&kode_toko=${dataHead.kode_toko}&kode_reseller=${dataHead.kode_reseller}&status=${dataHead.status}
       `).then((res) => {
         const dataDecrypt = doDecryptData(res.data, [
           '_id',
-          'input_date',
-          'status',
-          'no_surat_jalan',
-          'kode_surat_jalan',
-          'kode_toko',
-          'tanggal_surat_jalan',
-          'kode_cabang',
-          'jenis_produk',
-          'nama_produk',
-          'unit',
-          'jumlah_kirim',
-          'jumlah_hilang',
-          'no_resi',
-          'nama_ekspedisi',
-          'tanggal_kirim',
-          'tanggal_terima',
-          'tanggal_batal',
-          'tanggal_hilang',
-          'ditagihkan',
-          'ongkos_kirim',
+          'no_reseller',
+          'no_sales_order',
           'no_order_konfirmasi',
+          'tanggal_bayar',
+          'kode_reseller',
+          'biaya_reseller',
+          'bayar_rp',
+          'status',
+          'tanggal_sales_order',
+          'tanggal_order_konfirmasi',
+          'kode_toko',
+          'kode_cabang',
+          'kode_produk',
+          'jenis_produk',
+          'satuan',
+          'qty',
+          'harga',
+          'sub_total',
+          'type',
+          'total_harga',
+          'no_implementasi',
+          'status_implementasi',
         ]);
         const dataSave: any = [];
         let no = 1;
@@ -105,9 +110,9 @@ export const actions = {
       });
     };
   },
-  getListSJ: () => {
+  getListOC: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      AxiosGet('delivery-order').then((res) => {
+      AxiosGet('order-confirmation').then((res) => {
         const dataDecrypt = doDecryptData(res.data, [
           'status',
           '_id',
@@ -126,7 +131,6 @@ export const actions = {
           'nama_diskon',
           'persentase',
           'jenis_ok',
-          'no_surat_jalan',
         ]);
         const dataSave: any = [];
         let no = 1;
@@ -136,7 +140,7 @@ export const actions = {
           dataSave.push(element);
           no += 1;
         });
-        dispatch({ type: actionTypes.GetSJ, payload: { listSJ: dataSave } });
+        dispatch({ type: actionTypes.GetOC, payload: { listOC: dataSave } });
       });
     };
   },

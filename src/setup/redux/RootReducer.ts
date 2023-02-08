@@ -30,10 +30,12 @@ import * as implementation from '../../app/pages/implementation/redux/Implementa
 import * as deliverynote from '../../app/pages/delivery-order/redux/DeliveryNoteRedux';
 import * as listinvoice from '../../app/pages/invoice/list-invoice/redux/ListInvoiceRedux';
 import * as serialnumber from '../../app/pages/serial-number/redux/SerialNumberRedux';
+import * as resellerpayment from '../../app/pages/reseller-payment/redux/ResellerPaymentRedux';
 import * as reportreceivable from '../../app/pages/report/receivable-report/redux/ReceivableReportRedux';
 import * as reportoc from '../../app/pages/report/oc-report/redux/OCReportRedux';
 import * as reportimplementation from '../../app/pages/report/implementation-report/redux/ImplementationReportRedux';
 import * as reportdelivery from '../../app/pages/report/delivery-order-report/redux/DeliveryReportRedux';
+import * as reportresellerpayment from '../../app/pages/report/reseller-payment-report/redux/ResellerPaymentReportRedux';
 import * as utility from './UtilityRedux';
 
 export const rootReducer = combineReducers({
@@ -67,10 +69,12 @@ export const rootReducer = combineReducers({
   deliverynote: deliverynote.reducer,
   listinvoice: listinvoice.reducer,
   serialnumber: serialnumber.reducer,
+  resellerpayment: resellerpayment.reducer,
   reportreceivable: reportreceivable.reducer,
   reportoc: reportoc.reducer,
   reportimplementation: reportimplementation.reducer,
   reportdelivery: reportdelivery.reducer,
+  reportresellerpayment: reportresellerpayment.reducer,
   utility: utility.reducer,
   form: reducerForm,
 });

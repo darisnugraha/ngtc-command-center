@@ -38,7 +38,7 @@ export default function AsideMenuMain() {
         <AsideMenuItem to='/master/division' title='Master Division' hasBullet />
         <AsideMenuItem to='/master/discount' title='Master Discount' hasBullet />
       </AsideMenuItemWithSub>
-      {/* <AsideMenuItemWithSub
+      <AsideMenuItemWithSub
         to='/service'
         title='Service'
         icon='/media/icons/duotune/coding/cod009.svg'
@@ -46,7 +46,7 @@ export default function AsideMenuMain() {
       >
         <AsideMenuItem to='/service/support' title='Support Service' hasBullet />
         <AsideMenuItem to='/service/production' title='Production Service' hasBullet />
-      </AsideMenuItemWithSub> */}
+      </AsideMenuItemWithSub>
       <AsideMenuItemWithSub
         to='/order-confirmation'
         title='Order Confirmation'
@@ -69,39 +69,39 @@ export default function AsideMenuMain() {
           hasBullet
         />
       </AsideMenuItemWithSub>
-      {/* <AsideMenuItem
+      <AsideMenuItem
         to='/receivable'
         icon='/media/icons/duotune/finance/fin002.svg'
         title='Receivable'
         fontIcon='bi-app-indicator'
-      /> */}
+      />
       <AsideMenuItem
         to='/validation-payment'
         icon='/media/icons/duotune/general/gen048.svg'
         title='Validation Payment'
         fontIcon='bi-app-indicator'
       />
-      {/* <AsideMenuItemWithSub
+      <AsideMenuItemWithSub
         to='/sales-order'
         title='Sales Order'
         icon='/media/icons/duotune/ecommerce/ecm002.svg'
         fontIcon='bi-archive'
       >
         <AsideMenuItem to='/sales-order/list-sales-order' title='List Sales Order' hasBullet />
-      </AsideMenuItemWithSub> */}
-      {/* <AsideMenuItem
+      </AsideMenuItemWithSub>
+      <AsideMenuItem
         to='/implementation'
         icon='/media/icons/duotune/general/gen016.svg'
         title='Implementation'
         fontIcon='bi-app-indicator'
-      /> */}
-      {/* <AsideMenuItem
+      />
+      <AsideMenuItem
         to='/delivery-order'
         icon='/media/icons/duotune/ecommerce/ecm006.svg'
         title='Delivery Order'
         fontIcon='bi-app-indicator'
-      /> */}
-      {/* <AsideMenuItemWithSub
+      />
+      <AsideMenuItemWithSub
         to='/invoice'
         title='Invoice'
         icon='/media/icons/duotune/general/gen032.svg'
@@ -109,7 +109,13 @@ export default function AsideMenuMain() {
       >
         <AsideMenuItem to='/invoice/list-invoice' title='List Invoice' hasBullet />
         <AsideMenuItem to='/invoice/serial-number' title='Serial Number' hasBullet />
-      </AsideMenuItemWithSub> */}
+      </AsideMenuItemWithSub>
+      <AsideMenuItem
+        to='/reseller-payment'
+        icon='/media/icons/duotune/finance/fin008.svg'
+        title='Reseller Payment'
+        fontIcon='bi-app-indicator'
+      />
       <AsideMenuItemWithSub
         to='/report'
         title='Report'
@@ -121,9 +127,14 @@ export default function AsideMenuMain() {
           title='Report Order Confirmation'
           hasBullet
         />
-        {/* <AsideMenuItem to='/report/report-receivable' title='Report Receivable' hasBullet />
+        <AsideMenuItem to='/report/report-receivable' title='Report Receivable' hasBullet />
         <AsideMenuItem to='/report/report-implementation' title='Report Implementation' hasBullet />
-        <AsideMenuItem to='/report/report-delivery' title='Report Delivery Order' hasBullet /> */}
+        <AsideMenuItem to='/report/report-delivery' title='Report Delivery Order' hasBullet />
+        <AsideMenuItem
+          to='/report/report-reseller-payment'
+          title='Report Reseller Payment'
+          hasBullet
+        />
       </AsideMenuItemWithSub>
     </>
   );

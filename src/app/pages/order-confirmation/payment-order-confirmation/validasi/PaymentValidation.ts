@@ -28,10 +28,6 @@ const PaymentValidation = (values: PaymentModel): FormErrors<PaymentModel> => {
     errors.nominal = 'Nominal required';
   }
 
-  if (!values.remaining_payment) {
-    errors.remaining_payment = 'Remaining Payment required';
-  }
-
   if (!values.total_price) {
     errors.total_price = 'Total Price required';
   }

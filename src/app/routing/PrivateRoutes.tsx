@@ -46,6 +46,7 @@ export const PrivateRoutes = () => {
   const DeliveryNotePage = lazy(() => import('../pages/delivery-order/DeliveryNotePage'));
   const ListInvoicePage = lazy(() => import('../pages/invoice/list-invoice/ListInvoicePage'));
   const SerialNumberPage = lazy(() => import('../pages/serial-number/SerialNumberPage'));
+  const ResellerPaymentPage = lazy(() => import('../pages/reseller-payment/ResellerPaymentPage'));
   // Report
   const ReceivableReportPage = lazy(
     () => import('../pages/report/receivable-report/ReceivableReport')
@@ -56,6 +57,9 @@ export const PrivateRoutes = () => {
   );
   const DeliveryOrderReportPage = lazy(
     () => import('../pages/report/delivery-order-report/DeliveryOrderReport')
+  );
+  const ResellerPaymentReportPage = lazy(
+    () => import('../pages/report/reseller-payment-report/ResellerPaymentReport')
   );
 
   return (
@@ -96,11 +100,13 @@ export const PrivateRoutes = () => {
         <Route path='/delivery-order' component={DeliveryNotePage} />
         <Route path='/invoice/list-invoice' component={ListInvoicePage} />
         <Route path='/invoice/serial-number' component={SerialNumberPage} />
+        <Route path='/reseller-payment' component={ResellerPaymentPage} />
         {/* report */}
         <Route path='/report/report-receivable' component={ReceivableReportPage} />
         <Route path='/report/report-order-confirmation' component={OCReportPage} />
         <Route path='/report/report-implementation' component={ImplementationReportPage} />
         <Route path='/report/report-delivery' component={DeliveryOrderReportPage} />
+        <Route path='/report/report-reseller-payment' component={ResellerPaymentReportPage} />
         {/* end report */}
         <Redirect from='/auth' to='/potential-customer' />
         <Redirect exact from='/' to='/potential-customer' />

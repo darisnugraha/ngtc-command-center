@@ -1,29 +1,29 @@
 import React, { FC, useEffect, useState } from 'react';
 import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
-import BootstrapTable, { ColumnDescription } from 'react-bootstrap-table-next';
+import { ColumnDescription } from 'react-bootstrap-table-next';
+import { Image } from 'react-bootstrap-v5';
 import { RootState } from '../../../setup';
 import GlobalModal from '../../modules/modal/GlobalModal';
 import * as modal from '../../modules/modal/GlobalModalRedux';
 import { KTSVG } from '../../../_metronic/helpers';
 import DefaultTable from '../../modules/custom-table';
-import * as redux from './redux/ImplementationRedux';
-import * as reduxDivision from '../master/division/redux/DivisionRedux';
-import FormImplementation from './component/FormImplementation';
+import * as redux from './redux/ResellerPaymentRedux';
+import FormPaymentReseller from './component/FormPaymentReseller';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
 const connector = connect(mapState);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const ImplementationPage: FC<PropsFromRedux> = () => {
+const ResellerPaymentPage: FC<PropsFromRedux> = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(redux.actions.getImplementation());
-    dispatch(redux.actions.getOC());
-    dispatch(reduxDivision.actions.getDivision());
+    dispatch(redux.actions.getReseller());
   }, [dispatch]);
 
-  const dataTab: any = useSelector<RootState>(({ implementation }) => implementation.feedback);
+  const [typeModal, setTypeModal] = useState('');
+
+  const dataTab: any = useSelector<RootState>(({ resellerpayment }) => resellerpayment.feedback);
   const [dataSource, setDataSource] = useState(dataTab);
   const [value, setValue] = useState('');
   const [search, setSearch] = useState(false);
@@ -42,43 +42,43 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
       },
     },
     {
-      dataField: 'no_implementasi',
-      text: 'No Implementation',
+      dataField: 'no_reseller',
+      text: 'No Reseller',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
-      dataField: 'tanggal_implementasi',
-      text: 'Implementation Date',
+      dataField: 'no_order_konfirmasi',
+      text: 'No Order Konfirmasi',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
-      dataField: 'tanggal_realisasi',
-      text: 'Realization Date',
+      dataField: 'no_sales_order',
+      text: 'No Sales Order',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
-      dataField: 'tipe_implementasi',
-      text: 'Implementation Type',
+      dataField: 'nama_reseller',
+      text: 'Reseller Name',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
-      dataField: 'lama_implementasi',
-      text: 'Implementation Time',
+      dataField: 'biaya_reseller',
+      text: 'Reseller Fee',
       align: 'center',
       formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp.{cell?.toLocaleString()}</p>;
       },
     },
     {
@@ -87,6 +87,26 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+      },
+    },
+    {
+      dataField: '',
+      text: 'Status SO',
+      align: 'center',
+      formatter: (cell, row) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{row.sales_order.status}</p>;
+      },
+    },
+    {
+      dataField: '',
+      text: 'Status Implementation',
+      align: 'center',
+      formatter: (cell, row) => {
+        return (
+          <p className='text-hover-primary d-block mb-1 fs-6'>
+            {row.sales_order.status_implementasi}
+          </p>
+        );
       },
     },
     {
@@ -101,13 +121,25 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
               <button
                 type='button'
                 onClick={() => {
-                  // eslint-disable-next-line
-                  dispatch(redux.actions.validateImplementation(row.no_implementasi));
+                  dispatch(redux.actions.getIMG(row.no_reseller));
+                  setTypeModal('BUKTIBAYAR');
                 }}
                 className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-                disabled={row.status !== 'OPEN'}
               >
-                <KTSVG path='/media/icons/duotune/general/gen043.svg' className='svg-icon-3' />
+                <i className='bi bi-eye-fill' />
+              </button>
+            </div>
+            <div className='col-lg-4'>
+              <button
+                type='button'
+                onClick={() => {
+                  dispatch(redux.actions.getResellerByNo(row.no_reseller));
+                  setTypeModal('PAYMENT');
+                }}
+                disabled={row.status === 'DONE'}
+                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              >
+                <KTSVG path='/media/icons/duotune/finance/fin002.svg' className='svg-icon-3' />
               </button>
             </div>
             <div className='col-lg-4'>
@@ -115,20 +147,7 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
                 type='button'
                 onClick={() => {
                   // eslint-disable-next-line
-                  dispatch(redux.actions.getDataImplementationByID(row._id));
-                }}
-                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-                disabled={row.status !== 'OPEN'}
-              >
-                <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
-              </button>
-            </div>
-            <div className='col-lg-4'>
-              <button
-                type='button'
-                onClick={() => {
-                  // eslint-disable-next-line
-                  dispatch(redux.actions.deleteImplementation(row._id));
+                  dispatch(redux.actions.deleteResellerPayment(row._id));
                 }}
                 className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
               >
@@ -141,77 +160,34 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
     },
   ];
 
-  const expandRow = {
-    // eslint-disable-next-line
-    renderer: (row: any, rowIndex: any) => {
-      const columExpand: ColumnDescription[] = [
-        {
-          dataField: 'kode_helpdesk',
-          text: 'Helpdesk Code',
-          align: 'center',
-          headerClasses: 'ps-4 min-w-100px rounded-start',
-          formatter: (cell) => {
-            return <p className='ps-4 text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
-          },
-        },
-        {
-          dataField: 'nama_helpdesk',
-          text: 'Helpdesk Name',
-          align: 'center',
-          headerClasses: 'ps-4 min-w-100px rounded-start',
-          formatter: (cell) => {
-            return <p className='ps-4 text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
-          },
-        },
-      ];
-      return (
-        <BootstrapTable
-          keyField='_id'
-          columns={columExpand}
-          data={row.staff_implementasi}
-          wrapperClasses='table-responsive'
-          classes='table align-middle gs-0 gy-2'
-          headerClasses='fw-bolder text-center'
-          noDataIndication={() => {
-            return <span>No Data</span>;
-          }}
-        />
-      );
-    },
-  };
-
   const handleClick = () => {
-    dispatch(redux.actions.getStaffLocal());
     dispatch(modal.actions.show());
   };
 
   const handleClose = () => {
-    dispatch(redux.actions.closeModal());
+    dispatch(modal.actions.hide());
   };
 
-  const isEdit: any = useSelector<RootState>(({ implementation }) => implementation.isEdit);
+  const img: any = useSelector<RootState>(({ resellerpayment }) => resellerpayment.buktiImg);
 
   return (
     <>
-      <GlobalModal
-        title={`${isEdit ? 'Edit' : 'Add'} Implementation`}
-        onClose={() => handleClose()}
-      >
-        <FormImplementation
-          onSubmit={(data: any) => {
-            if (isEdit) {
-              dispatch(redux.actions.updateImplementation(data));
-            } else {
-              dispatch(redux.actions.addImplementation(data));
-            }
-          }}
-        />
+      <GlobalModal title='Payment' onClose={() => handleClose()}>
+        {typeModal === 'PAYMENT' ? (
+          <FormPaymentReseller
+            onSubmit={(data: any) => {
+              dispatch(redux.actions.postPayment(data));
+            }}
+          />
+        ) : (
+          <Image src={img} fluid />
+        )}
       </GlobalModal>
       <div className='card mb-5 mb-xl-8'>
         {/* begin::Header */}
         <div className='card-header border-0 pt-5'>
           <h3 className='card-title align-items-start flex-column'>
-            <span className='card-label fw-bolder fs-3 mb-1'>Implementation Schedule</span>
+            <span className='card-label fw-bolder fs-3 mb-1'>Reseller Payment</span>
             {/* <span className='text-muted mt-1 fw-bold fs-7'>{subtitle}</span> */}
           </h3>
         </div>
@@ -237,16 +213,10 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
                     setValue(currValue);
                     const filteredData = dataTab.filter(
                       (entry: any) =>
-                        entry.no_implementasi?.toUpperCase().includes(currValue?.toUpperCase()) ||
-                        entry.tanggal_implementasi
-                          ?.toUpperCase()
-                          .includes(currValue?.toUpperCase()) ||
-                        entry.tanggal_realisasi?.toUpperCase().includes(currValue?.toUpperCase()) ||
-                        entry.lama_implementasi
-                          ?.toString()
-                          ?.toUpperCase()
-                          .includes(currValue?.toUpperCase()) ||
-                        entry.tipe_implementasi?.toUpperCase().includes(currValue?.toUpperCase())
+                        entry.nama_bank?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.no_rekening?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.kode_bank?.toUpperCase().includes(currValue?.toUpperCase()) ||
+                        entry.nama_nasabah?.toUpperCase().includes(currValue?.toUpperCase())
                     );
                     setDataSource(filteredData);
                     setSearch(true);
@@ -262,7 +232,7 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
                   onClick={() => handleClick()}
                 >
                   <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
-                  Add Implementation Schedule
+                  Add Reseller Payment
                 </button>
               </div>
             </div>
@@ -270,14 +240,9 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
         </div>
         {/* begin::Body */}
       </div>
-      <DefaultTable
-        className='mb-5 mb-xl-8'
-        data={dataTable}
-        columns={columns}
-        expandRow={expandRow}
-      />
+      <DefaultTable className='mb-5 mb-xl-8' data={dataTable} columns={columns} />
     </>
   );
 };
 
-export default connector(ImplementationPage);
+export default connector(ResellerPaymentPage);

@@ -118,7 +118,7 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
         </div>
         <div className='col-lg-6' />
         <div className='col-lg-6'>
-          <div className='row justify-content-end mt-5'>
+          <div className={dataTab.length === 0 ? 'd-none' : 'row justify-content-end mt-5'}>
             <div className='col-lg-3 d-grid'>
               <button
                 type='button'
@@ -127,7 +127,6 @@ const ImplementationPage: FC<PropsFromRedux> = () => {
                   handlePDFPrint();
                 }}
                 className='btn btn-danger btn-lg me-1'
-                disabled={dataTab.length === 0}
               >
                 PDF
               </button>

@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup/index.js';
 import SubmitButton from '../../../../modules/button';
 import { SelectDateRange } from '../../../../modules/redux-form/DatePicker';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
-import AddDeliveryReportValidation from '../validation/DeliveryReportValidation';
+import AddResellerReportValidation from '../validation/ResellerPaymentReportValidation';
 
 interface Props {}
 
 // eslint-disable-next-line
 const mapState = (state: RootState) => {};
 
-const FormDeliveryReport: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
+const FormResellerPaymentReport: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const { handleSubmit } = props;
-  // eslint-disable-next-line
-  const dispatch = useDispatch();
   // eslint-disable-next-line
   const [startDate, setStartDate] = useState(new Date());
   // eslint-disable-next-line
@@ -27,56 +25,31 @@ const FormDeliveryReport: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
     setEndDate(end);
   };
 
-  const listSJ: any = useSelector<RootState>(({ reportdelivery }) => reportdelivery.listSJ);
-  const dataSJ = [
+  const dataOC = [
     {
       value: 'all',
       label: 'All',
     },
   ];
-  listSJ.forEach((element: any) => {
-    const row = {
-      value: element.no_surat_jalan,
-      label: element.no_surat_jalan,
-    };
-    dataSJ.push(row);
-  });
 
-  const listStore: any = useSelector<RootState>(({ reportdelivery }) => reportdelivery.listStore);
   const dataStore = [
     {
       value: 'all',
       label: 'All',
     },
   ];
-  listStore.forEach((element: any) => {
-    const row = {
-      value: element.kode_toko,
-      label: element.nama_toko,
-    };
-    dataStore.push(row);
-  });
+
+  const dataReseller = [
+    {
+      value: 'all',
+      label: 'All',
+    },
+  ];
 
   const dataStatus = [
     {
       value: 'all',
       label: 'All',
-    },
-    {
-      value: 'OPEN',
-      label: 'OPEN',
-    },
-    {
-      value: 'DONE',
-      label: 'DONE',
-    },
-    {
-      value: 'CANCEL',
-      label: 'CANCEL',
-    },
-    {
-      value: 'LOST',
-      label: 'LOST',
     },
   ];
 
@@ -98,12 +71,12 @@ const FormDeliveryReport: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
         </div>
         <div className='col-lg-3'>
           <Field
-            name='no_sj'
+            name='no_order_confirmation'
             type='text'
             component={RenderFieldSelect}
-            options={dataSJ}
-            label='No Delivery Order'
-            placeHolder='Select No Delivery Order'
+            options={dataOC}
+            label='No Order Confirmation'
+            placeHolder='Select No Order Confirmation'
           />
         </div>
         <div className='col-lg-3'>
@@ -114,17 +87,26 @@ const FormDeliveryReport: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             options={dataStore}
             label='Central Store'
             placeHolder='Select Central Store'
-            onChange={() => {}}
           />
         </div>
         <div className='col-lg-3'>
           <Field
-            name='status_validation'
+            name='reseller_code'
+            type='text'
+            component={RenderFieldSelect}
+            options={dataReseller}
+            label='Reseller Code'
+            placeHolder='Select Reseller Code'
+          />
+        </div>
+        <div className='col-lg-3'>
+          <Field
+            name='status'
             type='text'
             component={RenderFieldSelect}
             options={dataStatus}
-            label='Status Validation'
-            placeHolder='Select Status Validation'
+            label='Status'
+            placeHolder='Select Status'
           />
         </div>
       </div>
@@ -140,8 +122,8 @@ const FormDeliveryReport: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
 const form = reduxForm<{}, Props>({
   destroyOnUnmount: true,
   forceUnregisterOnUnmount: true,
-  form: 'FormDeliveryReport',
+  form: 'FormResellerPaymentReport',
   touchOnChange: true,
-  validate: AddDeliveryReportValidation,
-})(FormDeliveryReport);
+  validate: AddResellerReportValidation,
+})(FormResellerPaymentReport);
 export default connect(mapState, null)(form);

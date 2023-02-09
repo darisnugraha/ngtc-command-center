@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
@@ -12,7 +13,13 @@ interface Props {}
 // eslint-disable-next-line
 const mapState = (state: RootState) => {
   return {
-    initialValues: {},
+    initialValues: {
+      date: [moment(new Date(), 'YYYY:MM:DD'), moment(new Date(), 'YYYY:MM:DD')],
+      staff_name: 'all',
+      no_oc: 'all',
+      central_store_name: 'all',
+      status_payment: 'all',
+    },
   };
 };
 
@@ -102,6 +109,7 @@ const FormSearchOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             label='Start Date - End Date'
             placeHolder='Select Range Date'
             onChange={onChange}
+            defaultValue={moment(new Date(), 'YYYY:MM:DD')}
           />
         </div>
         <div className='col-lg-6'>
@@ -112,6 +120,7 @@ const FormSearchOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             options={listStaff}
             label='Staff Name'
             placeHolder='Select Staff Name'
+            defaultValue={{ value: 'all', label: 'All' }}
           />
         </div>
         <div className='col-lg-6'>
@@ -122,6 +131,7 @@ const FormSearchOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             options={listOC}
             label='No OC'
             placeHolder='Select No OC'
+            defaultValue={{ value: 'all', label: 'All' }}
           />
         </div>
         <div className='col-lg-6'>
@@ -132,6 +142,7 @@ const FormSearchOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             options={listStore}
             label='Central Store'
             placeHolder='Select Central Store'
+            defaultValue={{ value: 'all', label: 'All' }}
           />
         </div>
         <div className='col-lg-6'>
@@ -142,6 +153,7 @@ const FormSearchOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             options={StatusPayment}
             label='Status Payment'
             placeHolder='Select Status Payment'
+            defaultValue={{ value: 'all', label: 'All' }}
           />
         </div>
       </div>

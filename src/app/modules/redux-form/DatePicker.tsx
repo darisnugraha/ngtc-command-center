@@ -1,6 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-expressions */
 import clsx from 'clsx';
+import moment from 'moment';
 import React, { FC } from 'react';
 import DatePicker from 'react-datepicker';
 
@@ -44,6 +45,7 @@ export const SelectDateRange: FC = (field: any) => {
           readOnly={field.readOnly}
           placeholder={field.placeholder}
           customInput={field.customInput}
+          value={moment(field.input.value || field.defaultValue, 'YYYY:MM:DD')}
         />
         {field.meta.touched &&
           ((field.meta.error && (

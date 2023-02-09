@@ -625,6 +625,8 @@ export const actions = {
   },
   searchAction: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+      dispatch(utility.actions.showLoadingButton());
+
       const onSendData = {
         startDate: moment(data.date[0]).format('yyyy-MM-DD'),
         endDate: moment(data.date[1]).format('yyyy-MM-DD'),
@@ -666,10 +668,12 @@ export const actions = {
             no += 1;
           });
           dispatch({ type: actionTypes.GetListOC, payload: { feedback: dataSave } });
+          dispatch(utility.actions.hideLoading());
         })
         .catch((err) => {
           const dataErr = err.response?.data;
           toast.error(dataErr.message || 'Error');
+          dispatch(utility.actions.hideLoading());
         });
     };
   },

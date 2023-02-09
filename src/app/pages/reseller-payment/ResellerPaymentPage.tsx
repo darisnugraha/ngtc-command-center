@@ -117,7 +117,7 @@ const ResellerPaymentPage: FC<PropsFromRedux> = () => {
       formatter: (cell, row) => {
         return (
           <div className='row'>
-            <div className='col-lg-4'>
+            <div className='col-lg-6'>
               <button
                 type='button'
                 onClick={() => {
@@ -129,7 +129,7 @@ const ResellerPaymentPage: FC<PropsFromRedux> = () => {
                 <i className='bi bi-eye-fill' />
               </button>
             </div>
-            <div className='col-lg-4'>
+            <div className='col-lg-6'>
               <button
                 type='button'
                 onClick={() => {
@@ -142,7 +142,7 @@ const ResellerPaymentPage: FC<PropsFromRedux> = () => {
                 <KTSVG path='/media/icons/duotune/finance/fin002.svg' className='svg-icon-3' />
               </button>
             </div>
-            <div className='col-lg-4'>
+            <div className='col-lg-4 d-none'>
               <button
                 type='button'
                 onClick={() => {

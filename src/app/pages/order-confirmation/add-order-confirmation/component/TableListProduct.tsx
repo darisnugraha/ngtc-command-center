@@ -65,7 +65,7 @@ const TableListProduct: FC = () => {
       text: 'Price',
       align: 'right',
       formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell.toLocaleString()}</p>;
+        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell?.toLocaleString()}</p>;
       },
     },
     {
@@ -73,7 +73,7 @@ const TableListProduct: FC = () => {
       text: 'Sub Total',
       align: 'right',
       formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell.toLocaleString()}</p>;
+        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell?.toLocaleString()}</p>;
       },
     },
     {

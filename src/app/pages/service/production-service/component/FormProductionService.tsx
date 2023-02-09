@@ -2,7 +2,7 @@ import React from 'react';
 import * as xlsx from 'xlsx';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
-import { currencyMask } from '../../../../../setup/function.js';
+import { currencyMask, upper } from '../../../../../setup/function.js';
 import { RootState } from '../../../../../setup/index.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField } from '../../../../modules/redux-form/BasicInput';
@@ -105,6 +105,7 @@ const FormProductionService: React.FC<InjectedFormProps<{}, Props>> = (props: an
             component={RenderField}
             label='Production Service Name'
             placeHolder='Insert Production Service Name'
+            normalize={upper}
           />
         </div>
         <div className='col-lg-6'>

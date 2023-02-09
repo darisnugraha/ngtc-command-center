@@ -51,6 +51,7 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
   };
 
   const isLoading = useSelector<RootState, boolean>(({ utility }) => utility.isLoadingButton);
+  const typeOC = useSelector<RootState>(({ addorderconfirmation }) => addorderconfirmation.typeOC);
 
   return (
     <>
@@ -125,7 +126,7 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
             </div>
           </div>
         </div>
-        <div className='accordion-item d-none'>
+        <div className={typeOC === 'SUPPORT SERVICE' ? 'accordion-item' : 'accordion-item d-none'}>
           <h2 className='accordion-header' id='kt_accordion_1_support'>
             <button
               className='accordion-button fs-4 fw-bold collapsed'
@@ -154,7 +155,9 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
             </div>
           </div>
         </div>
-        <div className='accordion-item d-none'>
+        <div
+          className={typeOC === 'PRODUCTION SERVICE' ? 'accordion-item' : 'accordion-item d-none'}
+        >
           <h2 className='accordion-header' id='kt_accordion_1_support'>
             <button
               className='accordion-button fs-4 fw-bold collapsed'
@@ -185,7 +188,13 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
         </div>
       </div>
 
-      <div className='card mb-5 mb-xl-8 mt-10'>
+      <div
+        className={
+          typeOC === 'SUPPORT SERVICE' || typeOC === 'PRODUCTION SERVICE'
+            ? 'd-none'
+            : 'card mb-5 mb-xl-8 mt-10'
+        }
+      >
         <div className='card-header border-0 pt-5'>
           <h3 className='card-title align-items-start flex-column'>
             <span className='card-label fw-bolder fs-3 mb-1'>List Product</span>
@@ -220,18 +229,27 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
         </div>
       </div>
       <div className='card mb-5 mb-xl-8 mt-10'>
-        <div className='card-header border-0 pt-5 d-none'>
+        <div className='card-header border-0 pt-5'>
           <h3 className='card-title align-items-start flex-column'>
             <span className='card-label fw-bolder fs-3 mb-1'>List Service</span>
           </h3>
         </div>
         <div className='card-body py-3'>
           <div className='row'>
-            <div className='col-lg-12 d-none'>
+            <div className={typeOC === 'SUPPORT SERVICE' ? 'col-lg-12' : 'd-none'}>
               <TableSupportService />
             </div>
-            <div className='col-lg-12 d-none'>
+            <div className={typeOC === 'PRODUCTION SERVICE' ? 'col-lg-12' : 'd-none'}>
               <TableProductionService />
+            </div>
+            <div
+              className={
+                typeOC === 'SUPPORT SERVICE' || typeOC === 'PRODUCTION SERVICE'
+                  ? 'col-lg-12'
+                  : 'd-none'
+              }
+            >
+              <TableListDiscount />
             </div>
             <div className='col-lg-12'>
               <div className='row justify-content-end mt-5'>

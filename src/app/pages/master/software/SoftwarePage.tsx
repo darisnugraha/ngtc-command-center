@@ -94,7 +94,7 @@ const SoftwarePage: FC<PropsFromRedux> = () => {
                 // eslint-disable-next-line
                 dispatch(redux.actions.getSoftwareByID(row._id));
               }}
-              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              className='btn btn-icon btn-active-color-dark btn-color-warning btn-sm me-1'
             >
               <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
             </button>
@@ -104,7 +104,7 @@ const SoftwarePage: FC<PropsFromRedux> = () => {
                 // eslint-disable-next-line
                 dispatch(redux.actions.deleteSoftware(row._id));
               }}
-              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              className='btn btn-icon btn-active-color-dark btn-color-danger btn-sm me-1'
             >
               <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
             </button>

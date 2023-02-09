@@ -21,6 +21,8 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
   const dataOCType = [
     { value: 'INCLUDE SOFTWARE', label: 'INCLUDE SOFTWARE' },
     { value: 'NOT INCLUDE SOFTWARE', label: 'NOT INCLUDE SOFTWARE' },
+    { value: 'SUPPORT SERVICE', label: 'SUPPORT SERVICE' },
+    { value: 'PRODUCTION SERVICE', label: 'PRODUCTION SERVICE' },
   ];
 
   const dataProductType = [
@@ -72,7 +74,11 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
             defaultValue={typeOC !== undefined ? defaultType : ''}
           />
         </div>
-        <div className='col-lg-4'>
+        <div
+          className={
+            typeOC === 'SUPPORT SERVICE' || typeOC === 'PRODUCTION SERVICE' ? 'd-none' : 'col-lg-4'
+          }
+        >
           <Field
             name='product_type'
             type='text'
@@ -90,7 +96,11 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
             onChange={(e: any) => dispatch(redux.actions.getProduct(e.value))}
           />
         </div>
-        <div className='col-lg-4'>
+        <div
+          className={
+            typeOC === 'SUPPORT SERVICE' || typeOC === 'PRODUCTION SERVICE' ? 'd-none' : 'col-lg-4'
+          }
+        >
           <Field
             name='product'
             type='text'
@@ -125,7 +135,11 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
             placeHolder='Insert Type'
           />
         </div>
-        <div className='col-lg-2'>
+        <div
+          className={
+            typeOC === 'SUPPORT SERVICE' || typeOC === 'PRODUCTION SERVICE' ? 'd-none' : 'col-lg-2'
+          }
+        >
           <Field
             isEdit={typeProduct === 'PACKAGE'}
             readOnly={typeProduct === 'PACKAGE'}
@@ -139,7 +153,11 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
             }}
           />
         </div>
-        <div className='col-lg-2'>
+        <div
+          className={
+            typeOC === 'SUPPORT SERVICE' || typeOC === 'PRODUCTION SERVICE' ? 'd-none' : 'col-lg-2'
+          }
+        >
           <Field
             isEdit={typeProduct === 'PACKAGE'}
             readOnly={typeProduct === 'PACKAGE'}
@@ -150,7 +168,11 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
             placeHolder='Insert Unit'
           />
         </div>
-        <div className='col-lg-2'>
+        <div
+          className={
+            typeOC === 'SUPPORT SERVICE' || typeOC === 'PRODUCTION SERVICE' ? 'd-none' : 'col-lg-2'
+          }
+        >
           <Field
             isEdit={typeProduct === 'PACKAGE'}
             readOnly={typeProduct === 'PACKAGE'}
@@ -163,7 +185,11 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
             onChange={(e: any) => dispatch(redux.actions.setSubTotalRp(e.target.value))}
           />
         </div>
-        <div className='col-lg-2'>
+        <div
+          className={
+            typeOC === 'SUPPORT SERVICE' || typeOC === 'PRODUCTION SERVICE' ? 'd-none' : 'col-lg-2'
+          }
+        >
           <Field
             isEdit={typeProduct === 'PACKAGE'}
             readOnly={typeProduct === 'PACKAGE'}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
-import { currencyMask } from '../../../../../setup/function.js';
+import { currencyMask, upper } from '../../../../../setup/function.js';
 import { RootState } from '../../../../../setup/index.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField } from '../../../../modules/redux-form/BasicInput';
@@ -74,6 +74,7 @@ const FormSupportService: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             component={RenderField}
             label='Support Service Name'
             placeHolder='Insert Support Service Name'
+            normalize={upper}
           />
         </div>
         <div className='col-lg-6'>

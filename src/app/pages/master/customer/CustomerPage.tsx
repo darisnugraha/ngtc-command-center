@@ -112,7 +112,7 @@ const CustomerPage: FC<PropsFromRedux> = () => {
                 dispatch(redux.actions.getStoreByID(row._id));
                 setTypeModal('STORE');
               }}
-              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              className='btn btn-icon btn-active-color-dark btn-color-warning btn-sm me-1'
             >
               <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
             </button>
@@ -122,7 +122,7 @@ const CustomerPage: FC<PropsFromRedux> = () => {
                 // eslint-disable-next-line
                 dispatch(redux.actions.deleteStore(row._id));
               }}
-              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              className='btn btn-icon btn-active-color-dark btn-color-danger btn-sm me-1'
             >
               <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
             </button>
@@ -241,7 +241,7 @@ const CustomerPage: FC<PropsFromRedux> = () => {
                     dispatch(redux.actions.getBranchByID(rowdata._id));
                     setTypeModal('BRANCH');
                   }}
-                  className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+                  className='btn btn-icon btn-active-color-dark btn-color-warning btn-sm me-1'
                 >
                   <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
                 </button>
@@ -251,7 +251,7 @@ const CustomerPage: FC<PropsFromRedux> = () => {
                     // eslint-disable-next-line
                     dispatch(redux.actions.deleteBranch(rowdata._id));
                   }}
-                  className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+                  className='btn btn-icon btn-active-color-dark btn-color-danger btn-sm me-1'
                   disabled={rowdata.kode_cabang === 'PUSAT'}
                 >
                   <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />

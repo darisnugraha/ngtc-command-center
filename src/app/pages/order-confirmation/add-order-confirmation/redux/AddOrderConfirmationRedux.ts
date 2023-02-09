@@ -325,11 +325,139 @@ export const actions = {
     ): Promise<void> => {
       const state = getState();
       const typeProd = state.addorderconfirmation.typeProduct;
-      getLocal('type_oc').then((resType) => {
-        if (resType.length === 0) {
-          const type = [];
-          type.push(oc_type);
-          saveLocal('type_oc', type).then(() => {
+      if (oc_type === 'SUPPORT SERVICE' || oc_type === 'PRODUCTION SERVICE') {
+        const type = [];
+        type.push(oc_type);
+        saveLocal('type_oc', type).then(() => {
+          toast.success('Success Add Data !');
+        });
+      } else {
+        getLocal('type_oc').then((resType) => {
+          if (resType.length === 0) {
+            const type = [];
+            type.push(oc_type);
+            saveLocal('type_oc', type).then(() => {
+              if (data.product_type === 'PACKAGE') {
+                AxiosGet(`bundle/by-kode/${data.product}`).then((response: any) => {
+                  const dataDecrypt = doDecryptData(response.data[0], [
+                    'kode_paket',
+                    'status',
+                    '_id',
+                    'input_date',
+                    'kode_produk',
+                    'jenis_produk',
+                    'harga',
+                    'type',
+                  ]);
+                  getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
+                    if (res.length === 0) {
+                      const dataArr: listProductModel[] = [];
+                      let no = 1;
+                      dataDecrypt.detail_produk.forEach((element: any) => {
+                        const row: listProductModel = {
+                          // eslint-disable-next-line
+                          key: no,
+                          harga: element.harga,
+                          kode_produk: element.kode_produk,
+                          nama_produk: element.nama_produk,
+                          qty: element.qty || 1,
+                          satuan: element.satuan,
+                          sub_total: element.harga,
+                          tipe_produk: element.jenis_produk || typeProd,
+                          type: element.type || '-',
+                        };
+                        dataArr.push(row);
+                        no += 1;
+                      });
+
+                      saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+                        saveLocal('dataPackage', true).then(() => {
+                          toast.success('Success Add Data !');
+                          dispatch(reset('FormAddProductOC'));
+                          dispatch(actions.getDataProductLocal());
+                        });
+                      });
+                    } else {
+                      const dataArr: listProductModel[] = res;
+                      let no = res.length + 1;
+                      dataDecrypt.detail_produk.forEach((element: any) => {
+                        const row: listProductModel = {
+                          // eslint-disable-next-line
+                          key: no,
+                          harga: element.harga,
+                          kode_produk: element.kode_produk,
+                          nama_produk: element.nama_produk,
+                          qty: element.qty || 1,
+                          satuan: element.satuan,
+                          sub_total: element.harga,
+                          tipe_produk: element.jenis_produk || typeProd,
+                          type: element.type || '-',
+                        };
+                        dataArr.push(row);
+                        no += 1;
+                      });
+                      saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+                        saveLocal('dataPackage', true).then(() => {
+                          toast.success('Success Add Data !');
+                          dispatch(reset('FormAddProductOC'));
+                          dispatch(actions.getDataProductLocal());
+                        });
+                      });
+                    }
+                  });
+                });
+              } else {
+                getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
+                  if (res.length === 0) {
+                    const dataArr = [];
+                    const row: listProductModel = {
+                      key: 1,
+                      harga: data.price,
+                      kode_produk: data.product,
+                      nama_produk: data.product_name,
+                      qty: data.qty || 1,
+                      satuan: data.unit,
+                      sub_total: data.sub_total,
+                      tipe_produk: data.product_type || typeProd,
+                      type: data.type || '-',
+                    };
+                    dataArr.push(row);
+                    saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+                      saveLocal('dataPackage', false).then(() => {
+                        toast.success('Success Add Data !');
+                        dispatch(reset('FormAddProductOC'));
+                        dispatch(actions.getDataProductLocal());
+                      });
+                    });
+                  } else {
+                    const dataArr = res;
+                    const no = res.length + 1;
+                    const row: listProductModel = {
+                      // eslint-disable-next-line
+                      key: no,
+                      harga: data.price,
+                      kode_produk: data.product,
+                      nama_produk: data.product_name,
+                      qty: data.qty || 1,
+                      satuan: data.unit,
+                      sub_total: data.sub_total,
+                      tipe_produk: data.product_type || typeProd,
+                      type: data.type || '-',
+                    };
+                    dataArr.push(row);
+                    saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+                      saveLocal('dataPackage', false).then(() => {
+                        toast.success('Success Add Data !');
+                        dispatch(reset('FormAddProductOC'));
+                        dispatch(actions.getDataProductLocal());
+                      });
+                    });
+                  }
+                });
+              }
+            });
+          } else {
+            // eslint-disable-next-line
             if (data.product_type === 'PACKAGE') {
               AxiosGet(`bundle/by-kode/${data.product}`).then((response: any) => {
                 const dataDecrypt = doDecryptData(response.data[0], [
@@ -362,7 +490,6 @@ export const actions = {
                       dataArr.push(row);
                       no += 1;
                     });
-
                     saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
                       saveLocal('dataPackage', true).then(() => {
                         toast.success('Success Add Data !');
@@ -448,128 +575,9 @@ export const actions = {
                 }
               });
             }
-          });
-        } else {
-          // eslint-disable-next-line
-          if (data.product_type === 'PACKAGE') {
-            AxiosGet(`bundle/by-kode/${data.product}`).then((response: any) => {
-              const dataDecrypt = doDecryptData(response.data[0], [
-                'kode_paket',
-                'status',
-                '_id',
-                'input_date',
-                'kode_produk',
-                'jenis_produk',
-                'harga',
-                'type',
-              ]);
-              getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
-                if (res.length === 0) {
-                  const dataArr: listProductModel[] = [];
-                  let no = 1;
-                  dataDecrypt.detail_produk.forEach((element: any) => {
-                    const row: listProductModel = {
-                      // eslint-disable-next-line
-                      key: no,
-                      harga: element.harga,
-                      kode_produk: element.kode_produk,
-                      nama_produk: element.nama_produk,
-                      qty: element.qty || 1,
-                      satuan: element.satuan,
-                      sub_total: element.harga,
-                      tipe_produk: element.jenis_produk || typeProd,
-                      type: element.type || '-',
-                    };
-                    dataArr.push(row);
-                    no += 1;
-                  });
-                  saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
-                    saveLocal('dataPackage', true).then(() => {
-                      toast.success('Success Add Data !');
-                      dispatch(reset('FormAddProductOC'));
-                      dispatch(actions.getDataProductLocal());
-                    });
-                  });
-                } else {
-                  const dataArr: listProductModel[] = res;
-                  let no = res.length + 1;
-                  dataDecrypt.detail_produk.forEach((element: any) => {
-                    const row: listProductModel = {
-                      // eslint-disable-next-line
-                      key: no,
-                      harga: element.harga,
-                      kode_produk: element.kode_produk,
-                      nama_produk: element.nama_produk,
-                      qty: element.qty || 1,
-                      satuan: element.satuan,
-                      sub_total: element.harga,
-                      tipe_produk: element.jenis_produk || typeProd,
-                      type: element.type || '-',
-                    };
-                    dataArr.push(row);
-                    no += 1;
-                  });
-                  saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
-                    saveLocal('dataPackage', true).then(() => {
-                      toast.success('Success Add Data !');
-                      dispatch(reset('FormAddProductOC'));
-                      dispatch(actions.getDataProductLocal());
-                    });
-                  });
-                }
-              });
-            });
-          } else {
-            getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
-              if (res.length === 0) {
-                const dataArr = [];
-                const row: listProductModel = {
-                  key: 1,
-                  harga: data.price,
-                  kode_produk: data.product,
-                  nama_produk: data.product_name,
-                  qty: data.qty || 1,
-                  satuan: data.unit,
-                  sub_total: data.sub_total,
-                  tipe_produk: data.product_type || typeProd,
-                  type: data.type || '-',
-                };
-                dataArr.push(row);
-                saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
-                  saveLocal('dataPackage', false).then(() => {
-                    toast.success('Success Add Data !');
-                    dispatch(reset('FormAddProductOC'));
-                    dispatch(actions.getDataProductLocal());
-                  });
-                });
-              } else {
-                const dataArr = res;
-                const no = res.length + 1;
-                const row: listProductModel = {
-                  // eslint-disable-next-line
-                  key: no,
-                  harga: data.price,
-                  kode_produk: data.product,
-                  nama_produk: data.product_name,
-                  qty: data.qty || 1,
-                  satuan: data.unit,
-                  sub_total: data.sub_total,
-                  tipe_produk: data.product_type || typeProd,
-                  type: data.type || '-',
-                };
-                dataArr.push(row);
-                saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
-                  saveLocal('dataPackage', false).then(() => {
-                    toast.success('Success Add Data !');
-                    dispatch(reset('FormAddProductOC'));
-                    dispatch(actions.getDataProductLocal());
-                  });
-                });
-              }
-            });
           }
-        }
-      });
+        });
+      }
     };
   },
   getDataProductLocal: () => {
@@ -767,248 +775,461 @@ export const actions = {
   postAddOC: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
-      getLocal('dataCustomer').then((resCust) => {
-        if (resCust.length === 0) {
-          toast.error('Fill Customer Data First !');
-          dispatch(utility.actions.hideLoading());
+      getLocal('type_oc').then((response) => {
+        if (response.length === 0) {
+          toast.error('Choose The Type Of Order First !');
+        }
+        if (response[0] === 'SUPPORT SERVICE') {
+          getLocal('dataCustomer').then((resCust) => {
+            getLocal('listSupport', ['qty', 'harga', 'total_harga']).then((resSupp) => {
+              const onSendData = {
+                kode_toko: resCust.central_store_code,
+                nama_toko: resCust.central_store_name,
+                kode_cabang: resCust.branch_store_code,
+                nama_cabang: resCust.branch_store_name,
+                nama_customer: resCust.customer_name || '-',
+                alamat_cabang: resCust.address,
+                alamat_korespondensi: resCust.correspondence_address,
+                kota: resCust.city || '-',
+                telepon: resCust.telephone || '-',
+                email: resCust.email || '-',
+                kode_staff: resCust.staff,
+                kode_reseller: resCust.referral || '-',
+                biaya_reseller: resCust.reseller_fee || 0,
+                jenis_ok: response[0],
+                detail_produk: [],
+                detail_diskon: [],
+                no_support_service: resSupp[0]?.no_support_service || '-',
+                no_production_service: '-',
+                total_harga: resSupp[0]?.total_harga,
+                deskripsi_header: '-',
+                deskripsi_footer: '-',
+              };
+              AxiosPost('order-confirmation', onSendData)
+                .then((res: any) => {
+                  AxiosGet(
+                    // eslint-disable-next-line
+                    `order-confirmation/by-id/${res._id}`
+                  ).then((resDetail) => {
+                    const dataDecrypt = doDecryptData(resDetail.data, [
+                      'status',
+                      '_id',
+                      'input_date',
+                      'no_order_konfirmasi',
+                      'kode_toko',
+                      'kode_cabang',
+                      'tanggal_order_konfirmasi',
+                      'total_harga',
+                      'kode_produk',
+                      'satuan',
+                      'harga',
+                      'sub_total',
+                      'qty',
+                      'kode_diskon',
+                      'nama_diskon',
+                      'persentase',
+                      'jenis_ok',
+                      'jenis_produk',
+                      'type',
+                    ]);
+                    const desc = {
+                      header_desc:
+                        'Sebelumnya kami ucapkan terima kasih atas kerjasama yang telah terjalin selama ini. Bersama ini kami sampaikan Order Konfirmasi Harga Software Nagatech Gold Store Solution web based (Online) dengan kondisi sbb :',
+                      footer_desc:
+                        'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan',
+                    };
+                    const pdf64 = OC(dataDecrypt, desc);
+                    const file = dataURLtoPDFFile(
+                      pdf64,
+                      `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+                    );
+                    postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
+                      .then(() => {
+                        Swal.fire('Good job!', 'Success Add Data !', 'success').then(() => {
+                          localStorage.removeItem('dataCustomer');
+                          localStorage.removeItem('listProduct');
+                          localStorage.removeItem('listDiscount');
+                          localStorage.removeItem('type_oc');
+                          localStorage.removeItem('listSupport');
+                          localStorage.removeItem('listProduction');
+                          dispatch(modal.actions.hide());
+                          dispatch(utility.actions.hideLoading());
+                          dispatch(customerRedux.actions.PrevCustomer());
+                          window.location.reload();
+                        });
+                      })
+                      .catch(() => {
+                        Swal.fire().then(() => {
+                          localStorage.removeItem('dataCustomer');
+                          localStorage.removeItem('listProduct');
+                          localStorage.removeItem('listDiscount');
+                          localStorage.removeItem('type_oc');
+                          localStorage.removeItem('listSupport');
+                          localStorage.removeItem('listProduction');
+                          dispatch(modal.actions.hide());
+                          dispatch(utility.actions.hideLoading());
+                          dispatch(customerRedux.actions.PrevCustomer());
+                          window.location.reload();
+                        });
+                      });
+                  });
+                })
+                .catch((error) => {
+                  dispatch(utility.actions.hideLoading());
+                  const dataErr = error.response.data;
+                  toast.error(dataErr.message || 'Failed Add Data !');
+                });
+            });
+          });
+        } else if (response[0] === 'PRODUCTION SERVICE') {
+          getLocal('dataCustomer').then((resCust) => {
+            getLocal('listProduction', ['qty', 'total_harga']).then((resProdServ) => {
+              const onSendData = {
+                kode_toko: resCust.central_store_code,
+                nama_toko: resCust.central_store_name,
+                kode_cabang: resCust.branch_store_code,
+                nama_cabang: resCust.branch_store_name,
+                nama_customer: resCust.customer_name || '-',
+                alamat_cabang: resCust.address,
+                alamat_korespondensi: resCust.correspondence_address,
+                kota: resCust.city || '-',
+                telepon: resCust.telephone || '-',
+                email: resCust.email || '-',
+                kode_staff: resCust.staff,
+                kode_reseller: resCust.referral || '-',
+                biaya_reseller: resCust.reseller_fee || 0,
+                jenis_ok: response[0],
+                detail_produk: [],
+                detail_diskon: [],
+                no_support_service: '-',
+                no_production_service: resProdServ[0]?.no_production_service || '-',
+                total_harga: resProdServ[0]?.total_harga,
+                deskripsi_header: '-',
+                deskripsi_footer: '-',
+              };
+              AxiosPost('order-confirmation', onSendData)
+                .then((res: any) => {
+                  AxiosGet(
+                    // eslint-disable-next-line
+                    `order-confirmation/by-id/${res._id}`
+                  ).then((resDetail) => {
+                    const dataDecrypt = doDecryptData(resDetail.data, [
+                      'status',
+                      '_id',
+                      'input_date',
+                      'no_order_konfirmasi',
+                      'kode_toko',
+                      'kode_cabang',
+                      'tanggal_order_konfirmasi',
+                      'total_harga',
+                      'kode_produk',
+                      'satuan',
+                      'harga',
+                      'sub_total',
+                      'qty',
+                      'kode_diskon',
+                      'nama_diskon',
+                      'persentase',
+                      'jenis_ok',
+                      'jenis_produk',
+                      'type',
+                    ]);
+                    const desc = {
+                      header_desc:
+                        'Sebelumnya kami ucapkan terima kasih atas kerjasama yang telah terjalin selama ini. Bersama ini kami sampaikan Order Konfirmasi Harga Software Nagatech Gold Store Solution web based (Online) dengan kondisi sbb :',
+                      footer_desc:
+                        'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan',
+                    };
+                    const pdf64 = OC(dataDecrypt, desc);
+                    const file = dataURLtoPDFFile(
+                      pdf64,
+                      `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+                    );
+                    postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
+                      .then(() => {
+                        Swal.fire('Good job!', 'Success Add Data !', 'success').then(() => {
+                          localStorage.removeItem('dataCustomer');
+                          localStorage.removeItem('listProduct');
+                          localStorage.removeItem('listDiscount');
+                          localStorage.removeItem('type_oc');
+                          localStorage.removeItem('listSupport');
+                          localStorage.removeItem('listProduction');
+                          dispatch(modal.actions.hide());
+                          dispatch(utility.actions.hideLoading());
+                          dispatch(customerRedux.actions.PrevCustomer());
+                          window.location.reload();
+                        });
+                      })
+                      .catch(() => {
+                        Swal.fire().then(() => {
+                          localStorage.removeItem('dataCustomer');
+                          localStorage.removeItem('listProduct');
+                          localStorage.removeItem('listDiscount');
+                          localStorage.removeItem('type_oc');
+                          localStorage.removeItem('listSupport');
+                          localStorage.removeItem('listProduction');
+                          dispatch(modal.actions.hide());
+                          dispatch(utility.actions.hideLoading());
+                          dispatch(customerRedux.actions.PrevCustomer());
+                          window.location.reload();
+                        });
+                      });
+                  });
+                })
+                .catch((error) => {
+                  dispatch(utility.actions.hideLoading());
+                  const dataErr = error.response.data;
+                  toast.error(dataErr.message || 'Failed Add Data !');
+                });
+            });
+          });
         } else {
-          getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((resProd) => {
-            if (resProd.length === 0) {
-              toast.error('Fill The Product First !');
+          getLocal('dataCustomer').then((resCust) => {
+            if (resCust.length === 0) {
+              toast.error('Fill Customer Data First !');
               dispatch(utility.actions.hideLoading());
             } else {
-              getLocal('listDiscount', ['persentase', 'diskon_rp']).then((resDisc) => {
-                getLocal('type_oc').then((resType) => {
-                  if (resType.length === 0) {
-                    toast.error('Fill Product Data First !');
-                    dispatch(utility.actions.hideLoading());
-                  } else {
-                    getLocal('listSupport', ['qty', 'harga', 'total_harga']).then((resSupp) => {
-                      getLocal('listProduction', ['qty', 'total_harga']).then((resProdServ) => {
-                        const ProductSoftware = resProd.filter(
-                          (value: any) => value.tipe_produk === 'SOFTWARE'
-                        );
-                        const ProductHardware = resProd.filter(
-                          (value: any) => value.tipe_produk === 'HARDWARE'
-                        );
-                        const ProductConsumable = resProd.filter(
-                          (value: any) => value.tipe_produk === 'CONSUMABLE'
-                        );
-                        const DiscountSoftware = resDisc.filter((value: any) =>
-                          value.nama_diskon.includes('SOFTWARE')
-                        );
-                        const DiscountHardware = resDisc.filter((value: any) =>
-                          value.nama_diskon.includes('HARDWARE')
-                        );
-                        const DiscountConsumable = resDisc.filter((value: any) =>
-                          value.nama_diskon.includes('CONSUMABLE')
-                        );
-                        const totalSoftware = ProductSoftware.reduce(
-                          (a: any, b: any) => a + b.harga * b.qty,
-                          0
-                        );
-                        const totalHardware = ProductHardware.reduce(
-                          (a: any, b: any) => a + b.harga * b.qty,
-                          0
-                        );
-                        const totalConsumable = ProductConsumable.reduce(
-                          (a: any, b: any) => a + b.harga * b.qty,
-                          0
-                        );
+              getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((resProd) => {
+                if (resProd.length === 0) {
+                  toast.error('Fill The Product First !');
+                  dispatch(utility.actions.hideLoading());
+                } else {
+                  getLocal('listDiscount', ['persentase', 'diskon_rp']).then((resDisc) => {
+                    getLocal('type_oc').then((resType) => {
+                      if (resType.length === 0) {
+                        toast.error('Fill Product Data First !');
+                        dispatch(utility.actions.hideLoading());
+                      } else {
+                        getLocal('listSupport', ['qty', 'harga', 'total_harga']).then((resSupp) => {
+                          getLocal('listProduction', ['qty', 'total_harga']).then((resProdServ) => {
+                            const ProductSoftware = resProd.filter(
+                              (value: any) => value.tipe_produk === 'SOFTWARE'
+                            );
+                            const ProductHardware = resProd.filter(
+                              (value: any) => value.tipe_produk === 'HARDWARE'
+                            );
+                            const ProductConsumable = resProd.filter(
+                              (value: any) => value.tipe_produk === 'CONSUMABLE'
+                            );
+                            const DiscountSoftware = resDisc.filter((value: any) =>
+                              value.nama_diskon.includes('SOFTWARE')
+                            );
+                            const DiscountHardware = resDisc.filter((value: any) =>
+                              value.nama_diskon.includes('HARDWARE')
+                            );
+                            const DiscountConsumable = resDisc.filter((value: any) =>
+                              value.nama_diskon.includes('CONSUMABLE')
+                            );
+                            const totalSoftware = ProductSoftware.reduce(
+                              (a: any, b: any) => a + b.harga * b.qty,
+                              0
+                            );
+                            const totalHardware = ProductHardware.reduce(
+                              (a: any, b: any) => a + b.harga * b.qty,
+                              0
+                            );
+                            const totalConsumable = ProductConsumable.reduce(
+                              (a: any, b: any) => a + b.harga * b.qty,
+                              0
+                            );
 
-                        const totalDiscountSoftwareRp = DiscountSoftware.reduce(
-                          (a: any, b: any) => a + b.diskon_rp,
-                          0
-                        );
-                        const totalDiscountHardwareRp = DiscountHardware.reduce(
-                          (a: any, b: any) => a + b.diskon_rp,
-                          0
-                        );
-                        const totalDiscountConsumableRp = DiscountConsumable.reduce(
-                          (a: any, b: any) => a + b.diskon_rp,
-                          0
-                        );
-                        const SoftwarePersen = DiscountSoftware.reduce(
-                          (a: any, b: any) => a + b.persentase,
-                          0
-                        );
-                        const HardwarePersen = DiscountHardware.reduce(
-                          (a: any, b: any) => a + b.persentase,
-                          0
-                        );
-                        const ConsumablePersen = DiscountConsumable.reduce(
-                          (a: any, b: any) => a + b.persentase,
-                          0
-                        );
+                            const totalDiscountSoftwareRp = DiscountSoftware.reduce(
+                              (a: any, b: any) => a + b.diskon_rp,
+                              0
+                            );
+                            const totalDiscountHardwareRp = DiscountHardware.reduce(
+                              (a: any, b: any) => a + b.diskon_rp,
+                              0
+                            );
+                            const totalDiscountConsumableRp = DiscountConsumable.reduce(
+                              (a: any, b: any) => a + b.diskon_rp,
+                              0
+                            );
+                            const SoftwarePersen = DiscountSoftware.reduce(
+                              (a: any, b: any) => a + b.persentase,
+                              0
+                            );
+                            const HardwarePersen = DiscountHardware.reduce(
+                              (a: any, b: any) => a + b.persentase,
+                              0
+                            );
+                            const ConsumablePersen = DiscountConsumable.reduce(
+                              (a: any, b: any) => a + b.persentase,
+                              0
+                            );
 
-                        const subTotalSoftware =
-                          totalSoftware -
-                            (totalDiscountSoftwareRp + totalSoftware * (SoftwarePersen / 100)) || 0;
-                        const subTotalHardware =
-                          totalHardware -
-                            (totalDiscountHardwareRp + totalHardware * (HardwarePersen / 100)) || 0;
-                        const subTotalConsumable =
-                          totalConsumable -
-                            (totalDiscountConsumableRp +
-                              totalConsumable * (ConsumablePersen / 100)) || 0;
+                            const subTotalSoftware =
+                              totalSoftware -
+                                (totalDiscountSoftwareRp +
+                                  totalSoftware * (SoftwarePersen / 100)) || 0;
+                            const subTotalHardware =
+                              totalHardware -
+                                (totalDiscountHardwareRp +
+                                  totalHardware * (HardwarePersen / 100)) || 0;
+                            const subTotalConsumable =
+                              totalConsumable -
+                                (totalDiscountConsumableRp +
+                                  totalConsumable * (ConsumablePersen / 100)) || 0;
 
-                        const grandTotal =
-                          subTotalSoftware +
-                          subTotalHardware +
-                          subTotalConsumable +
-                          (resSupp[0]?.total_harga || 0) +
-                          (resProdServ[0]?.total_harga || 0);
+                            const grandTotal =
+                              subTotalSoftware +
+                              subTotalHardware +
+                              subTotalConsumable +
+                              (resSupp[0]?.total_harga || 0) +
+                              (resProdServ[0]?.total_harga || 0);
 
-                        const dataProd: {
-                          kode_produk: any;
-                          nama_produk: any;
-                          jenis_produk: any;
-                          satuan: any;
-                          qty: any;
-                          harga: any;
-                          sub_total: any;
-                          type: any;
-                        }[] = [];
-                        resProd.forEach((element: any) => {
-                          const row = {
-                            kode_produk: element.kode_produk,
-                            nama_produk: element.nama_produk,
-                            jenis_produk: element.tipe_produk,
-                            satuan: element.satuan,
-                            // eslint-disable-next-line
-                            qty: parseInt(element.qty) || 1,
-                            harga: element.harga,
-                            sub_total: element.sub_total,
-                            type: element.type || '-',
-                          };
-                          dataProd.push(row);
-                        });
-                        const dataDisc: {
-                          kode_diskon: any;
-                          nama_diskon: any;
-                          persentase: any;
-                          sub_total: any;
-                        }[] = [];
-                        resDisc.forEach((element: any) => {
-                          const row = {
-                            kode_diskon: element.kode_diskon,
-                            nama_diskon: element.nama_diskon,
-                            persentase: element.persentase / 100,
-                            sub_total: element.diskon_rp,
-                          };
-                          dataDisc.push(row);
-                        });
-                        const onSendData = {
-                          kode_toko: resCust.central_store_code,
-                          nama_toko: resCust.central_store_name,
-                          kode_cabang: resCust.branch_store_code,
-                          nama_cabang: resCust.branch_store_name,
-                          nama_customer: resCust.customer_name || '-',
-                          alamat_cabang: resCust.address,
-                          alamat_korespondensi: resCust.correspondence_address,
-                          kota: resCust.city || '-',
-                          telepon: resCust.telephone || '-',
-                          email: resCust.email || '-',
-                          kode_staff: resCust.staff,
-                          kode_reseller: resCust.referral || '-',
-                          biaya_reseller: resCust.reseller_fee || 0,
-                          jenis_ok: resType[0],
-                          detail_produk: dataProd,
-                          detail_diskon: dataDisc,
-                          no_support_service: resSupp[0]?.no_support_service || '-',
-                          no_production_service: resProdServ[0]?.no_production_service || '-',
-                          total_harga: grandTotal,
-                          deskripsi_header: '-',
-                          deskripsi_footer: '-',
-                        };
-                        AxiosPost('order-confirmation', onSendData)
-                          .then((res: any) => {
-                            AxiosGet(
-                              // eslint-disable-next-line
-                              `order-confirmation/by-id/${res._id}`
-                            ).then((resDetail) => {
-                              const dataDecrypt = doDecryptData(resDetail.data, [
-                                'status',
-                                '_id',
-                                'input_date',
-                                'no_order_konfirmasi',
-                                'kode_toko',
-                                'kode_cabang',
-                                'tanggal_order_konfirmasi',
-                                'total_harga',
-                                'kode_produk',
-                                'satuan',
-                                'harga',
-                                'sub_total',
-                                'qty',
-                                'kode_diskon',
-                                'nama_diskon',
-                                'persentase',
-                                'jenis_ok',
-                                'jenis_produk',
-                                'type',
-                              ]);
-                              const desc = {
-                                header_desc:
-                                  'Sebelumnya kami ucapkan terima kasih atas kerjasama yang telah terjalin selama ini. Bersama ini kami sampaikan Order Konfirmasi Harga Software Nagatech Gold Store Solution web based (Online) dengan kondisi sbb :',
-                                footer_desc:
-                                  'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan',
+                            const dataProd: {
+                              kode_produk: any;
+                              nama_produk: any;
+                              jenis_produk: any;
+                              satuan: any;
+                              qty: any;
+                              harga: any;
+                              sub_total: any;
+                              type: any;
+                            }[] = [];
+                            resProd.forEach((element: any) => {
+                              const row = {
+                                kode_produk: element.kode_produk,
+                                nama_produk: element.nama_produk,
+                                jenis_produk: element.tipe_produk,
+                                satuan: element.satuan,
+                                // eslint-disable-next-line
+                                qty: parseInt(element.qty) || 1,
+                                harga: element.harga,
+                                sub_total: element.sub_total,
+                                type: element.type || '-',
                               };
-                              const pdf64 = OC(dataDecrypt, desc);
-                              const file = dataURLtoPDFFile(
-                                pdf64,
-                                `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
-                              );
-                              postPDF(
-                                file,
-                                `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
-                              )
-                                .then(() => {
-                                  Swal.fire('Good job!', 'Success Add Data !', 'success').then(
-                                    () => {
-                                      localStorage.removeItem('dataCustomer');
-                                      localStorage.removeItem('listProduct');
-                                      localStorage.removeItem('listDiscount');
-                                      localStorage.removeItem('type_oc');
-                                      localStorage.removeItem('listSupport');
-                                      localStorage.removeItem('listProduction');
-                                      dispatch(modal.actions.hide());
-                                      dispatch(utility.actions.hideLoading());
-                                      dispatch(customerRedux.actions.PrevCustomer());
-                                      window.location.reload();
-                                    }
-                                  );
-                                })
-                                .catch(() => {
-                                  Swal.fire().then(() => {
-                                    localStorage.removeItem('dataCustomer');
-                                    localStorage.removeItem('listProduct');
-                                    localStorage.removeItem('listDiscount');
-                                    localStorage.removeItem('type_oc');
-                                    localStorage.removeItem('listSupport');
-                                    localStorage.removeItem('listProduction');
-                                    dispatch(modal.actions.hide());
-                                    dispatch(utility.actions.hideLoading());
-                                    dispatch(customerRedux.actions.PrevCustomer());
-                                    window.location.reload();
-                                  });
-                                });
+                              dataProd.push(row);
                             });
-                          })
-                          .catch((error) => {
-                            dispatch(utility.actions.hideLoading());
-                            const dataErr = error.response.data;
-                            toast.error(dataErr.message || 'Failed Add Data !');
+                            const dataDisc: {
+                              kode_diskon: any;
+                              nama_diskon: any;
+                              persentase: any;
+                              sub_total: any;
+                            }[] = [];
+                            resDisc.forEach((element: any) => {
+                              const row = {
+                                kode_diskon: element.kode_diskon,
+                                nama_diskon: element.nama_diskon,
+                                persentase: element.persentase / 100,
+                                sub_total: element.diskon_rp,
+                              };
+                              dataDisc.push(row);
+                            });
+                            const onSendData = {
+                              kode_toko: resCust.central_store_code,
+                              nama_toko: resCust.central_store_name,
+                              kode_cabang: resCust.branch_store_code,
+                              nama_cabang: resCust.branch_store_name,
+                              nama_customer: resCust.customer_name || '-',
+                              alamat_cabang: resCust.address,
+                              alamat_korespondensi: resCust.correspondence_address,
+                              kota: resCust.city || '-',
+                              telepon: resCust.telephone || '-',
+                              email: resCust.email || '-',
+                              kode_staff: resCust.staff,
+                              kode_reseller: resCust.referral || '-',
+                              biaya_reseller: resCust.reseller_fee || 0,
+                              jenis_ok: resType[0],
+                              detail_produk: dataProd,
+                              detail_diskon: dataDisc,
+                              no_support_service: resSupp[0]?.no_support_service || '-',
+                              no_production_service: resProdServ[0]?.no_production_service || '-',
+                              total_harga: grandTotal,
+                              deskripsi_header: '-',
+                              deskripsi_footer: '-',
+                            };
+                            AxiosPost('order-confirmation', onSendData)
+                              .then((res: any) => {
+                                AxiosGet(
+                                  // eslint-disable-next-line
+                                  `order-confirmation/by-id/${res._id}`
+                                ).then((resDetail) => {
+                                  const dataDecrypt = doDecryptData(resDetail.data, [
+                                    'status',
+                                    '_id',
+                                    'input_date',
+                                    'no_order_konfirmasi',
+                                    'kode_toko',
+                                    'kode_cabang',
+                                    'tanggal_order_konfirmasi',
+                                    'total_harga',
+                                    'kode_produk',
+                                    'satuan',
+                                    'harga',
+                                    'sub_total',
+                                    'qty',
+                                    'kode_diskon',
+                                    'nama_diskon',
+                                    'persentase',
+                                    'jenis_ok',
+                                    'jenis_produk',
+                                    'type',
+                                  ]);
+                                  const desc = {
+                                    header_desc:
+                                      'Sebelumnya kami ucapkan terima kasih atas kerjasama yang telah terjalin selama ini. Bersama ini kami sampaikan Order Konfirmasi Harga Software Nagatech Gold Store Solution web based (Online) dengan kondisi sbb :',
+                                    footer_desc:
+                                      'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan',
+                                  };
+                                  const pdf64 = OC(dataDecrypt, desc);
+                                  const file = dataURLtoPDFFile(
+                                    pdf64,
+                                    `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+                                  );
+                                  postPDF(
+                                    file,
+                                    `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+                                  )
+                                    .then(() => {
+                                      Swal.fire('Good job!', 'Success Add Data !', 'success').then(
+                                        () => {
+                                          localStorage.removeItem('dataCustomer');
+                                          localStorage.removeItem('listProduct');
+                                          localStorage.removeItem('listDiscount');
+                                          localStorage.removeItem('type_oc');
+                                          localStorage.removeItem('listSupport');
+                                          localStorage.removeItem('listProduction');
+                                          dispatch(modal.actions.hide());
+                                          dispatch(utility.actions.hideLoading());
+                                          dispatch(customerRedux.actions.PrevCustomer());
+                                          window.location.reload();
+                                        }
+                                      );
+                                    })
+                                    .catch(() => {
+                                      Swal.fire().then(() => {
+                                        localStorage.removeItem('dataCustomer');
+                                        localStorage.removeItem('listProduct');
+                                        localStorage.removeItem('listDiscount');
+                                        localStorage.removeItem('type_oc');
+                                        localStorage.removeItem('listSupport');
+                                        localStorage.removeItem('listProduction');
+                                        dispatch(modal.actions.hide());
+                                        dispatch(utility.actions.hideLoading());
+                                        dispatch(customerRedux.actions.PrevCustomer());
+                                        window.location.reload();
+                                      });
+                                    });
+                                });
+                              })
+                              .catch((error) => {
+                                dispatch(utility.actions.hideLoading());
+                                const dataErr = error.response.data;
+                                toast.error(dataErr.message || 'Failed Add Data !');
+                              });
+                            // dispatch({
+                            //   type: actionTypes.SaveData,
+                            //   payload: { dataSend: onSendData },
+                            // });
+                            // dispatch(modal.actions.show());
                           });
-                        // dispatch({
-                        //   type: actionTypes.SaveData,
-                        //   payload: { dataSend: onSendData },
-                        // });
-                        // dispatch(modal.actions.show());
-                      });
+                        });
+                      }
                     });
-                  }
-                });
+                  });
+                }
               });
             }
           });

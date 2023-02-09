@@ -95,7 +95,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "local-dev-ngrok": "export REACT_APP_BACKEND_URL=https://5e2e-125-164-20-45.ap.ngrok.io/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=https://5e2e-125-164-20-45.ap.ngrok.io/api/&& react-scripts start",
+    "local-dev-ngrok": "export REACT_APP_BACKEND_URL=https://ae67-125-164-19-200.ap.ngrok.io/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=https://ae67-125-164-19-200.ap.ngrok.io/api/&& react-scripts start",
     "local-dev": "export REACT_APP_BACKEND_URL=http://192.168.0.19:5555/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=http://192.168.0.19:5555/api/&& react-scripts start",
     "local-dev-new": "export REACT_APP_BACKEND_URL=http://10.20.30.235:5555/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=http://10.20.30.235:5555/api/&& react-scripts start",
     "local-qc": "export REACT_APP_BACKEND_URL=http://103.119.55.52:5555/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=http://103.119.55.52:5555/api/&& react-scripts start",

@@ -218,6 +218,88 @@ const OCPDF = (data, head) => {
   if (PersentaseConsumable !== 0 || DiskonSubTotalConsumable !== 0) {
     tableRows.push(discountConsumable);
   }
+
+  const dataDiscountSupport = data[0].detail_diskon.find((element) =>
+    element.nama_diskon.includes('SUPPORT')
+  );
+
+  let PersentaseSupport = 0;
+  let DiskonSubTotalSupport = 0;
+  const supportPercent = dataDiscountSupport?.persentase || 0;
+  const DiskonRpSupport = dataDiscountSupport?.sub_total || 0;
+
+  if (supportPercent === 0 && DiskonRpSupport !== 0) {
+    const totalHargaSupp = data[0].support_service.reduce((a, b) => a + b.total_harga, 0);
+    PersentaseSupport = DiskonRpSupport / totalHargaSupp;
+    DiskonSubTotalSupport = DiskonRpSupport;
+  } else if (supportPercent !== 0 && DiskonRpSupport === 0) {
+    const totalHargaSupp = data[0].support_service.reduce((a, b) => a + b.total_harga, 0);
+    DiskonSubTotalSupport = totalHargaSupp * supportPercent;
+    PersentaseSupport = supportPercent;
+  } else {
+    PersentaseSupport = 0;
+    DiskonSubTotalSupport = 0;
+  }
+
+  const footerDiscount = [
+    {
+      content: `Diskon Support Service ${PersentaseSupport}`,
+      colSpan: 4,
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+    {
+      content: 'Rp. ' + DiskonSubTotalSupport?.toLocaleString(),
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+  ];
+
+  if (PersentaseSupport !== 0 || DiskonSubTotalSupport !== 0) {
+    tableRows.push(footerDiscount);
+  }
+
+  data[0].detail_diskon.forEach((res) => {
+    if (
+      !res.includes('SOFTWARE') ||
+      !res.includes('HARDWARE') ||
+      !res.includes('CONSUMABLE') ||
+      !res.includes('SUPPORT') ||
+      !res.includes('PRODUCTION')
+    ) {
+      let DiscTot = 0;
+      let PersenTot = 0;
+      if (res.persentase === 0 && res.sub_total !== 0) {
+        PersenTot = res.sub_total / data[0].total_harga;
+        DiscTot = res.sub_total;
+        const footerDiscountAll = [
+          {
+            content: `Diskon ${res.nama_diskon} ${PersenTot}`,
+            colSpan: 4,
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+          {
+            content: 'Rp. ' + DiscTot?.toLocaleString(),
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+        ];
+        tableRows.push(footerDiscountAll);
+      } else if (res.persentase !== 0 && res.sub_total === 0) {
+        PersenTot = res.persentase;
+        DiscTot = data[0].total_harga * res.persentase;
+        const footerDiscountAll = [
+          {
+            content: `Diskon ${res.nama_diskon} ${PersenTot}`,
+            colSpan: 4,
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+          {
+            content: 'Rp. ' + DiscTot?.toLocaleString(),
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+        ];
+        tableRows.push(footerDiscountAll);
+      }
+    }
+  });
   const total = [
     {
       content: 'Total',
@@ -278,7 +360,7 @@ const OCPDF = (data, head) => {
   const pageHeight = doc.internal.pageSize.height;
   doc.setFontSize(10);
   doc.setFont(undefined, 'bold');
-  doc.text('*Pembayaran dapat di transfer melalui rekening*',23, finalY + 78);
+  doc.text('*Pembayaran dapat di transfer melalui rekening*', 23, finalY + 78);
   let finalTableY = finalY + 83;
 
   let tableRowsBank = [];

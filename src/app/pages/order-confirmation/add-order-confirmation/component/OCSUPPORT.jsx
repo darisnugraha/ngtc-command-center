@@ -3,7 +3,7 @@ import 'jspdf-autotable';
 import moment from 'moment';
 import { toAbsoluteUrl } from '../../../../../_metronic/helpers';
 
-const OCPDFSUPPORT = (data, head) => {
+const OCSUPPORT = (data, head) => {
   const doc = new jsPDF('p', 'mm', 'a4');
   doc.setProperties({
     title: 'Order Confirmation',
@@ -56,68 +56,75 @@ const OCPDFSUPPORT = (data, head) => {
   tableColumn = [
     [
       { content: `No` },
-      { content: `Keterangan` },
+      { content: `Product Name` },
       { content: `Qty` },
-      { content: `Harga` },
-      { content: `Total Harga` },
+      { content: `Unit` },
+      { content: `Price` },
+      { content: `Sub Total` },
     ],
   ];
 
   let no = 1;
-  data[0].support_service.forEach((element) => {
+  data[0].detail_produk.forEach((element) => {
     const row = [
       { content: no },
-      { content: element.nama_support_service },
+      { content: element.nama_produk },
       { content: element.qty },
+      { content: element.satuan },
       { content: 'Rp. ' + element.harga?.toLocaleString(), styles: { halign: 'right' } },
       {
-        content: `Rp. ${element.total_harga?.toLocaleString()}`,
+        content: `Rp. ${element.sub_total?.toLocaleString()}`,
         styles: { halign: 'right' },
       },
     ];
     tableRows.push(row);
     no += 1;
   });
-  const grandTotal = data[0].support_service
-    .reduce((a, b) => a + b.total_harga, 0)
-    ?.toLocaleString();
   const footer = [
     {
       content: 'Grand Total : ',
-      colSpan: 4,
+      colSpan: 5,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
     {
-      content: 'Rp. ' + grandTotal,
+      content:
+        'Rp. ' + data[0].detail_produk.reduce((a, b) => a + b.sub_total, 0)?.toLocaleString(),
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
   tableRows.push(footer);
 
-  const dataDiscountSupport = data[0].detail_diskon.find((element) =>
-    element.nama_diskon.includes('SUPPORT')
+  const dataDiscountSoftware = data[0].detail_diskon.find((element) =>
+    element.nama_diskon.includes('SOFTWARE')
   );
-
-  let PersentaseSupport = 0;
+  const softwarePercent = dataDiscountSoftware?.persentase || 0;
+  let PersentaseSoftware = 0;
+  const DiskonRp = dataDiscountSoftware?.sub_total || 0;
   let DiskonSubTotal = 0;
-  const supportPercent = dataDiscountSupport?.persentase || 0;
-  const DiskonRp = dataDiscountSupport?.sub_total || 0;
 
-  if (supportPercent === 0 && DiskonRp !== 0) {
-    PersentaseSupport = DiskonRp / data[0].total_harga;
+  if (softwarePercent === 0 && DiskonRp !== 0) {
+    const dataProdSoftware = data[0].detail_produk.filter(
+      (element) => element.jenis_produk === 'SOFTWARE'
+    );
+    const totalHargaSoftware = dataProdSoftware.reduce((a, b) => a + b.sub_total, 0);
+    PersentaseSoftware = DiskonRp / totalHargaSoftware;
     DiskonSubTotal = DiskonRp;
-  } else if (supportPercent !== 0 && DiskonRp === 0) {
-    DiskonSubTotal = data[0].total_harga * supportPercent;
-    PersentaseSupport = supportPercent;
+    console.log(DiskonRp);
+  } else if (softwarePercent !== 0 && DiskonRp === 0) {
+    const dataProdSoftware = data[0].detail_produk.filter(
+      (element) => element.jenis_produk === 'SOFTWARE'
+    );
+    const totalHargaSoftware = dataProdSoftware.reduce((a, b) => a + b.sub_total, 0);
+    DiskonSubTotal = totalHargaSoftware * softwarePercent;
+    PersentaseSoftware = softwarePercent;
   } else {
-    PersentaseSupport = 0;
+    PersentaseSoftware = 0;
     DiskonSubTotal = 0;
   }
-
-  const footerDiscount = [
+  const discountSoftware = [
     {
-      content: `Diskon Support Service ${PersentaseSupport}`,
-      colSpan: 4,
+      content: `Discount Software  ${PersentaseSoftware * 100} %`,
+      colSpan: 5,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
     {
@@ -125,70 +132,104 @@ const OCPDFSUPPORT = (data, head) => {
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
-
-  if (PersentaseSupport !== 0 || DiskonSubTotal !== 0) {
-    tableRows.push(footerDiscount);
+  if (PersentaseSoftware !== 0 || DiskonSubTotal !== 0) {
+    tableRows.push(discountSoftware);
   }
 
-  data[0].detail_diskon.forEach((res) => {
-    if (
-      !res.includes('SOFTWARE') ||
-      !res.includes('HARDWARE') ||
-      !res.includes('CONSUMABLE') ||
-      !res.includes('SUPPORT') ||
-      !res.includes('PRODUCTION')
-    ) {
-      let DiscTot = 0;
-      let PersenTot = 0;
-      if (res.persentase === 0 && res.sub_total !== 0) {
-        PersenTot = res.sub_total / data[0].total_harga;
-        DiscTot = res.sub_total;
-        const footerDiscountAll = [
-          {
-            content: `Diskon ${res.nama_diskon} ${PersenTot}`,
-            colSpan: 4,
-            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
-          },
-          {
-            content: 'Rp. ' + DiscTot?.toLocaleString(),
-            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
-          },
-        ];
-        tableRows.push(footerDiscountAll);
-      } else if (res.persentase !== 0 && res.sub_total === 0) {
-        PersenTot = res.persentase;
-        DiscTot = data[0].total_harga * res.persentase;
-        const footerDiscountAll = [
-          {
-            content: `Diskon ${res.nama_diskon} ${PersenTot}`,
-            colSpan: 4,
-            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
-          },
-          {
-            content: 'Rp. ' + DiscTot?.toLocaleString(),
-            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
-          },
-        ];
-        tableRows.push(footerDiscountAll);
-      }
-    }
-  });
+  const dataDiscountHardware = data[0].detail_diskon.find((element) =>
+    element.nama_diskon.includes('HARDWARE')
+  );
+  const hardwarePercent = dataDiscountHardware?.persentase || 0;
+  let PersentaseHardware = 0;
+  const DiskonRpHardware = dataDiscountHardware?.sub_total || 0;
+  let DiskonSubTotalHardware = 0;
 
-  const footerTotal = [
+  if (hardwarePercent === 0 && DiskonRpHardware !== 0) {
+    const dataProdHardware = data[0].detail_produk.filter(
+      (element) => element.jenis_produk === 'HARDWARE'
+    );
+    const totalHargaHardware = dataProdHardware.reduce((a, b) => a + b.sub_total, 0);
+    PersentaseHardware = DiskonRpHardware / totalHargaHardware;
+    DiskonSubTotalHardware = DiskonRpHardware;
+  } else if (hardwarePercent !== 0 && DiskonRpHardware === 0) {
+    const dataProdHardware = data[0].detail_produk.filter(
+      (element) => element.jenis_produk === 'HARDWARE'
+    );
+    const totalHargaHardware = dataProdHardware.reduce((a, b) => a + b.sub_total, 0);
+    DiskonSubTotalHardware = totalHargaHardware * hardwarePercent;
+    PersentaseHardware = hardwarePercent;
+  } else {
+    PersentaseHardware = 0;
+    DiskonSubTotalHardware = 0;
+  }
+  const discountHardware = [
     {
-      content: `Total`,
-      colSpan: 4,
+      content: `Discount Hardware  ${PersentaseHardware * 100} %`,
+      colSpan: 5,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
     {
-      content: 'Rp. ' + (grandTotal - DiskonSubTotal)?.toLocaleString(),
+      content: 'Rp. ' + DiskonSubTotalHardware?.toLocaleString(),
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
-
-  if (PersentaseSupport !== 0 || DiskonSubTotal !== 0) {
-    tableRows.push(footerTotal);
+  if (PersentaseHardware !== 0 || DiskonSubTotalHardware !== 0) {
+    tableRows.push(discountHardware);
   }
+
+  const dataDiscountConsumable = data[0].detail_diskon.find((element) =>
+    element.nama_diskon.includes('CONSUMABLE')
+  );
+  const ConsumablePercent = dataDiscountConsumable?.persentase || 0;
+  let PersentaseConsumable = 0;
+  const DiskonRpConsumable = dataDiscountConsumable?.sub_total || 0;
+  let DiskonSubTotalConsumable = 0;
+
+  if (ConsumablePercent === 0 && DiskonRpConsumable !== 0) {
+    const dataProdConsumable = data[0].detail_produk.filter(
+      (element) => element.jenis_produk === 'CONSUMABLE'
+    );
+    const totalHargaConsumable = dataProdConsumable.reduce((a, b) => a + b.sub_total, 0);
+    PersentaseConsumable = DiskonRpConsumable / totalHargaConsumable;
+    DiskonSubTotalConsumable = DiskonRpConsumable;
+  } else if (ConsumablePercent !== 0 && DiskonRpConsumable === 0) {
+    const dataProdConsumable = data[0].detail_produk.filter(
+      (element) => element.jenis_produk === 'CONSUMABLE'
+    );
+    const totalHargaConsumable = dataProdConsumable.reduce((a, b) => a + b.sub_total, 0);
+    DiskonSubTotalConsumable = totalHargaConsumable * ConsumablePercent;
+    PersentaseConsumable = ConsumablePercent;
+  } else {
+    PersentaseConsumable = 0;
+    DiskonSubTotalConsumable = 0;
+  }
+
+  const discountConsumable = [
+    {
+      content: `Discount Consumable  ${PersentaseConsumable * 100} %`,
+      colSpan: 5,
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+    {
+      content: 'Rp. ' + DiskonSubTotalConsumable?.toLocaleString(),
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+  ];
+  if (PersentaseConsumable !== 0 || DiskonSubTotalConsumable !== 0) {
+    tableRows.push(discountConsumable);
+  }
+  const total = [
+    {
+      content: 'Total',
+      colSpan: 5,
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+    {
+      content: 'Rp. ' + data[0].total_harga?.toLocaleString(),
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+  ];
+  tableRows.push(total);
 
   doc.autoTable({
     head: tableColumn,
@@ -301,19 +342,20 @@ const OCPDFSUPPORT = (data, head) => {
     var imgData = toAbsoluteUrl('/media/kop/footer.png');
     doc.addImage(imgData, 'PNG', 0, verticalPos, pageWidth, 30);
   }
-  const string = doc.output('bloburl');
-  const x = window.open();
-  x.document.open();
-  x.document.write(
-    `<html>
-    <head>
-    <title>Order Confirmation</title>
-    </head>
-    <body style='margin:0 !important'>
-    <embed width='100%' height='100%'src='${string}'></embed>
-    </body>
-    </html>`
-  );
+  const string = doc.output('datauristring');
+  return string;
+  //   const x = window.open();
+  //   x.document.open();
+  //   x.document.write(
+  //     `<html>
+  //     <head>
+  //     <title>Order Confirmation</title>
+  //     </head>
+  //     <body style='margin:0 !important'>
+  //     <embed width='100%' height='100%'src='${string}'></embed>
+  //     </body>
+  //     </html>`
+  //   );
 };
 
-export default OCPDFSUPPORT;
+export default OCSUPPORT;

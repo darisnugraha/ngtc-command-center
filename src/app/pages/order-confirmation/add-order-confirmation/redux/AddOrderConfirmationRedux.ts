@@ -751,6 +751,7 @@ export const actions = {
           const row = {
             // eslint-disable-next-line
             key: no,
+            kode_diskon: data.discount_code,
             nama_diskon: data.discount_name,
             persentase: data.percentage || 0,
             diskon_rp: data.discount_rp || 0,

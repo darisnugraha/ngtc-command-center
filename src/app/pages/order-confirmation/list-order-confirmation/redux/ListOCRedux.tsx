@@ -16,6 +16,8 @@ import { AxiosPut } from '../../../../../setup/axios/AxiosPut';
 import OC from '../../add-order-confirmation/component/OC.jsx';
 import { dataURLtoPDFFile, NumberOnly } from '../../../../../setup/function.js';
 import { postPDF } from '../../../../../setup/axios/Firebase';
+import OCPDFSUPPORT from '../component/OCPDFSUPPORT.jsx';
+import OCSUPPORT from '../../add-order-confirmation/component/OCSUPPORT.jsx';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -365,25 +367,70 @@ export const actions = {
           'jenis_ok',
           'jenis_produk',
         ]);
-        const pdf64 = OC(dataDecrypt, data);
-        const file = dataURLtoPDFFile(
-          pdf64,
-          `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
-        );
-        postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
-          .then(() => {
-            const send = {
-              no_order_konfirmasi: data.id,
-            };
-            AxiosPost('order-confirmation/send-ok', send).finally(() => {
+        if (
+          dataDecrypt[0]?.jenis_ok === 'INCLUDE SOFTWARE' ||
+          dataDecrypt[0]?.jenis_ok === 'NOT INCLUDE SOFTWARE'
+        ) {
+          const pdf64 = OC(dataDecrypt, data);
+          const file = dataURLtoPDFFile(
+            pdf64,
+            `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+          );
+          postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
+            .then(() => {
+              const send = {
+                no_order_konfirmasi: data.id,
+              };
+              AxiosPost('order-confirmation/send-ok', send).finally(() => {
+                OCPDF(dataDecrypt, data);
+                dispatch(utility.actions.hideLoading());
+              });
+            })
+            .catch(() => {
               OCPDF(dataDecrypt, data);
               dispatch(utility.actions.hideLoading());
             });
-          })
-          .catch(() => {
-            OCPDF(dataDecrypt, data);
-            dispatch(utility.actions.hideLoading());
-          });
+        } else if (dataDecrypt[0]?.jenis_ok === 'SUPPORT SERVICE') {
+          const pdf64 = OCSUPPORT(dataDecrypt, data);
+          const file = dataURLtoPDFFile(
+            pdf64,
+            `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+          );
+          postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
+            .then(() => {
+              const send = {
+                no_order_konfirmasi: data.id,
+              };
+              AxiosPost('order-confirmation/send-ok', send).finally(() => {
+                OCPDFSUPPORT(dataDecrypt, data);
+                dispatch(utility.actions.hideLoading());
+              });
+            })
+            .catch(() => {
+              OCPDF(dataDecrypt, data);
+              dispatch(utility.actions.hideLoading());
+            });
+        } else if (dataDecrypt[0]?.jenis_ok === 'PRODUCTION SERVICE') {
+          const pdf64 = OC(dataDecrypt, data);
+          const file = dataURLtoPDFFile(
+            pdf64,
+            `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+          );
+          postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
+            .then(() => {
+              const send = {
+                no_order_konfirmasi: data.id,
+              };
+              AxiosPost('order-confirmation/send-ok', send).finally(() => {
+                OCPDF(dataDecrypt, data);
+                dispatch(utility.actions.hideLoading());
+              });
+            })
+            .catch(() => {
+              OCPDF(dataDecrypt, data);
+              dispatch(utility.actions.hideLoading());
+            });
+        }
       });
     };
   },
@@ -625,6 +672,7 @@ export const actions = {
   },
   searchAction: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+      dispatch(utility.actions.showLoadingButton());
       const onSendData = {
         startDate: moment(data.date[0]).format('yyyy-MM-DD'),
         endDate: moment(data.date[1]).format('yyyy-MM-DD'),
@@ -666,10 +714,12 @@ export const actions = {
             no += 1;
           });
           dispatch({ type: actionTypes.GetListOC, payload: { feedback: dataSave } });
+          dispatch(utility.actions.hideLoading());
         })
         .catch((err) => {
           const dataErr = err.response?.data;
           toast.error(dataErr.message || 'Error');
+          dispatch(utility.actions.hideLoading());
         });
     };
   },

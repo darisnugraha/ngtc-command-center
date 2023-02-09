@@ -743,8 +743,9 @@ export const actions = {
           const row = {
             // eslint-disable-next-line
             key: no,
+            kode_diskon: data.discount_code,
             nama_diskon: data.discount_name,
-            persentase: data.percentage || 0,
+            persentase: data.discount_percentage || 0,
             diskon_rp: data.discount_rp || 0,
           };
           dataArr.push(row);
@@ -785,6 +786,7 @@ export const actions = {
                   } else {
                     getLocal('listSupport', ['qty', 'harga', 'total_harga']).then((resSupp) => {
                       getLocal('listProduction', ['qty', 'total_harga']).then((resProdServ) => {
+                        // Product
                         const ProductSoftware = resProd.filter(
                           (value: any) => value.tipe_produk === 'SOFTWARE'
                         );
@@ -794,6 +796,7 @@ export const actions = {
                         const ProductConsumable = resProd.filter(
                           (value: any) => value.tipe_produk === 'CONSUMABLE'
                         );
+                        // Discount
                         const DiscountSoftware = resDisc.filter((value: any) =>
                           value.nama_diskon.includes('SOFTWARE')
                         );
@@ -803,6 +806,25 @@ export const actions = {
                         const DiscountConsumable = resDisc.filter((value: any) =>
                           value.nama_diskon.includes('CONSUMABLE')
                         );
+                        const DiscountSupport = resDisc.filter((value: any) =>
+                          value.nama_diskon.includes('SUPPORT')
+                        );
+                        const DiscountProduction = resDisc.filter((value: any) =>
+                          value.nama_diskon.includes('PRODUCTION')
+                        );
+                        const newArrDiscAll: any = [];
+                        resDisc.forEach((element: any) => {
+                          if (
+                            !element.nama_diskon.includes('SOFTWARE') &&
+                            !element.nama_diskon.includes('HARDWARE') &&
+                            !element.nama_diskon.includes('CONSUMABLE') &&
+                            !element.nama_diskon.includes('SUPPORT') &&
+                            !element.nama_diskon.includes('PRODUCTION')
+                          ) {
+                            newArrDiscAll.push(element);
+                          }
+                        });
+                        // Total
                         const totalSoftware = ProductSoftware.reduce(
                           (a: any, b: any) => a + b.harga * b.qty,
                           0
@@ -815,7 +837,15 @@ export const actions = {
                           (a: any, b: any) => a + b.harga * b.qty,
                           0
                         );
-
+                        const totalSupport = resSupp.reduce(
+                          (a: any, b: any) => a + b.total_harga,
+                          0
+                        );
+                        const totalProduction = resProdServ.reduce(
+                          (a: any, b: any) => a + b.total_harga,
+                          0
+                        );
+                        // DiscountTotal
                         const totalDiscountSoftwareRp = DiscountSoftware.reduce(
                           (a: any, b: any) => a + b.diskon_rp,
                           0
@@ -825,6 +855,18 @@ export const actions = {
                           0
                         );
                         const totalDiscountConsumableRp = DiscountConsumable.reduce(
+                          (a: any, b: any) => a + b.diskon_rp,
+                          0
+                        );
+                        const totalDiscountSupportRp = DiscountSupport.reduce(
+                          (a: any, b: any) => a + b.diskon_rp,
+                          0
+                        );
+                        const totalDiscountProductionRp = DiscountProduction.reduce(
+                          (a: any, b: any) => a + b.diskon_rp,
+                          0
+                        );
+                        const totalDiscountAllRp = newArrDiscAll.reduce(
                           (a: any, b: any) => a + b.diskon_rp,
                           0
                         );
@@ -840,7 +882,19 @@ export const actions = {
                           (a: any, b: any) => a + b.persentase,
                           0
                         );
-
+                        const SupportPersen = DiscountSupport.reduce(
+                          (a: any, b: any) => a + b.persentase,
+                          0
+                        );
+                        const ProductionPersen = DiscountSupport.reduce(
+                          (a: any, b: any) => a + b.persentase,
+                          0
+                        );
+                        const AllPersen = newArrDiscAll.reduce(
+                          (a: any, b: any) => a + b.persentase,
+                          0
+                        );
+                        // Total+Discount
                         const subTotalSoftware =
                           totalSoftware -
                             (totalDiscountSoftwareRp + totalSoftware * (SoftwarePersen / 100)) || 0;
@@ -851,13 +905,24 @@ export const actions = {
                           totalConsumable -
                             (totalDiscountConsumableRp +
                               totalConsumable * (ConsumablePersen / 100)) || 0;
+                        const subTotalSupport =
+                          totalSupport -
+                            (totalDiscountSupportRp + totalSupport * (SupportPersen / 100)) || 0;
+                        const subTotalProduction =
+                          totalProduction -
+                            (totalDiscountProductionRp +
+                              totalProduction * (ProductionPersen / 100)) || 0;
 
+                        // TotalAll
                         const grandTotal =
                           subTotalSoftware +
                           subTotalHardware +
                           subTotalConsumable +
-                          (resSupp[0]?.total_harga || 0) +
-                          (resProdServ[0]?.total_harga || 0);
+                          subTotalSupport +
+                          subTotalProduction;
+
+                        const grandTotalDiscount =
+                          grandTotal - (totalDiscountAllRp + grandTotal * (AllPersen / 100)) || 0;
 
                         const dataProd: {
                           kode_produk: any;
@@ -910,14 +975,14 @@ export const actions = {
                           telepon: resCust.telephone || '-',
                           email: resCust.email || '-',
                           kode_staff: resCust.staff,
-                          // kode_reseller: resCust.referral || '-',
+                          kode_reseller: resCust.referral || '-',
                           biaya_reseller: resCust.reseller_fee || 0,
                           jenis_ok: resType[0],
                           detail_produk: dataProd,
                           detail_diskon: dataDisc,
                           no_support_service: resSupp[0]?.no_support_service || '-',
                           no_production_service: resProdServ[0]?.no_production_service || '-',
-                          total_harga: grandTotal,
+                          total_harga: grandTotalDiscount,
                           deskripsi_header: '-',
                           deskripsi_footer: '-',
                         };

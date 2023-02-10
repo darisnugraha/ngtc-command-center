@@ -56,75 +56,68 @@ const OCSUPPORT = (data, head) => {
   tableColumn = [
     [
       { content: `No` },
-      { content: `Product Name` },
+      { content: `Keterangan` },
       { content: `Qty` },
-      { content: `Unit` },
-      { content: `Price` },
-      { content: `Sub Total` },
+      { content: `Harga` },
+      { content: `Total Harga` },
     ],
   ];
 
   let no = 1;
-  data[0].detail_produk.forEach((element) => {
+  data[0].support_service.forEach((element) => {
     const row = [
       { content: no },
-      { content: element.nama_produk },
+      { content: element.nama_support_service },
       { content: element.qty },
-      { content: element.satuan },
       { content: 'Rp. ' + element.harga?.toLocaleString(), styles: { halign: 'right' } },
       {
-        content: `Rp. ${element.sub_total?.toLocaleString()}`,
+        content: `Rp. ${element.total_harga?.toLocaleString()}`,
         styles: { halign: 'right' },
       },
     ];
     tableRows.push(row);
     no += 1;
   });
+  const grandTotal = data[0].support_service
+    .reduce((a, b) => a + b.total_harga, 0)
+    ?.toLocaleString();
   const footer = [
     {
       content: 'Grand Total : ',
-      colSpan: 5,
+      colSpan: 4,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
     {
-      content:
-        'Rp. ' + data[0].detail_produk.reduce((a, b) => a + b.sub_total, 0)?.toLocaleString(),
+      content: 'Rp. ' + grandTotal,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
   tableRows.push(footer);
 
-  const dataDiscountSoftware = data[0].detail_diskon.find((element) =>
-    element.nama_diskon.includes('SOFTWARE')
+  const dataDiscountSupport = data[0].detail_diskon.find((element) =>
+    element.nama_diskon.includes('SUPPORT')
   );
-  const softwarePercent = dataDiscountSoftware?.persentase || 0;
-  let PersentaseSoftware = 0;
-  const DiskonRp = dataDiscountSoftware?.sub_total || 0;
-  let DiskonSubTotal = 0;
 
-  if (softwarePercent === 0 && DiskonRp !== 0) {
-    const dataProdSoftware = data[0].detail_produk.filter(
-      (element) => element.jenis_produk === 'SOFTWARE'
-    );
-    const totalHargaSoftware = dataProdSoftware.reduce((a, b) => a + b.sub_total, 0);
-    PersentaseSoftware = DiskonRp / totalHargaSoftware;
+  let PersentaseSupport = 0;
+  let DiskonSubTotal = 0;
+  const supportPercent = dataDiscountSupport?.persentase || 0;
+  const DiskonRp = dataDiscountSupport?.sub_total || 0;
+
+  if (supportPercent === 0 && DiskonRp !== 0) {
+    PersentaseSupport = DiskonRp / data[0].total_harga;
     DiskonSubTotal = DiskonRp;
-    console.log(DiskonRp);
-  } else if (softwarePercent !== 0 && DiskonRp === 0) {
-    const dataProdSoftware = data[0].detail_produk.filter(
-      (element) => element.jenis_produk === 'SOFTWARE'
-    );
-    const totalHargaSoftware = dataProdSoftware.reduce((a, b) => a + b.sub_total, 0);
-    DiskonSubTotal = totalHargaSoftware * softwarePercent;
-    PersentaseSoftware = softwarePercent;
+  } else if (supportPercent !== 0 && DiskonRp === 0) {
+    DiskonSubTotal = data[0].total_harga * supportPercent;
+    PersentaseSupport = supportPercent;
   } else {
-    PersentaseSoftware = 0;
+    PersentaseSupport = 0;
     DiskonSubTotal = 0;
   }
-  const discountSoftware = [
+
+  const footerDiscount = [
     {
-      content: `Discount Software  ${PersentaseSoftware * 100} %`,
-      colSpan: 5,
+      content: `Diskon Support Service ${PersentaseSupport}`,
+      colSpan: 4,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
     {
@@ -132,104 +125,70 @@ const OCSUPPORT = (data, head) => {
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
-  if (PersentaseSoftware !== 0 || DiskonSubTotal !== 0) {
-    tableRows.push(discountSoftware);
+
+  if (PersentaseSupport !== 0 || DiskonSubTotal !== 0) {
+    tableRows.push(footerDiscount);
   }
 
-  const dataDiscountHardware = data[0].detail_diskon.find((element) =>
-    element.nama_diskon.includes('HARDWARE')
-  );
-  const hardwarePercent = dataDiscountHardware?.persentase || 0;
-  let PersentaseHardware = 0;
-  const DiskonRpHardware = dataDiscountHardware?.sub_total || 0;
-  let DiskonSubTotalHardware = 0;
+  data[0].detail_diskon.forEach((res) => {
+    if (
+      !res.includes('SOFTWARE') &&
+      !res.includes('HARDWARE') &&
+      !res.includes('CONSUMABLE') &&
+      !res.includes('SUPPORT') &&
+      !res.includes('PRODUCTION')
+    ) {
+      let DiscTot = 0;
+      let PersenTot = 0;
+      if (res.persentase === 0 && res.sub_total !== 0) {
+        PersenTot = res.sub_total / data[0].total_harga;
+        DiscTot = res.sub_total;
+        const footerDiscountAll = [
+          {
+            content: `Diskon ${res.nama_diskon} ${PersenTot}`,
+            colSpan: 4,
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+          {
+            content: 'Rp. ' + DiscTot?.toLocaleString(),
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+        ];
+        tableRows.push(footerDiscountAll);
+      } else if (res.persentase !== 0 && res.sub_total === 0) {
+        PersenTot = res.persentase;
+        DiscTot = data[0].total_harga * res.persentase;
+        const footerDiscountAll = [
+          {
+            content: `Diskon ${res.nama_diskon} ${PersenTot}`,
+            colSpan: 4,
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+          {
+            content: 'Rp. ' + DiscTot?.toLocaleString(),
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+        ];
+        tableRows.push(footerDiscountAll);
+      }
+    }
+  });
 
-  if (hardwarePercent === 0 && DiskonRpHardware !== 0) {
-    const dataProdHardware = data[0].detail_produk.filter(
-      (element) => element.jenis_produk === 'HARDWARE'
-    );
-    const totalHargaHardware = dataProdHardware.reduce((a, b) => a + b.sub_total, 0);
-    PersentaseHardware = DiskonRpHardware / totalHargaHardware;
-    DiskonSubTotalHardware = DiskonRpHardware;
-  } else if (hardwarePercent !== 0 && DiskonRpHardware === 0) {
-    const dataProdHardware = data[0].detail_produk.filter(
-      (element) => element.jenis_produk === 'HARDWARE'
-    );
-    const totalHargaHardware = dataProdHardware.reduce((a, b) => a + b.sub_total, 0);
-    DiskonSubTotalHardware = totalHargaHardware * hardwarePercent;
-    PersentaseHardware = hardwarePercent;
-  } else {
-    PersentaseHardware = 0;
-    DiskonSubTotalHardware = 0;
-  }
-  const discountHardware = [
+  const footerTotal = [
     {
-      content: `Discount Hardware  ${PersentaseHardware * 100} %`,
-      colSpan: 5,
+      content: `Total`,
+      colSpan: 4,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
     {
-      content: 'Rp. ' + DiskonSubTotalHardware?.toLocaleString(),
+      content: 'Rp. ' + (grandTotal - DiskonSubTotal)?.toLocaleString(),
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
-  if (PersentaseHardware !== 0 || DiskonSubTotalHardware !== 0) {
-    tableRows.push(discountHardware);
-  }
 
-  const dataDiscountConsumable = data[0].detail_diskon.find((element) =>
-    element.nama_diskon.includes('CONSUMABLE')
-  );
-  const ConsumablePercent = dataDiscountConsumable?.persentase || 0;
-  let PersentaseConsumable = 0;
-  const DiskonRpConsumable = dataDiscountConsumable?.sub_total || 0;
-  let DiskonSubTotalConsumable = 0;
-
-  if (ConsumablePercent === 0 && DiskonRpConsumable !== 0) {
-    const dataProdConsumable = data[0].detail_produk.filter(
-      (element) => element.jenis_produk === 'CONSUMABLE'
-    );
-    const totalHargaConsumable = dataProdConsumable.reduce((a, b) => a + b.sub_total, 0);
-    PersentaseConsumable = DiskonRpConsumable / totalHargaConsumable;
-    DiskonSubTotalConsumable = DiskonRpConsumable;
-  } else if (ConsumablePercent !== 0 && DiskonRpConsumable === 0) {
-    const dataProdConsumable = data[0].detail_produk.filter(
-      (element) => element.jenis_produk === 'CONSUMABLE'
-    );
-    const totalHargaConsumable = dataProdConsumable.reduce((a, b) => a + b.sub_total, 0);
-    DiskonSubTotalConsumable = totalHargaConsumable * ConsumablePercent;
-    PersentaseConsumable = ConsumablePercent;
-  } else {
-    PersentaseConsumable = 0;
-    DiskonSubTotalConsumable = 0;
+  if (PersentaseSupport !== 0 || DiskonSubTotal !== 0) {
+    tableRows.push(footerTotal);
   }
-
-  const discountConsumable = [
-    {
-      content: `Discount Consumable  ${PersentaseConsumable * 100} %`,
-      colSpan: 5,
-      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
-    },
-    {
-      content: 'Rp. ' + DiskonSubTotalConsumable?.toLocaleString(),
-      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
-    },
-  ];
-  if (PersentaseConsumable !== 0 || DiskonSubTotalConsumable !== 0) {
-    tableRows.push(discountConsumable);
-  }
-  const total = [
-    {
-      content: 'Total',
-      colSpan: 5,
-      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
-    },
-    {
-      content: 'Rp. ' + data[0].total_harga?.toLocaleString(),
-      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
-    },
-  ];
-  tableRows.push(total);
 
   doc.autoTable({
     head: tableColumn,
@@ -344,18 +303,18 @@ const OCSUPPORT = (data, head) => {
   }
   const string = doc.output('datauristring');
   return string;
-  //   const x = window.open();
-  //   x.document.open();
-  //   x.document.write(
-  //     `<html>
-  //     <head>
-  //     <title>Order Confirmation</title>
-  //     </head>
-  //     <body style='margin:0 !important'>
-  //     <embed width='100%' height='100%'src='${string}'></embed>
-  //     </body>
-  //     </html>`
-  //   );
+  // const x = window.open();
+  // x.document.open();
+  // x.document.write(
+  //   `<html>
+  //   <head>
+  //   <title>Order Confirmation</title>
+  //   </head>
+  //   <body style='margin:0 !important'>
+  //   <embed width='100%' height='100%'src='${string}'></embed>
+  //   </body>
+  //   </html>`
+  // );
 };
 
 export default OCSUPPORT;

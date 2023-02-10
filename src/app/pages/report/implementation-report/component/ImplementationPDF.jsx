@@ -53,13 +53,13 @@ const ReceivableReportPDF = (data, head) => {
       { content: element.nama_cabang },
       { content: element.nama_customer },
       {
-        content: `Rp. ${element.total_harga.toLocaleString()}`,
+        content: `Rp. ${element.total_harga?.toLocaleString()}`,
         styles: { halign: 'right' },
       },
       { content: element.tanggal_bayar },
-      { content: `Rp. ${element.bayar.toLocaleString()}`, styles: { halign: 'right' } },
+      { content: `Rp. ${element.bayar?.toLocaleString()}`, styles: { halign: 'right' } },
       { content: element.jenis_pembayaran },
-      { content: `Rp. ${element.sisa_tagihan.toLocaleString()}`, styles: { halign: 'right' } },
+      { content: `Rp. ${element.sisa_tagihan?.toLocaleString()}`, styles: { halign: 'right' } },
     ];
     tableRows.push(row);
   });
@@ -71,7 +71,7 @@ const ReceivableReportPDF = (data, head) => {
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
     },
     {
-      content: 'Rp. ' + data.reduce((a, b) => a + b.total_harga, 0).toLocaleString(),
+      content: 'Rp. ' + data.reduce((a, b) => a + b.total_harga, 0)?.toLocaleString(),
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
     },
     {
@@ -79,7 +79,7 @@ const ReceivableReportPDF = (data, head) => {
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
     },
     {
-      content: 'Rp. ' + data.reduce((a, b) => a + b.bayar, 0).toLocaleString(),
+      content: 'Rp. ' + data.reduce((a, b) => a + b.bayar, 0)?.toLocaleString(),
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
     },
     {
@@ -87,7 +87,7 @@ const ReceivableReportPDF = (data, head) => {
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
     },
     {
-      content: 'Rp. ' + data.reduce((a, b) => a + b.sisa_tagihan, 0).toLocaleString(),
+      content: 'Rp. ' + data.reduce((a, b) => a + b.sisa_tagihan, 0)?.toLocaleString(),
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
     },
   ];

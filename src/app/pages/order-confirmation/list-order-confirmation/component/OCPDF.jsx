@@ -241,7 +241,7 @@ const OCPDF = (data, head) => {
     DiskonSubTotalSupport = 0;
   }
 
-  const footerDiscount = [
+  const footerDiscountSupport = [
     {
       content: `Diskon Support Service ${PersentaseSupport}`,
       colSpan: 4,
@@ -254,15 +254,53 @@ const OCPDF = (data, head) => {
   ];
 
   if (PersentaseSupport !== 0 || DiskonSubTotalSupport !== 0) {
-    tableRows.push(footerDiscount);
+    tableRows.push(footerDiscountSupport);
+  }
+
+  const dataDiscountProduction = data[0].detail_diskon.find((element) =>
+    element.nama_diskon.includes('PRODUCTION')
+  );
+
+  let PersentaseProduction = 0;
+  let DiskonSubTotalProduction = 0;
+  const productionPercent = dataDiscountProduction?.persentase || 0;
+  const DiskonRpProduction = dataDiscountProduction?.sub_total || 0;
+
+  if (productionPercent === 0 && DiskonRpProduction !== 0) {
+    const totalHargaSupp = data[0].production_service.reduce((a, b) => a + b.total_harga, 0);
+    PersentaseProduction = DiskonRpProduction / totalHargaSupp;
+    DiskonSubTotalProduction = DiskonRpProduction;
+  } else if (productionPercent !== 0 && DiskonRpProduction === 0) {
+    const totalHargaSupp = data[0].production_service.reduce((a, b) => a + b.total_harga, 0);
+    DiskonSubTotalProduction = totalHargaSupp * productionPercent;
+    PersentaseProduction = productionPercent;
+  } else {
+    PersentaseProduction = 0;
+    DiskonSubTotalProduction = 0;
+  }
+
+  const footerDiscountProduction = [
+    {
+      content: `Diskon Production Service ${PersentaseProduction}`,
+      colSpan: 4,
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+    {
+      content: 'Rp. ' + DiskonSubTotalProduction?.toLocaleString(),
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+  ];
+
+  if (PersentaseProduction !== 0 || DiskonSubTotalProduction !== 0) {
+    tableRows.push(footerDiscountProduction);
   }
 
   data[0].detail_diskon.forEach((res) => {
     if (
-      !res.includes('SOFTWARE') ||
-      !res.includes('HARDWARE') ||
-      !res.includes('CONSUMABLE') ||
-      !res.includes('SUPPORT') ||
+      !res.includes('SOFTWARE') &&
+      !res.includes('HARDWARE') &&
+      !res.includes('CONSUMABLE') &&
+      !res.includes('SUPPORT') &&
       !res.includes('PRODUCTION')
     ) {
       let DiscTot = 0;

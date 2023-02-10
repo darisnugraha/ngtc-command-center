@@ -3,7 +3,7 @@ import 'jspdf-autotable';
 import moment from 'moment';
 import { toAbsoluteUrl } from '../../../../../_metronic/helpers';
 
-const OCPDFSUPPORT = (data, head) => {
+const OCPDFPRODUCTION = (data, head) => {
   const doc = new jsPDF('p', 'mm', 'a4');
   doc.setProperties({
     title: 'Order Confirmation',
@@ -58,18 +58,18 @@ const OCPDFSUPPORT = (data, head) => {
       { content: `No` },
       { content: `Keterangan` },
       { content: `Qty` },
-      { content: `Harga` },
+      { content: `Satuan` },
       { content: `Total Harga` },
     ],
   ];
 
   let no = 1;
-  data[0].support_service.forEach((element) => {
+  data[0].production_service.forEach((element) => {
     const row = [
       { content: no },
-      { content: element.nama_support_service },
+      { content: element.nama_production_service },
       { content: element.qty },
-      { content: 'Rp. ' + element.harga?.toLocaleString(), styles: { halign: 'right' } },
+      { content: element.kode_satuan },
       {
         content: `Rp. ${element.total_harga?.toLocaleString()}`,
         styles: { halign: 'right' },
@@ -78,7 +78,7 @@ const OCPDFSUPPORT = (data, head) => {
     tableRows.push(row);
     no += 1;
   });
-  const grandTotal = data[0].support_service
+  const grandTotal = data[0].production_service
     .reduce((a, b) => a + b.total_harga, 0)
     ?.toLocaleString();
   const footer = [
@@ -94,29 +94,29 @@ const OCPDFSUPPORT = (data, head) => {
   ];
   tableRows.push(footer);
 
-  const dataDiscountSupport = data[0].detail_diskon.find((element) =>
-    element.nama_diskon.includes('SUPPORT')
+  const dataDiscountProduction = data[0].detail_diskon.find((element) =>
+    element.nama_diskon.includes('PRODUCTION')
   );
 
-  let PersentaseSupport = 0;
+  let PersentaseProduction = 0;
   let DiskonSubTotal = 0;
-  const supportPercent = dataDiscountSupport?.persentase || 0;
-  const DiskonRp = dataDiscountSupport?.sub_total || 0;
+  const productionPercent = dataDiscountProduction?.persentase || 0;
+  const DiskonRp = dataDiscountProduction?.sub_total || 0;
 
-  if (supportPercent === 0 && DiskonRp !== 0) {
-    PersentaseSupport = DiskonRp / data[0].total_harga;
+  if (productionPercent === 0 && DiskonRp !== 0) {
+    PersentaseProduction = DiskonRp / data[0].total_harga;
     DiskonSubTotal = DiskonRp;
-  } else if (supportPercent !== 0 && DiskonRp === 0) {
-    DiskonSubTotal = data[0].total_harga * supportPercent;
-    PersentaseSupport = supportPercent;
+  } else if (productionPercent !== 0 && DiskonRp === 0) {
+    DiskonSubTotal = data[0].total_harga * productionPercent;
+    PersentaseProduction = productionPercent;
   } else {
-    PersentaseSupport = 0;
+    PersentaseProduction = 0;
     DiskonSubTotal = 0;
   }
 
   const footerDiscount = [
     {
-      content: `Diskon Support Service ${PersentaseSupport}`,
+      content: `Diskon Production Service ${PersentaseProduction}`,
       colSpan: 4,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
@@ -126,7 +126,7 @@ const OCPDFSUPPORT = (data, head) => {
     },
   ];
 
-  if (PersentaseSupport !== 0 || DiskonSubTotal !== 0) {
+  if (PersentaseProduction !== 0 || DiskonSubTotal !== 0) {
     tableRows.push(footerDiscount);
   }
 
@@ -186,7 +186,7 @@ const OCPDFSUPPORT = (data, head) => {
     },
   ];
 
-  if (PersentaseSupport !== 0 || DiskonSubTotal !== 0) {
+  if (PersentaseProduction !== 0 || DiskonSubTotal !== 0) {
     tableRows.push(footerTotal);
   }
 
@@ -316,4 +316,4 @@ const OCPDFSUPPORT = (data, head) => {
   );
 };
 
-export default OCPDFSUPPORT;
+export default OCPDFPRODUCTION;

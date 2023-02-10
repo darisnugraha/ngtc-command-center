@@ -18,6 +18,8 @@ import { dataURLtoPDFFile, NumberOnly } from '../../../../../setup/function.js';
 import { postPDF } from '../../../../../setup/axios/Firebase';
 import OCPDFSUPPORT from '../component/OCPDFSUPPORT.jsx';
 import OCSUPPORT from '../../add-order-confirmation/component/OCSUPPORT.jsx';
+import OCPDFPRODUCTION from '../component/OCPDFPRODUCTION.jsx';
+import OCPRODUCTION from '../../add-order-confirmation/component/OCPRODUCTION.jsx';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -411,7 +413,7 @@ export const actions = {
               dispatch(utility.actions.hideLoading());
             });
         } else if (dataDecrypt[0]?.jenis_ok === 'PRODUCTION SERVICE') {
-          const pdf64 = OC(dataDecrypt, data);
+          const pdf64 = OCPRODUCTION(dataDecrypt, data);
           const file = dataURLtoPDFFile(
             pdf64,
             `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
@@ -422,12 +424,12 @@ export const actions = {
                 no_order_konfirmasi: data.id,
               };
               AxiosPost('order-confirmation/send-ok', send).finally(() => {
-                OCPDF(dataDecrypt, data);
+                OCPDFPRODUCTION(dataDecrypt, data);
                 dispatch(utility.actions.hideLoading());
               });
             })
             .catch(() => {
-              OCPDF(dataDecrypt, data);
+              OCPDFPRODUCTION(dataDecrypt, data);
               dispatch(utility.actions.hideLoading());
             });
         }

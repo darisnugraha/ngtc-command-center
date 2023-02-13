@@ -934,37 +934,37 @@ export const actions = {
         deskripsi: data.description,
       };
 
-      AxiosPost('receivable', onSendData)
+      const foto = dataURLtoFile(
+        data.foto,
+        onSendData.no_order_konfirmasi.replace(/\//g, '_') +
+          onSendData.tanggal +
+          onSendData.bayar_rp
+      );
+      postImage(
+        foto,
+        onSendData.no_order_konfirmasi.replace(/\//g, '_') +
+          onSendData.tanggal +
+          onSendData.bayar_rp
+      )
         .then(() => {
-          // eslint-disable-next-line
-          const foto = dataURLtoFile(
-            data.foto,
-            onSendData.no_order_konfirmasi.replace(/\//g, '_') +
-              onSendData.tanggal +
-              onSendData.bayar_rp
-          );
-          postImage(
-            foto,
-            onSendData.no_order_konfirmasi.replace(/\//g, '_') +
-              onSendData.tanggal +
-              onSendData.bayar_rp
-          )
+          AxiosPost('receivable', onSendData)
             .then(() => {
+              // eslint-disable-next-line
               dispatch(utility.actions.hideLoading());
               toast.success('Success Add Data !');
-              window.location.reload();
+              dispatch(actions.getListPaymentOC());
+              dispatch(modal.actions.hide());
             })
-            .catch((err) => {
-              dispatch(utility.actions.hideLoading());
+            .catch((error) => {
               // eslint-disable-next-line
-              console.log(err);
+              console.log(error);
+              dispatch(utility.actions.hideLoading());
+              toast.error('Failed To Add Data !');
             });
         })
-        .catch((error) => {
-          // eslint-disable-next-line
-          console.log(error);
+        .catch(() => {
           dispatch(utility.actions.hideLoading());
-          toast.error('Failed To Add Data !');
+          toast.error('Error Add Proof Payment !');
         });
     };
   },

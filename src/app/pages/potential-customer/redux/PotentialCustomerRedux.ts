@@ -192,6 +192,9 @@ export const actions = {
         kota: data.city || '-',
         telepon: data.telephone || '-',
         email: data.email || '-',
+        kode_staff: data.staff_code,
+        nama_staff: data.staff_name,
+        nama_divisi: data.division,
       };
       AxiosPost('applicant', onSendData)
         .then(() => {
@@ -222,6 +225,32 @@ export const actions = {
           const dataErr = err.response?.data;
           toast.error(dataErr.message || 'Error');
         });
+    };
+  },
+  getStaffDetailByCode: (code: string) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      AxiosGet(`staff/by-kode/${code}`).then((res) => {
+        const dataDecrypt = doDecryptData(res.data, [
+          'kode_staff',
+          'status',
+          '_id',
+          'input_date',
+          'kode_divisi',
+        ]);
+        AxiosGet(`division/by-kode/${dataDecrypt[0].kode_divisi}`).then((resDivisi) => {
+          const dataDecryptDivision = doDecryptData(resDivisi.data, [
+            'kode_divisi',
+            'status',
+            '_id',
+            'input_date',
+          ]);
+          dispatch(change('FormPotentialCustomer', 'staff_name', dataDecrypt[0].nama_staff));
+          dispatch(change('FormPotentialCustomer', 'division', dataDecryptDivision[0].nama_divisi));
+          dispatch(
+            change('FormPotentialCustomer', 'division_code', dataDecryptDivision[0].kode_divisi)
+          );
+        });
+      });
     };
   },
   closeModal: () => {

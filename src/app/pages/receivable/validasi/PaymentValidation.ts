@@ -8,9 +8,9 @@ const PaymentValidation = (values: PaymentModel): FormErrors<PaymentModel> => {
     errors.bank_name = 'Bank Name required';
   }
 
-  if (!values.account_number) {
-    errors.account_number = 'Account Number required';
-  }
+  // if (!values.account_number) {
+  //   errors.account_number = 'Account Number required';
+  // }
 
   if (!values.date) {
     errors.date = 'Date required';
@@ -28,9 +28,9 @@ const PaymentValidation = (values: PaymentModel): FormErrors<PaymentModel> => {
     errors.nominal = 'Nominal required';
   }
 
-  if (!values.remaining_payment) {
-    errors.remaining_payment = 'Remaining Payment required';
-  }
+  // if (!values.remaining_payment) {
+  //   errors.remaining_payment = 'Remaining Payment required';
+  // }
 
   if (!values.total_price) {
     errors.total_price = 'Total Price required';

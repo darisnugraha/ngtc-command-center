@@ -186,6 +186,19 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
                 <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
               </button>
             </div>
+            <div className='col-lg-2'>
+              <button
+                type='button'
+                onClick={() => {
+                  // eslint-disable-next-line
+                  dispatch(redux.actions.showModalPrint(row.no_order_konfirmasi));
+                  setTypeModal('SENDWA');
+                }}
+                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+              >
+                <KTSVG path='/media/icons/duotune/general/gen016.svg' className='svg-icon-3' />
+              </button>
+            </div>
           </div>
         );
       },
@@ -214,10 +227,14 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
           typeModal === 'DETAIL' ? (
             <DetailOC />
           ) : // eslint-disable-next-line
-          typeModal === 'PRINT' ? (
+          typeModal === 'PRINT' || typeModal === 'SENDWA' ? (
             <FormPrintPDF
               onSubmit={(data: any) => {
-                dispatch(redux.actions.printPDF(data));
+                if (typeModal === 'PRINT') {
+                  dispatch(redux.actions.printPDF(data));
+                } else {
+                  dispatch(redux.actions.sendPDF(data));
+                }
               }}
             />
           ) : typeModal === 'EDITCUSTOMER' ? (

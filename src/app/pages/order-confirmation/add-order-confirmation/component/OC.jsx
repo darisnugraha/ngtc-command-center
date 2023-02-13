@@ -3,14 +3,14 @@ import 'jspdf-autotable';
 import moment from 'moment';
 import { toAbsoluteUrl } from '../../../../../_metronic/helpers';
 
-const OC = (data, head) => {
+const OCPDF = (data, head) => {
   const doc = new jsPDF('p', 'mm', 'a4');
   doc.setProperties({
     title: 'Order Confirmation',
   });
   var imgData = toAbsoluteUrl('/media/kop/header.png');
-  doc.addImage(imgData, 'PNG', 0, 0, 215, 25);
-  let final = 15;
+  doc.addImage(imgData, 'PNG', 15, 15, 180, 20);
+  let final = 24;
   doc.setFontSize(8);
   doc.text(
     `Bandung, ${moment(data[0].tanggal_order_konfirmasi).format('DD MMMM YYYY')}`,
@@ -35,8 +35,13 @@ const OC = (data, head) => {
   doc.text('UP : ', 15, final + 50);
   doc.text(data[0].nama_customer, 23, final + 50);
   doc.text('Order Konfirmasi', 93, final + 55);
+  doc.line(92, final + 56, 118, final + 56);
   doc.setFont(undefined, 'normal');
-  doc.text(data[0].no_order_konfirmasi, 90, final + 60);
+  if (data[0].no_order_konfirmasi.includes('REVISI')) {
+    doc.text(data[0].no_order_konfirmasi, 85, final + 60);
+  } else {
+    doc.text(data[0].no_order_konfirmasi, 90, final + 60);
+  }
   doc.text('Dengan Hormat ,', 23, final + 65);
   const headerDesc = head.header_desc;
   const jumlah_header_desc = headerDesc.length;
@@ -44,7 +49,7 @@ const OC = (data, head) => {
     doc.text(headerDesc.slice(0, 127), 26, final + 70);
   }
   if (jumlah_header_desc > 157) {
-    doc.text(headerDesc.slice(127, 254), 23, final + 75);
+    doc.text(headerDesc.slice(127, 254), 15, final + 75);
   }
   // doc.text(head.header_desc, 26, 70);
 
@@ -59,8 +64,8 @@ const OC = (data, head) => {
       { content: `Product Name` },
       { content: `Qty` },
       { content: `Unit` },
-      { content: `Price` },
-      { content: `Sub Total` },
+      { content: `Price`, colSpan: 2 },
+      { content: `Sub Total`, colSpan: 2 },
     ],
   ];
 
@@ -71,9 +76,11 @@ const OC = (data, head) => {
       { content: element.nama_produk },
       { content: element.qty },
       { content: element.satuan },
-      { content: 'Rp. ' + element.harga?.toLocaleString(), styles: { halign: 'right' } },
+      { content: 'Rp. ', styles: { halign: 'right' } },
+      { content: element.harga?.toLocaleString(), styles: { halign: 'right' } },
+      { content: 'Rp. ', styles: { halign: 'right' } },
       {
-        content: `Rp. ${element.sub_total?.toLocaleString()}`,
+        content: element.sub_total?.toLocaleString(),
         styles: { halign: 'right' },
       },
     ];
@@ -83,12 +90,15 @@ const OC = (data, head) => {
   const footer = [
     {
       content: 'Grand Total : ',
-      colSpan: 5,
+      colSpan: 6,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
     {
-      content:
-        'Rp. ' + data[0].detail_produk.reduce((a, b) => a + b.sub_total, 0)?.toLocaleString(),
+      content: 'Rp. ',
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+    {
+      content: data[0].detail_produk.reduce((a, b) => a + b.sub_total, 0)?.toLocaleString(),
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
@@ -124,11 +134,15 @@ const OC = (data, head) => {
   const discountSoftware = [
     {
       content: `Discount Software  ${PersentaseSoftware * 100} %`,
-      colSpan: 5,
+      colSpan: 6,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
     {
-      content: 'Rp. ' + DiskonSubTotal?.toLocaleString(),
+      content: 'Rp. ',
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+    {
+      content: DiskonSubTotal?.toLocaleString(),
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
@@ -165,11 +179,15 @@ const OC = (data, head) => {
   const discountHardware = [
     {
       content: `Discount Hardware  ${PersentaseHardware * 100} %`,
-      colSpan: 5,
+      colSpan: 6,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
     {
-      content: 'Rp. ' + DiskonSubTotalHardware?.toLocaleString(),
+      content: 'Rp. ',
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+    {
+      content: DiskonSubTotalHardware?.toLocaleString(),
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
@@ -207,11 +225,15 @@ const OC = (data, head) => {
   const discountConsumable = [
     {
       content: `Discount Consumable  ${PersentaseConsumable * 100} %`,
-      colSpan: 5,
+      colSpan: 6,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
     {
-      content: 'Rp. ' + DiskonSubTotalConsumable?.toLocaleString(),
+      content: 'Rp. ',
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+    {
+      content: DiskonSubTotalConsumable?.toLocaleString(),
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
@@ -221,11 +243,15 @@ const OC = (data, head) => {
   const total = [
     {
       content: 'Total',
-      colSpan: 5,
+      colSpan: 6,
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
     {
-      content: 'Rp. ' + data[0].total_harga?.toLocaleString(),
+      content: 'Rp. ',
+      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+    },
+    {
+      content: data[0].total_harga?.toLocaleString(),
       styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
     },
   ];
@@ -256,29 +282,33 @@ const OC = (data, head) => {
   tableColumn = [];
   finalY = doc.lastAutoTable.finalY + 20;
 
-  doc.text('2. Waktu Pengiriman', 23, finalY - 10);
-  doc.text('... Hari setelah Order Konfirmasi disetujui', 90, finalY - 10);
-  doc.text('3. Sistem Pembayaran', 23, finalY - 5);
-  doc.text('50% Pada saat Order Konfirmasi disetujui', 90, finalY - 5);
-  doc.text('4. Keterangan ', 23, finalY);
-  doc.text(head.footer_desc, 90, finalY);
+  doc.text('2. Waktu Pengiriman', 15, finalY - 10);
+  doc.text('... Hari setelah Order Konfirmasi disetujui', 70, finalY - 10);
+  doc.text('3. Sistem Pembayaran', 15, finalY - 5);
+  doc.text('50% Pada saat Order Konfirmasi disetujui', 70, finalY - 5);
+  doc.text('4. Keterangan ', 15, finalY);
+  doc.text(head.footer_desc, 70, finalY);
   doc.text(
     'Demikianlah Order Konfirmasi ini kami sampaikan, Apabila Ibu setuju dengan kondisi tersebut di atas, mohon Order Konfirmasi \nini ditandangani dan dikirimkan kembali kepada kami',
-    23,
-    finalY + 33
+    15,
+    finalY + 43
   );
-  doc.text('Hormat Kami, ', 50, finalY + 48);
-  doc.text('Menyetujui, ', 140, finalY + 48);
+  doc.text('Hormat Kami, ', 50, finalY + 53);
+  doc.text('Menyetujui, ', 140, finalY + 53);
 
   doc.text('Budi Kristiyanto', 48, finalY + 68);
-  doc.text(data[0].nama_customer, 138, finalY + 68);
+  if (data[0].nama_customer.length > 4) {
+    doc.text(data[0].nama_customer, 135, finalY + 68);
+  } else {
+    doc.text(data[0].nama_customer, 142, finalY + 68);
+  }
 
   const pages = doc.internal.getNumberOfPages();
   const pageWidth = doc.internal.pageSize.width;
   const pageHeight = doc.internal.pageSize.height;
   doc.setFontSize(10);
   doc.setFont(undefined, 'bold');
-  doc.text('*Pembayaran dapat di transfer melalui rekening*', 23, finalY + 78);
+  doc.text('* Pembayaran dapat di transfer melalui rekening *', 15, finalY + 78);
   let finalTableY = finalY + 83;
 
   let tableRowsBank = [];
@@ -288,7 +318,7 @@ const OC = (data, head) => {
     tableColumnBank = [
       [
         { content: `BCA` },
-        { content: `7753 0151 18` },
+        { content: `7405 8716 88` },
         { content: `PT. NAGATECH SISTEM INTEGRATOR` },
       ],
       [
@@ -340,22 +370,10 @@ const OC = (data, head) => {
     //   align: 'center',
     // });
     var imgData = toAbsoluteUrl('/media/kop/footer.png');
-    doc.addImage(imgData, 'PNG', 0, verticalPos, pageWidth, 30);
+    doc.addImage(imgData, 'PNG', 15, verticalPos, pageWidth - 29, 25);
   }
   const string = doc.output('datauristring');
   return string;
-  //   const x = window.open();
-  //   x.document.open();
-  //   x.document.write(
-  //     `<html>
-  //     <head>
-  //     <title>Order Confirmation</title>
-  //     </head>
-  //     <body style='margin:0 !important'>
-  //     <embed width='100%' height='100%'src='${string}'></embed>
-  //     </body>
-  //     </html>`
-  //   );
 };
 
-export default OC;
+export default OCPDF;

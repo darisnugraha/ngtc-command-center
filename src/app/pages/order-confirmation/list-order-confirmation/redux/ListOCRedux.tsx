@@ -372,6 +372,54 @@ export const actions = {
         );
         postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
           .then(() => {
+            OCPDF(dataDecrypt, data);
+            dispatch(utility.actions.hideLoading());
+            // const send = {
+            //   no_order_konfirmasi: data.id,
+            // };
+            // AxiosPost('order-confirmation/send-ok', send).finally(() => {
+            //   OCPDF(dataDecrypt, data);
+            //   dispatch(utility.actions.hideLoading());
+            // });
+          })
+          .catch(() => {
+            OCPDF(dataDecrypt, data);
+            dispatch(utility.actions.hideLoading());
+          });
+      });
+    };
+  },
+  sendPDF: (data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch(utility.actions.showLoadingButton());
+      AxiosGet(`order-confirmation/by-no?no_order_konfirmasi=${data.id}`).then((res) => {
+        const dataDecrypt = doDecryptData(res.data, [
+          'status',
+          '_id',
+          'input_date',
+          'no_order_konfirmasi',
+          'kode_toko',
+          'kode_cabang',
+          'tanggal_order_konfirmasi',
+          'total_harga',
+          'kode_produk',
+          'satuan',
+          'harga',
+          'sub_total',
+          'qty',
+          'kode_diskon',
+          'nama_diskon',
+          'persentase',
+          'jenis_ok',
+          'jenis_produk',
+        ]);
+        const pdf64 = OC(dataDecrypt, data);
+        const file = dataURLtoPDFFile(
+          pdf64,
+          `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+        );
+        postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
+          .then(() => {
             const send = {
               no_order_konfirmasi: data.id,
             };

@@ -6,6 +6,7 @@ import GlobalModal from '../../modules/modal/GlobalModal';
 import { KTSVG } from '../../../_metronic/helpers';
 import DefaultTable from '../../modules/custom-table';
 import * as redux from './redux/PotentialCustomerRedux';
+import * as reduxStaff from '../master/staff/redux/StaffRedux';
 import * as reduxStore from '../master/customer/redux/CustomerRedux';
 import * as modal from '../../modules/modal/GlobalModalRedux';
 import FormPotentialCustomer from './component/FormPotentialCustomer';
@@ -20,6 +21,7 @@ const PotentialCustomerPage: FC<PropsFromRedux> = () => {
   useEffect(() => {
     dispatch(redux.actions.getPotentialCustomer());
     dispatch(reduxStore.actions.getStore());
+    dispatch(reduxStaff.actions.getStaff());
   }, [dispatch]);
 
   const dataTab: any = useSelector<RootState>(
@@ -93,6 +95,22 @@ const PotentialCustomerPage: FC<PropsFromRedux> = () => {
     {
       dataField: 'tipe_toko',
       text: 'Store Type',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;
+      },
+    },
+    {
+      dataField: 'nama_staff',
+      text: 'Staff',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;
+      },
+    },
+    {
+      dataField: 'divisi',
+      text: 'Division',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;

@@ -14,6 +14,7 @@ import * as customerRedux from './AddOrderConfirmationCustomerRedux';
 import { dataURLtoPDFFile, NumberOnly } from '../../../../../setup/function.js';
 import OC from '../component/OC.jsx';
 import { postPDF } from '../../../../../setup/axios/Firebase';
+import OCPDF from '../../list-order-confirmation/component/OCPDF.jsx';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -1031,6 +1032,7 @@ export const actions = {
                                 .then(() => {
                                   Swal.fire('Good job!', 'Success Add Data !', 'success').then(
                                     () => {
+                                      OCPDF(dataDecrypt, desc);
                                       localStorage.removeItem('dataCustomer');
                                       localStorage.removeItem('listProduct');
                                       localStorage.removeItem('listDiscount');
@@ -1046,6 +1048,7 @@ export const actions = {
                                 })
                                 .catch(() => {
                                   Swal.fire().then(() => {
+                                    OCPDF(dataDecrypt, desc);
                                     localStorage.removeItem('dataCustomer');
                                     localStorage.removeItem('listProduct');
                                     localStorage.removeItem('listDiscount');

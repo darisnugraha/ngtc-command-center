@@ -21,7 +21,7 @@ export default function AsideMenuMain() {
       />
       <AsideMenuItemWithSub
         to='/master'
-        title='Masterdata'
+        title='Master Data'
         icon='/media/icons/duotune/art/art002.svg'
         fontIcon='bi-archive'
       >
@@ -30,7 +30,7 @@ export default function AsideMenuMain() {
         <AsideMenuItem to='/master/hardware' title='Master Hardware' hasBullet />
         <AsideMenuItem to='/master/consumable' title='Master Consumable' hasBullet />
         <AsideMenuItem to='/master/bundle' title='Master Bundle' hasBullet />
-        <AsideMenuItem to='/master/customer' title='Customer Master' hasBullet />
+        <AsideMenuItem to='/master/customer' title='Master Customer' hasBullet />
         <AsideMenuItem to='/master/staff' title='Master Staff' hasBullet />
         <AsideMenuItem to='/master/bank' title='Master Bank' hasBullet />
         <AsideMenuItem to='/master/supplier' title='Master Supplier' hasBullet />

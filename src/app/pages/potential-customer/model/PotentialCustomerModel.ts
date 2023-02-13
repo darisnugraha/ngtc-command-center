@@ -8,5 +8,7 @@ export interface PotentialCustomerModel {
   telephone: String;
   email: String;
   address: String;
+  staff_code: String;
+  division: String;
   correspondence_address: String;
 }

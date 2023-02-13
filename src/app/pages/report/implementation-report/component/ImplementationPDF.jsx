@@ -30,7 +30,7 @@ const ReceivableReportPDF = (data, head) => {
   tableColumn = [
     [
       { content: `No` },
-      { content: `No Order Confirmation` },
+      { content: `No Implementation` },
       { content: `OC Type` },
       { content: `Store` },
       { content: `Branch` },

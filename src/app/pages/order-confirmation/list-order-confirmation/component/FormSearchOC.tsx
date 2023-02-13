@@ -4,7 +4,7 @@ import { connect, useSelector } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup/index.js';
 import SubmitButton from '../../../../modules/button';
-import { SelectDateRange } from '../../../../modules/redux-form/DatePicker';
+import { SelectDateRangeListOC } from '../../../../modules/redux-form/DatePicker';
 // import { RenderField } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
 
@@ -103,7 +103,7 @@ const FormSearchOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             id='date'
             name='date'
             type='date'
-            component={SelectDateRange}
+            component={SelectDateRangeListOC}
             startDate={startDate}
             endDate={endDate}
             label='Start Date - End Date'

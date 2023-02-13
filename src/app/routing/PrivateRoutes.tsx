@@ -47,6 +47,7 @@ export const PrivateRoutes = () => {
   const ListInvoicePage = lazy(() => import('../pages/invoice/list-invoice/ListInvoicePage'));
   const SerialNumberPage = lazy(() => import('../pages/serial-number/SerialNumberPage'));
   const ResellerPaymentPage = lazy(() => import('../pages/reseller-payment/ResellerPaymentPage'));
+  const RatingPage = lazy(() => import('../pages/rating/RatingPage'));
   // Report
   const ReceivableReportPage = lazy(
     () => import('../pages/report/receivable-report/ReceivableReport')
@@ -101,6 +102,7 @@ export const PrivateRoutes = () => {
         <Route path='/invoice/list-invoice' component={ListInvoicePage} />
         <Route path='/invoice/serial-number' component={SerialNumberPage} />
         <Route path='/reseller-payment' component={ResellerPaymentPage} />
+        <Route path='/rating' component={RatingPage} />
         {/* report */}
         <Route path='/report/report-receivable' component={ReceivableReportPage} />
         <Route path='/report/report-order-confirmation' component={OCReportPage} />

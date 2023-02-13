@@ -31,6 +31,7 @@ import * as deliverynote from '../../app/pages/delivery-order/redux/DeliveryNote
 import * as listinvoice from '../../app/pages/invoice/list-invoice/redux/ListInvoiceRedux';
 import * as serialnumber from '../../app/pages/serial-number/redux/SerialNumberRedux';
 import * as resellerpayment from '../../app/pages/reseller-payment/redux/ResellerPaymentRedux';
+import * as rating from '../../app/pages/rating/redux/RatingRedux';
 import * as reportreceivable from '../../app/pages/report/receivable-report/redux/ReceivableReportRedux';
 import * as reportoc from '../../app/pages/report/oc-report/redux/OCReportRedux';
 import * as reportimplementation from '../../app/pages/report/implementation-report/redux/ImplementationReportRedux';
@@ -70,6 +71,7 @@ export const rootReducer = combineReducers({
   listinvoice: listinvoice.reducer,
   serialnumber: serialnumber.reducer,
   resellerpayment: resellerpayment.reducer,
+  rating: rating.reducer,
   reportreceivable: reportreceivable.reducer,
   reportoc: reportoc.reducer,
   reportimplementation: reportimplementation.reducer,

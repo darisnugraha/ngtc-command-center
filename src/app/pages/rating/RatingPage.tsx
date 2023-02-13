@@ -1,29 +1,28 @@
 import React, { FC, useEffect, useState } from 'react';
 import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
 import { ColumnDescription } from 'react-bootstrap-table-next';
-import { Image } from 'react-bootstrap-v5';
 import { RootState } from '../../../setup';
 import GlobalModal from '../../modules/modal/GlobalModal';
 import * as modal from '../../modules/modal/GlobalModalRedux';
 import { KTSVG } from '../../../_metronic/helpers';
 import DefaultTable from '../../modules/custom-table';
-import * as redux from './redux/ResellerPaymentRedux';
-import FormPaymentReseller from './component/FormPaymentReseller';
+import * as redux from './redux/RatingRedux';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
 const connector = connect(mapState);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const ResellerPaymentPage: FC<PropsFromRedux> = () => {
+const RatingPage: FC<PropsFromRedux> = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(redux.actions.getReseller());
+    dispatch(redux.actions.getRating());
   }, [dispatch]);
 
+  // eslint-disable-next-line
   const [typeModal, setTypeModal] = useState('');
 
-  const dataTab: any = useSelector<RootState>(({ resellerpayment }) => resellerpayment.feedback);
+  const dataTab: any = useSelector<RootState>(({ rating }) => rating.feedback);
   const [dataSource, setDataSource] = useState(dataTab);
   const [value, setValue] = useState('');
   const [search, setSearch] = useState(false);
@@ -42,14 +41,6 @@ const ResellerPaymentPage: FC<PropsFromRedux> = () => {
       },
     },
     {
-      dataField: 'no_reseller',
-      text: 'No Reseller',
-      align: 'center',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
-      },
-    },
-    {
       dataField: 'no_order_konfirmasi',
       text: 'No Order Confirmation',
       align: 'center',
@@ -58,55 +49,35 @@ const ResellerPaymentPage: FC<PropsFromRedux> = () => {
       },
     },
     {
-      dataField: 'no_sales_order',
-      text: 'No Sales Order',
+      dataField: 'no_rating',
+      text: 'No Rating',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
-      dataField: 'nama_reseller',
-      text: 'Reseller Name',
+      dataField: 'tanggal_rating',
+      text: 'Rating Date',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
-      dataField: 'biaya_reseller',
-      text: 'Reseller Fee',
-      align: 'center',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp.{cell?.toLocaleString()}</p>;
-      },
-    },
-    {
-      dataField: 'status',
-      text: 'Status',
+      dataField: 'nama_marketing',
+      text: 'Marketing Name',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
-      dataField: '',
-      text: 'Status SO',
+      dataField: 'rating_marketing',
+      text: 'Marketing Rating',
       align: 'center',
-      formatter: (cell, row) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>{row.sales_order.status}</p>;
-      },
-    },
-    {
-      dataField: '',
-      text: 'Status Implementation',
-      align: 'center',
-      formatter: (cell, row) => {
-        return (
-          <p className='text-hover-primary d-block mb-1 fs-6'>
-            {row.sales_order.status_implementasi}
-          </p>
-        );
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
@@ -121,7 +92,6 @@ const ResellerPaymentPage: FC<PropsFromRedux> = () => {
               <button
                 type='button'
                 onClick={() => {
-                  dispatch(redux.actions.getIMG(row.no_reseller));
                   setTypeModal('BUKTIBAYAR');
                 }}
                 className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
@@ -133,7 +103,6 @@ const ResellerPaymentPage: FC<PropsFromRedux> = () => {
               <button
                 type='button'
                 onClick={() => {
-                  dispatch(redux.actions.getResellerByNo(row.no_reseller));
                   setTypeModal('PAYMENT');
                 }}
                 disabled={row.status === 'DONE'}
@@ -147,7 +116,6 @@ const ResellerPaymentPage: FC<PropsFromRedux> = () => {
                 type='button'
                 onClick={() => {
                   // eslint-disable-next-line
-                  dispatch(redux.actions.deleteResellerPayment(row._id));
                 }}
                 className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
               >
@@ -168,26 +136,16 @@ const ResellerPaymentPage: FC<PropsFromRedux> = () => {
     dispatch(modal.actions.hide());
   };
 
-  const img: any = useSelector<RootState>(({ resellerpayment }) => resellerpayment.buktiImg);
-
   return (
     <>
       <GlobalModal title='Payment' onClose={() => handleClose()}>
-        {typeModal === 'PAYMENT' ? (
-          <FormPaymentReseller
-            onSubmit={(data: any) => {
-              dispatch(redux.actions.postPayment(data));
-            }}
-          />
-        ) : (
-          <Image src={img} fluid />
-        )}
+        form
       </GlobalModal>
       <div className='card mb-5 mb-xl-8'>
         {/* begin::Header */}
         <div className='card-header border-0 pt-5'>
           <h3 className='card-title align-items-start flex-column'>
-            <span className='card-label fw-bolder fs-3 mb-1'>Reseller Payment</span>
+            <span className='card-label fw-bolder fs-3 mb-1'>Rating</span>
             {/* <span className='text-muted mt-1 fw-bold fs-7'>{subtitle}</span> */}
           </h3>
         </div>
@@ -232,7 +190,7 @@ const ResellerPaymentPage: FC<PropsFromRedux> = () => {
                   onClick={() => handleClick()}
                 >
                   <KTSVG path='/media/icons/duotune/arrows/arr075.svg' className='svg-icon-2' />
-                  Add Reseller Payment
+                  Add Rating
                 </button>
               </div>
             </div>
@@ -245,4 +203,4 @@ const ResellerPaymentPage: FC<PropsFromRedux> = () => {
   );
 };
 
-export default connector(ResellerPaymentPage);
+export default connector(RatingPage);

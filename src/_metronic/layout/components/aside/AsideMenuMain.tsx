@@ -116,6 +116,12 @@ export default function AsideMenuMain() {
         title='Reseller Payment'
         fontIcon='bi-app-indicator'
       />
+      <AsideMenuItem
+        to='/rating'
+        icon='/media/icons/duotune/general/gen003.svg'
+        title='Rating'
+        fontIcon='bi-app-indicator'
+      />
       <AsideMenuItemWithSub
         to='/report'
         title='Report'

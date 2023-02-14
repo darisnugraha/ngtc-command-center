@@ -324,21 +324,69 @@ export const actions = {
   showModalPrint: (id: String) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(change('FormPrintPDF', 'id', id));
-      dispatch(
-        change(
-          'FormPrintPDF',
-          'header_desc',
-          'Sebelumnya kami ucapkan terima kasih atas kerjasama yang telah terjalin selama ini. Bersama ini kami sampaikan Order Konfirmasi Harga Software Nagatech Gold Store Solution web based (Online) dengan kondisi sbb :'
-        )
-      );
-      dispatch(
-        change(
-          'FormPrintPDF',
-          'footer_desc',
-          'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan'
-        )
-      );
-      dispatch(modal.actions.show());
+      AxiosGet(`order-confirmation/by-no?no_order_konfirmasi=${id}`)
+        .then((res) => {
+          const dataDecrypt = doDecryptData(res.data, [
+            'status',
+            '_id',
+            'input_date',
+            'no_order_konfirmasi',
+            'kode_toko',
+            'kode_cabang',
+            'tanggal_order_konfirmasi',
+            'total_harga',
+            'kode_produk',
+            'satuan',
+            'harga',
+            'sub_total',
+            'qty',
+            'kode_diskon',
+            'nama_diskon',
+            'persentase',
+            'jenis_ok',
+            'jenis_produk',
+          ]);
+          if (dataDecrypt[0]?.deskripsi_header !== '-') {
+            dispatch(change('FormPrintPDF', 'header_desc', dataDecrypt[0]?.deskripsi_header));
+          } else {
+            dispatch(
+              change(
+                'FormPrintPDF',
+                'header_desc',
+                'Sebelumnya kami ucapkan terima kasih atas kerjasama yang telah terjalin selama ini. Bersama ini kami sampaikan Order Konfirmasi Harga Software Nagatech Gold Store Solution web based (Online) dengan kondisi sbb :'
+              )
+            );
+          }
+          if (dataDecrypt[0]?.deskripsi_footer !== '-') {
+            dispatch(change('FormPrintPDF', 'footer_desc', dataDecrypt[0]?.deskripsi_footer));
+          } else {
+            dispatch(
+              change(
+                'FormPrintPDF',
+                'footer_desc',
+                'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan'
+              )
+            );
+          }
+          dispatch(modal.actions.show());
+        })
+        .catch(() => {
+          dispatch(
+            change(
+              'FormPrintPDF',
+              'header_desc',
+              'Sebelumnya kami ucapkan terima kasih atas kerjasama yang telah terjalin selama ini. Bersama ini kami sampaikan Order Konfirmasi Harga Software Nagatech Gold Store Solution web based (Online) dengan kondisi sbb :'
+            )
+          );
+          dispatch(
+            change(
+              'FormPrintPDF',
+              'footer_desc',
+              'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan'
+            )
+          );
+          dispatch(modal.actions.show());
+        });
     };
   },
   printPDF: (data: any) => {
@@ -370,20 +418,26 @@ export const actions = {
           pdf64,
           `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
         );
-        postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
+        const onsend = {
+          no_order_konfirmasi: dataDecrypt[0]?.no_order_konfirmasi,
+          deskripsi_header: data.header_desc,
+          deskripsi_footer: data.footer_desc,
+        };
+        AxiosPost('order-confirmation/save-desc', onsend)
           .then(() => {
-            OCPDF(dataDecrypt, data);
-            dispatch(utility.actions.hideLoading());
-            // const send = {
-            //   no_order_konfirmasi: data.id,
-            // };
-            // AxiosPost('order-confirmation/send-ok', send).finally(() => {
-            //   OCPDF(dataDecrypt, data);
-            //   dispatch(utility.actions.hideLoading());
-            // });
+            postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
+              .then(() => {
+                OCPDF(dataDecrypt, data);
+                dispatch(utility.actions.hideLoading());
+              })
+              .catch(() => {
+                OCPDF(dataDecrypt, data);
+                dispatch(utility.actions.hideLoading());
+              });
           })
-          .catch(() => {
-            OCPDF(dataDecrypt, data);
+          .catch((err) => {
+            const dataErr = err.response.data;
+            toast.error(dataErr.message);
             dispatch(utility.actions.hideLoading());
           });
       });

@@ -9,8 +9,8 @@ const OCPDF = (data, head) => {
     title: 'Order Confirmation',
   });
   var imgData = toAbsoluteUrl('/media/kop/header.png');
-  doc.addImage(imgData, 'PNG', 15, 15, 180, 20);
-  let final = 24;
+  doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
+  let final = 20;
   doc.setFontSize(8);
   doc.text(
     `Bandung, ${moment(data[0].tanggal_order_konfirmasi).format('DD MMMM YYYY')}`,
@@ -291,16 +291,18 @@ const OCPDF = (data, head) => {
   doc.text(
     'Demikianlah Order Konfirmasi ini kami sampaikan, Apabila Ibu setuju dengan kondisi tersebut di atas, mohon Order Konfirmasi ini ditandangani \ndan dikirimkan kembali kepada kami',
     15,
-    finalY + 43
+    finalY + 38
   );
-  doc.text('Hormat Kami, ', 50, finalY + 53);
-  doc.text('Menyetujui, ', 140, finalY + 53);
+  doc.text('Hormat Kami, ', 50, finalY + 49);
+  doc.text('Menyetujui, ', 140, finalY + 49);
 
-  doc.text('Budi Kristiyanto', 48, finalY + 68);
-  if (data[0].nama_customer.length > 4) {
-    doc.text(data[0].nama_customer, 135, finalY + 68);
+  doc.text('Budi Kristiyanto', 48, finalY + 65);
+  if (data[0].nama_customer.length > 9) {
+    doc.text(data[0].nama_customer, 138, finalY + 65);
+  } else if (data[0].nama_customer.length > 15) {
+    doc.text(data[0].nama_customer, 135, finalY + 65);
   } else {
-    doc.text(data[0].nama_customer, 142, finalY + 68);
+    doc.text(data[0].nama_customer, 142, finalY + 65);
   }
 
   const pages = doc.internal.getNumberOfPages();
@@ -308,8 +310,8 @@ const OCPDF = (data, head) => {
   const pageHeight = doc.internal.pageSize.height;
   doc.setFontSize(10);
   doc.setFont(undefined, 'bold');
-  doc.text('* Pembayaran dapat di transfer melalui rekening *', 15, finalY + 78);
-  let finalTableY = finalY + 83;
+  doc.text('* Pembayaran dapat di transfer melalui rekening *', 15, finalY + 75);
+  let finalTableY = finalY + 80;
 
   let tableRowsBank = [];
   let tableColumnBank = [];
@@ -360,7 +362,7 @@ const OCPDF = (data, head) => {
   });
   tableRowsBank = [];
   tableColumnBank = [];
-  finalTableY = doc.lastAutoTable.finalY + 10;
+  finalTableY = doc.lastAutoTable.finalY + 5;
 
   for (let j = 1; j < pages + 1; j += 1) {
     const horizontalPos = pageWidth / 2;
@@ -370,7 +372,7 @@ const OCPDF = (data, head) => {
     //   align: 'center',
     // });
     var imgData = toAbsoluteUrl('/media/kop/footer.png');
-    doc.addImage(imgData, 'PNG', 15, verticalPos, pageWidth - 29, 25);
+    doc.addImage(imgData, 'PNG', 14, verticalPos, pageWidth - 28, 25);
   }
   const string = doc.output('bloburl');
   const x = window.open();

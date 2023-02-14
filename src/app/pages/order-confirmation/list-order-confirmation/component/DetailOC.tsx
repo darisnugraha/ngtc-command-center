@@ -331,6 +331,41 @@ const DetailOC: FC = () => {
             );
           }
         }
+        if (
+          !row.nama_diskon.includes('SOFTWARE') &&
+          !row.nama_diskon.includes('HARDWARE') &&
+          !row.nama_diskon.includes('CONSUMABLE')
+        ) {
+          const ProdukSoftware = dataTab[0].detail_produk.filter(
+            (element: any) => element.jenis_produk === 'SOFTWARE'
+          );
+          const TotalProdukSoftware = ProdukSoftware.reduce((a: any, b: any) => a + b.sub_total, 0);
+          const ProdukHardware = dataTab[0].detail_produk.filter(
+            (element: any) => element.jenis_produk === 'HARDWARE'
+          );
+          const TotalProdukHardware = ProdukHardware.reduce((a: any, b: any) => a + b.sub_total, 0);
+          const ProdukConsum = dataTab[0].detail_produk.filter(
+            (element: any) => element.jenis_produk === 'CONSUMABLE'
+          );
+          const TotalProdukConsum = ProdukConsum.reduce((a: any, b: any) => a + b.sub_total, 0);
+          const GrandTotalProduk = TotalProdukSoftware + TotalProdukHardware + TotalProdukConsum;
+          if (row.persentase !== 0 && row.sub_total === 0) {
+            const GrandTotal = GrandTotalProduk * row.persentase;
+            return (
+              <p className='text-hover-primary d-block mb-1 fs-6'>
+                Rp. {GrandTotal.toLocaleString() || '-'}
+              </p>
+            );
+          }
+          if (row.persentase === 0 && row.sub_total !== 0) {
+            const GrandTotal = row.sub_total;
+            return (
+              <p className='text-hover-primary d-block mb-1 fs-6'>
+                Rp. {GrandTotal.toLocaleString() || '-'}
+              </p>
+            );
+          }
+        }
         return (
           <p className='text-hover-primary d-block mb-1 fs-6'>
             Rp. {row.sub_total.toLocaleString() || '-'}

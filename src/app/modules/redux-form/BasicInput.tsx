@@ -17,7 +17,13 @@ export const RenderField: FC = (field: any) => {
           id={field.label}
           style={{
             textTransform:
-              field.label === 'Email' || field.label === 'Telephone' ? '' : 'uppercase',
+              field.label === 'Email' ||
+              field.label === 'Telephone' ||
+              field.label === 'User Id' ||
+              field.label === 'User Name' ||
+              field.label === 'Password'
+                ? ''
+                : 'uppercase',
           }}
           // onInput={(e: any) => e.target.value.toUpperCase()}
           // value={value}

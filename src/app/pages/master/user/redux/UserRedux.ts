@@ -99,7 +99,7 @@ export const actions = {
         user_name: data.user_name,
         user_id: data.user_id,
         password: data.password,
-        level: data.level,
+        level: data.level.value,
       };
       AxiosPostLogin('auth/register', onSendData)
         .then(() => {

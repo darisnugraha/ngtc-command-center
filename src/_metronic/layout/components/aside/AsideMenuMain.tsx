@@ -69,12 +69,12 @@ export default function AsideMenuMain() {
           hasBullet
         />
       </AsideMenuItemWithSub>
-      {/* <AsideMenuItem
+      <AsideMenuItem
         to='/receivable'
         icon='/media/icons/duotune/finance/fin002.svg'
         title='Receivable'
         fontIcon='bi-app-indicator'
-      /> */}
+      />
       <AsideMenuItem
         to='/validation-payment'
         icon='/media/icons/duotune/general/gen048.svg'

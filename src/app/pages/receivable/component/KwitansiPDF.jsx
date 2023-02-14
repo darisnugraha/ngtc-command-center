@@ -1,6 +1,6 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-// import { toAbsoluteUrl } from '../../../../../_metronic/helpers';
+import { toAbsoluteUrl } from '../../../../_metronic/helpers';
 import angkaTerbilang from '@develoka/angka-terbilang-js';
 import moment from 'moment';
 
@@ -9,29 +9,32 @@ const KwitansiPDF = (data, head) => {
   doc.setProperties({
     title: 'Kwitansi',
   });
-  doc.text('Kwitansi', 135, 15);
-  doc.text('Sudah Terima Dari :', 15, 25);
+  var imgData = toAbsoluteUrl('/media/kop/header.png');
+  const y = 34;
+  doc.addImage(imgData, 'PNG', 15, 10, 260, 30);
+  doc.text('Kwitansi', 135, y + 15);
+  doc.text('Sudah Terima Dari :', 15, y + 25);
+  doc.text(data[0].no_piutang, 195, y + 25);
   doc.setFont(undefined, 'bold');
-  doc.text(head[0].nama_toko, 68, 25);
+  doc.text(head[0].nama_toko, 68, y + 25);
   doc.setFont(undefined, 'normal');
   const alamat = head[0].alamat;
   const jml_alamat = alamat.length;
   if (jml_alamat > 20) {
-    doc.text(alamat.slice(0, 45), 68, 33);
+    doc.text(alamat.slice(0, 45), 68, y + 33);
   }
   if (jml_alamat > 50) {
-    doc.text(alamat.slice(45, 92), 68, 43);
+    doc.text(alamat.slice(45, 92), 68, y + 43);
   }
   if (jml_alamat > 70) {
-    doc.text(alamat.slice(92, 135), 68, 53);
+    doc.text(alamat.slice(92, 135), 68, y + 53);
   }
-  doc.text('Banyaknya Uang   :', 15, 63);
-  doc.text(angkaTerbilang(data[0].bayar_rp).toUpperCase(), 68, 63);
-  doc.text('Untuk Pembayaran :', 15, 73);
+  doc.text('Banyaknya Uang   :', 15, y + 63);
+  doc.text(angkaTerbilang(data[0].bayar_rp).toUpperCase(), 68, y + 63);
+  doc.text('Untuk Pembayaran :', 15, y + 73);
   const desc = data[0].deskripsi;
   const jml_desc = desc.length;
-  console.log(jml_desc);
-  let finalY = 73;
+  let finalY = y + 73;
   if (jml_desc > 0) {
     doc.text(desc.slice(0, 45), 68, finalY);
   }

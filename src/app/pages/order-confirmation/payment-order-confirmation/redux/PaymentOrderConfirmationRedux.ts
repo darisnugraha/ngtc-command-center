@@ -928,7 +928,7 @@ export const actions = {
         no_order_konfirmasi: data.no_order_confirmation,
         tipe_pembayaran: data.payment_type,
         bank: data.bank_name,
-        no_rekening: data.account_number,
+        no_rekening: data.account_number || '-',
         // eslint-disable-next-line
         bayar_rp: parseInt(data.nominal),
         deskripsi: data.description,
@@ -949,7 +949,6 @@ export const actions = {
         .then(() => {
           AxiosPost('receivable', onSendData)
             .then(() => {
-              // eslint-disable-next-line
               dispatch(utility.actions.hideLoading());
               toast.success('Success Add Data !');
               dispatch(actions.getListPaymentOC());

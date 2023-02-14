@@ -73,7 +73,7 @@ const OCPDF = (data, head) => {
   data[0].detail_produk.forEach((element) => {
     const row = [
       { content: no },
-      { content: element.nama_produk },
+      { content: element.nama_produk, styles: { halign: 'left' } },
       { content: element.qty },
       { content: element.satuan },
       { content: 'Rp. ', styles: { halign: 'right' } },
@@ -261,7 +261,7 @@ const OCPDF = (data, head) => {
     head: tableColumn,
     body: tableRows,
     startY: finalY,
-    theme: 'grid',
+    theme: 'plain',
     pageBreak: 'auto',
     rowPageBreak: 'avoid',
     margin: { top: 10 },
@@ -276,6 +276,89 @@ const OCPDF = (data, head) => {
       textColor: '#000',
       valign: 'middle',
       halign: 'center',
+    },
+    willDrawCell: function (data) {
+      // add borders around the head cells
+      if (data.row.section === 'body' && data.column.index != 4 && data.column.index != 6) {
+        if (data.row.section === 'body' && data.column.index == 5) {
+          // draw top border
+          doc.line(data.cell.x + data.cell.width, data.cell.y, data.cell.x, data.cell.y);
+          // draw bottom border
+          doc.line(
+            data.cell.x + data.cell.width,
+            data.cell.y,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+          doc.line(
+            data.cell.x,
+            data.cell.y + data.cell.height,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+        } else if (data.row.section === 'body' && data.column.index == 7) {
+          // draw top border
+          doc.line(data.cell.x + data.cell.width, data.cell.y, data.cell.x, data.cell.y);
+          // draw bottom border
+          doc.line(
+            data.cell.x + data.cell.width,
+            data.cell.y,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+          doc.line(
+            data.cell.x,
+            data.cell.y + data.cell.height,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+        } else {
+          // draw bottom border
+          doc.line(
+            data.cell.x + data.cell.width,
+            data.cell.y,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+          doc.line(
+            data.cell.x,
+            data.cell.y + data.cell.height,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+          // draw top border
+          doc.line(data.cell.x + data.cell.width, data.cell.y, data.cell.x, data.cell.y);
+          // draw left border
+          doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x, data.cell.y);
+        }
+      } else {
+        if (data.row.section === 'body' && data.column.index == 4) {
+          // draw bottom border
+          doc.line(
+            data.cell.x,
+            data.cell.y + data.cell.height,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+          // draw top border
+          doc.line(data.cell.x + data.cell.width, data.cell.y, data.cell.x, data.cell.y);
+          // draw left border
+          doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x, data.cell.y);
+        }
+        if (data.row.section === 'body' && data.column.index == 6) {
+          // draw bottom border
+          doc.line(
+            data.cell.x,
+            data.cell.y + data.cell.height,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+          // draw top border
+          doc.line(data.cell.x + data.cell.width, data.cell.y, data.cell.x, data.cell.y);
+          // draw left border
+          doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x, data.cell.y);
+        }
+      }
     },
   });
   tableRows = [];

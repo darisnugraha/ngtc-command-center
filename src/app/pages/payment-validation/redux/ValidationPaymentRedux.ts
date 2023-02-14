@@ -11,6 +11,7 @@ import * as modal from '../../../modules/modal/GlobalModalRedux';
 import * as modalSecond from '../../../modules/modal/ModalSecondRedux';
 import * as utility from '../../../../setup/redux/UtilityRedux';
 import { dataURLtoFile } from '../../../../setup/function.js';
+import KwitansiPDF from '../../receivable/component/KwitansiPDF.jsx';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -995,9 +996,37 @@ export const actions = {
       };
       AxiosPost('receivable/validation', onSendData)
         .then(() => {
-          toast.success('Success Validate Data !');
-          dispatch(actions.getListPaymentOC());
-          dispatch(actions.getListPaymentOCDP());
+          AxiosGet(`receivable/by-no/${noPiutang}`).then((response: any) => {
+            const dataDecrypt = doDecryptData(response.data, [
+              '_id',
+              'no_piutang',
+              'tanggal',
+              'no_order_konfirmasi',
+              'tanggal_order_konfirmasi',
+              'no_sales_order',
+              'tanggal_sales_order',
+              'kode_toko',
+              'kode_cabang',
+              'total_tagihan',
+              'bayar_rp',
+              'sisa_tagihan',
+              'status',
+              'input_date',
+            ]);
+            AxiosGet(`store/by-kode/${dataDecrypt[0].kode_toko}`).then((resToko) => {
+              const dataDecryptStore = doDecryptData(resToko.data, [
+                'kode_toko',
+                'status',
+                '_id',
+                'input_date',
+                'kode_cabang',
+              ]);
+              KwitansiPDF(dataDecrypt, dataDecryptStore);
+              toast.success('Success Validate Data !');
+              dispatch(actions.getListPaymentOC());
+              dispatch(actions.getListPaymentOCDP());
+            });
+          });
         })
         .catch((err) => {
           // eslint-disable-next-line

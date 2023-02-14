@@ -451,38 +451,102 @@ const OCPDF = (data, head) => {
   });
   tableRows = [];
   tableColumn = [];
-  finalY = doc.lastAutoTable.finalY + 20;
+  finalY = doc.lastAutoTable.finalY + 5;
 
-  doc.text('2. Waktu Pengiriman', 15, finalY - 10);
-  doc.text('... Hari setelah Order Konfirmasi disetujui', 70, finalY - 10);
-  doc.text('3. Sistem Pembayaran', 15, finalY - 5);
-  doc.text('50% Pada saat Order Konfirmasi disetujui', 70, finalY - 5);
-  doc.text('4. Keterangan ', 15, finalY);
-  doc.text(head.footer_desc, 70, finalY);
-  doc.text(
-    'Demikianlah Order Konfirmasi ini kami sampaikan, Apabila Ibu setuju dengan kondisi tersebut di atas, mohon Order Konfirmasi ini ditandangani \ndan dikirimkan kembali kepada kami',
-    15,
-    finalY + 38
-  );
-  doc.text('Hormat Kami, ', 50, finalY + 49);
-  doc.text('Menyetujui, ', 140, finalY + 49);
+  let rowDesc = [
+    [
+      { content: `2. Waktu Pengiriman` },
+      { content: `... Hari setelah Order Konfirmasi disetujui` },
+    ],
+    [{ content: `3. Sistem Pembayaran` }, { content: `50% Pada saat Order Konfirmasi disetujui` }],
+    [{ content: `4. Keterangan` }, { content: head.footer_desc }],
+  ];
+  rowDesc.push();
 
-  doc.text('Budi Kristiyanto', 48, finalY + 65);
-  if (data[0].nama_customer.length > 9) {
-    doc.text(data[0].nama_customer, 138, finalY + 65);
-  } else if (data[0].nama_customer.length > 15) {
-    doc.text(data[0].nama_customer, 135, finalY + 65);
-  } else {
-    doc.text(data[0].nama_customer, 142, finalY + 65);
+  doc.autoTable({
+    head: [],
+    body: rowDesc,
+    startY: finalY,
+    theme: 'plain',
+    pageBreak: 'auto',
+    rowPageBreak: 'avoid',
+    margin: { top: 10 },
+    bodyStyles: {
+      fontSize: 7,
+      halign: 'left',
+      valign: 'top',
+    },
+    headStyles: {
+      fontSize: 7,
+      fillColor: '#fff',
+      textColor: '#000',
+      valign: 'middle',
+      halign: 'left',
+      lineWidth: 0.5,
+      lineColor: [0, 0, 0],
+    },
+  });
+  rowDesc = [];
+  finalY = doc.lastAutoTable.finalY + 5;
+
+  if (finalY > 230) {
+    doc.addPage();
+    doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
+    finalY = 35;
   }
+  let rowFo = [
+    [
+      {
+        content: `Demikianlah Order Konfirmasi ini kami sampaikan, Apabila Ibu setuju dengan kondisi tersebut di atas, mohon Order Konfirmasi ini ditandangani \ndan dikirimkan kembali kepada kami`,
+        colSpan: 2,
+      },
+    ],
+    [
+      { content: `Hormat Kami ,`, styles: { halign: 'center' } },
+      { content: `Menyetujui`, styles: { halign: 'center' } },
+    ],
+    [{ content: `\n\n\n\n\n\n` }, { content: `\n\n\n\n\n\n` }],
+    [
+      { content: `Budi Kristiyanto ,`, styles: { halign: 'center' } },
+      { content: data[0].nama_customer, styles: { halign: 'center' } },
+    ],
+    [
+      {
+        content: `* Pembayaran dapat di transfer melalui rekening *`,
+        colSpan: 2,
+        styles: { fontStyle: 'bold' },
+      },
+    ],
+  ];
+  rowFo.push();
 
-  const pages = doc.internal.getNumberOfPages();
-  const pageWidth = doc.internal.pageSize.width;
-  const pageHeight = doc.internal.pageSize.height;
-  doc.setFontSize(10);
-  doc.setFont(undefined, 'bold');
-  doc.text('* Pembayaran dapat di transfer melalui rekening *', 15, finalY + 75);
-  let finalTableY = finalY + 80;
+  doc.autoTable({
+    head: [],
+    body: rowFo,
+    startY: finalY,
+    theme: 'plain',
+    pageBreak: 'auto',
+    rowPageBreak: 'avoid',
+    margin: { top: 10 },
+    bodyStyles: {
+      fontSize: 7,
+      halign: 'left',
+      valign: 'top',
+    },
+    headStyles: {
+      fontSize: 7,
+      fillColor: '#fff',
+      textColor: '#000',
+      valign: 'middle',
+      halign: 'left',
+      lineWidth: 0.5,
+      lineColor: [0, 0, 0],
+    },
+  });
+  rowDesc = [];
+  finalY = doc.lastAutoTable.finalY + 5;
+
+  let finalTableY = finalY + 5;
 
   let tableRowsBank = [];
   let tableColumnBank = [];
@@ -534,6 +598,85 @@ const OCPDF = (data, head) => {
   tableRowsBank = [];
   tableColumnBank = [];
   finalTableY = doc.lastAutoTable.finalY + 5;
+
+  const pages = doc.internal.getNumberOfPages();
+  const pageWidth = doc.internal.pageSize.width;
+  const pageHeight = doc.internal.pageSize.height;
+  const verticalPos = pageHeight - 32;
+
+  // doc.addPage();
+  // doc.text(
+  //   'Demikianlah Order Konfirmasi ini kami sampaikan, Apabila Ibu setuju dengan kondisi tersebut di atas, mohon Order Konfirmasi ini ditandangani \ndan dikirimkan kembali kepada kami',
+  //   15,
+  //   finalY + 38
+  // );
+  // doc.text('Hormat Kami, ', 50, finalY + 49);
+  // doc.text('Menyetujui, ', 140, finalY + 49);
+
+  // doc.text('Budi Kristiyanto', 48, finalY + 65);
+  // if (data[0].nama_customer.length > 9) {
+  //   doc.text(data[0].nama_customer, 138, finalY + 65);
+  // } else if (data[0].nama_customer.length > 15) {
+  //   doc.text(data[0].nama_customer, 135, finalY + 65);
+  // } else {
+  //   doc.text(data[0].nama_customer, 142, finalY + 65);
+  // }
+
+  // doc.setFontSize(10);
+  // doc.setFont(undefined, 'bold');
+  // doc.text('* Pembayaran dapat di transfer melalui rekening *', 15, finalY + 75);
+  // let finalTableY = finalY + 80;
+
+  // let tableRowsBank = [];
+  // let tableColumnBank = [];
+
+  // if (data[0].jenis_ok === 'INCLUDE SOFTWARE') {
+  //   tableColumnBank = [
+  //     [
+  //       { content: `BCA` },
+  //       { content: `7405 8716 88` },
+  //       { content: `PT. NAGATECH SISTEM INTEGRATOR` },
+  //     ],
+  //     [
+  //       { content: `BANK MANDIRI` },
+  //       { content: `132-00-6260-1688` },
+  //       { content: `PT. NAGATECH SISTEM INTEGRATOR` },
+  //     ],
+  //   ];
+  //   tableRowsBank.push();
+  // } else {
+  //   tableColumnBank = [
+  //     [{ content: `BCA` }, { content: `7405557878` }, { content: `BUDI KRISTIYANTO SH` }],
+  //   ];
+  //   tableRowsBank.push();
+  // }
+
+  // doc.autoTable({
+  //   head: tableColumnBank,
+  //   body: tableRowsBank,
+  //   startY: finalTableY,
+  //   theme: 'grid',
+  //   pageBreak: 'auto',
+  //   rowPageBreak: 'avoid',
+  //   margin: { top: 10 },
+  //   bodyStyles: {
+  //     fontSize: 7,
+  //     halign: 'center',
+  //     valign: 'middle',
+  //   },
+  //   headStyles: {
+  //     fontSize: 7,
+  //     fillColor: '#fff',
+  //     textColor: '#000',
+  //     valign: 'middle',
+  //     halign: 'center',
+  //     lineWidth: 0.5,
+  //     lineColor: [0, 0, 0],
+  //   },
+  // });
+  // tableRowsBank = [];
+  // tableColumnBank = [];
+  // finalTableY = doc.lastAutoTable.finalY + 5;
 
   for (let j = 1; j < pages + 1; j += 1) {
     const horizontalPos = pageWidth / 2;

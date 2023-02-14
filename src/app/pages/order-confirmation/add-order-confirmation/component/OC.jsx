@@ -104,6 +104,7 @@ const OCPDF = (data, head) => {
   ];
   tableRows.push(footer);
 
+  let grandTotalSoftware = 0;
   const dataDiscountSoftware = data[0].detail_diskon.find((element) =>
     element.nama_diskon.includes('SOFTWARE')
   );
@@ -148,8 +149,20 @@ const OCPDF = (data, head) => {
   ];
   if (PersentaseSoftware !== 0 || DiskonSubTotal !== 0) {
     tableRows.push(discountSoftware);
+    const dataProdSoftware = data[0].detail_produk.filter(
+      (element) => element.jenis_produk === 'SOFTWARE'
+    );
+    const totalHargaSoftware = dataProdSoftware.reduce((a, b) => a + b.sub_total, 0);
+    grandTotalSoftware = totalHargaSoftware - DiskonSubTotal;
+  } else {
+    const dataProdSoftware = data[0].detail_produk.filter(
+      (element) => element.jenis_produk === 'SOFTWARE'
+    );
+    const totalHargaSoftware = dataProdSoftware.reduce((a, b) => a + b.sub_total, 0);
+    grandTotalSoftware = totalHargaSoftware;
   }
 
+  let grandTotalHardware = 0;
   const dataDiscountHardware = data[0].detail_diskon.find((element) =>
     element.nama_diskon.includes('HARDWARE')
   );
@@ -193,8 +206,20 @@ const OCPDF = (data, head) => {
   ];
   if (PersentaseHardware !== 0 || DiskonSubTotalHardware !== 0) {
     tableRows.push(discountHardware);
+    const dataProdHardware = data[0].detail_produk.filter(
+      (element) => element.jenis_produk === 'HARDWARE'
+    );
+    const totalHargaHardware = dataProdHardware.reduce((a, b) => a + b.sub_total, 0);
+    grandTotalHardware = totalHargaHardware - DiskonSubTotalHardware;
+  } else {
+    const dataProdHardware = data[0].detail_produk.filter(
+      (element) => element.jenis_produk === 'HARDWARE'
+    );
+    const totalHargaHardware = dataProdHardware.reduce((a, b) => a + b.sub_total, 0);
+    grandTotalHardware = totalHargaHardware;
   }
 
+  let grandTotalConsumable = 0;
   const dataDiscountConsumable = data[0].detail_diskon.find((element) =>
     element.nama_diskon.includes('CONSUMABLE')
   );
@@ -239,7 +264,70 @@ const OCPDF = (data, head) => {
   ];
   if (PersentaseConsumable !== 0 || DiskonSubTotalConsumable !== 0) {
     tableRows.push(discountConsumable);
+    const dataProdConsumable = data[0].detail_produk.filter(
+      (element) => element.jenis_produk === 'CONSUMABLE'
+    );
+    const totalHargaConsumable = dataProdConsumable.reduce((a, b) => a + b.sub_total, 0);
+    grandTotalConsumable = totalHargaConsumable - DiskonSubTotalConsumable;
+  } else {
+    const dataProdConsumable = data[0].detail_produk.filter(
+      (element) => element.jenis_produk === 'CONSUMABLE'
+    );
+    const totalHargaConsumable = dataProdConsumable.reduce((a, b) => a + b.sub_total, 0);
+    grandTotalConsumable = totalHargaConsumable;
   }
+
+  data[0].detail_diskon.forEach((res) => {
+    if (
+      !res.nama_diskon.includes('SOFTWARE') &&
+      !res.nama_diskon.includes('HARDWARE') &&
+      !res.nama_diskon.includes('CONSUMABLE')
+    ) {
+      let DiscTot = 0;
+      let PersenTot = 0;
+      const total = grandTotalSoftware + grandTotalHardware + grandTotalConsumable;
+      if (res.persentase === 0 && res.sub_total !== 0) {
+        PersenTot = res.sub_total / total;
+        DiscTot = res.sub_total;
+        const footerDiscountAll = [
+          {
+            content: `Diskon ${res.nama_diskon} ${PersenTot} %`,
+            colSpan: 6,
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+          {
+            content: 'Rp. ',
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+          {
+            content: DiscTot?.toLocaleString(),
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+        ];
+        tableRows.push(footerDiscountAll);
+      } else if (res.persentase !== 0 && res.sub_total === 0) {
+        PersenTot = res.persentase * 100;
+        DiscTot = total * res.persentase;
+        const footerDiscountAll = [
+          {
+            content: `Diskon ${res.nama_diskon} ${PersenTot} %`,
+            colSpan: 6,
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+          {
+            content: 'Rp. ',
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+          {
+            content: DiscTot?.toLocaleString(),
+            styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
+          },
+        ];
+        tableRows.push(footerDiscountAll);
+      }
+    }
+  });
+
   const total = [
     {
       content: 'Total',
@@ -457,7 +545,6 @@ const OCPDF = (data, head) => {
     var imgData = toAbsoluteUrl('/media/kop/footer.png');
     doc.addImage(imgData, 'PNG', 14, verticalPos, pageWidth - 28, 25);
   }
-
   const string = doc.output('datauristring');
   return string;
 };

@@ -58,6 +58,7 @@ export const actions = {
               saveLocal('token', res.access_token).then(() => {
                 dispatch({ type: actionTypes.Login, payload: { res } });
                 toast.success('Login Success');
+                window.location.reload();
               });
             });
           });

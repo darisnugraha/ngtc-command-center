@@ -119,7 +119,7 @@ export const actions = {
       dispatch(utility.actions.showLoadingButton());
       const onSendData = {
         user_name: data.user_name,
-        level: data.level,
+        level: data.level.value,
       };
       AxiosPut(`users/${data.id}`, onSendData)
         .then(() => {

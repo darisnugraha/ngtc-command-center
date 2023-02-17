@@ -102,8 +102,8 @@ export const actions = {
           res.forEach((element: any) => {
             const row: DetailProduk = {
               harga: element.price,
-              jenis_produk: element.product_type,
-              kode_produk: element.product_code,
+              jenis_produk: element.product_type.value || element.product_type,
+              kode_produk: element.product_code.value || element.product_code,
               nama_produk: element.product_name,
               satuan: element.unit,
               type: element.type,
@@ -236,8 +236,8 @@ export const actions = {
           res.forEach((element: any) => {
             const row: DetailProduk = {
               harga: element.price,
-              jenis_produk: element.product_type,
-              kode_produk: element.product_code,
+              jenis_produk: element.product_type.value || element.product_type,
+              kode_produk: element.product_code.value || element.product_code,
               nama_produk: element.product_name,
               satuan: element.unit,
               type: element.type,

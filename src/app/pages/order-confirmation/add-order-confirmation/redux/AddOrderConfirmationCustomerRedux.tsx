@@ -98,7 +98,9 @@ export const actions = {
       getState: () => any
     ): Promise<void> => {
       const state = getState();
-      const storeCode = state.form.FormAddCustomerOC.values.central_store_code;
+      const storeCode =
+        state.form.FormAddCustomerOC.values.central_store_code.value ||
+        state.form.FormAddCustomerOC.values.central_store_code;
       AxiosGet(`branch/by-kode-cabang-kode-toko?kode_cabang=${code}&kode_toko=${storeCode}`).then(
         (res) => {
           const dataDecrypt = doDecryptData(res.data, [
@@ -161,6 +163,10 @@ export const actions = {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       // eslint-disable-next-line
       data.staff = data.staff.value || data.staff;
+      // eslint-disable-next-line
+      data.central_store_code = data.central_store_code.value || data.central_store_code;
+      // eslint-disable-next-line
+      data.branch_store_code = data.branch_store_code.value || data.branch_store_code;
       saveLocal('dataCustomer', data).then(() => {
         dispatch({ type: actionTypes.setStep, payload: { step: 2 } });
       });

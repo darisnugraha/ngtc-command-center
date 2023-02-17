@@ -78,27 +78,29 @@ export const actions = {
   getSupportService: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       getLocal('dataCustomer').then((val) => {
-        AxiosGet(`support-service/by-kode/${val.central_store_code}/${val.branch_store_code}`).then(
-          (res) => {
-            const dataDecrypt = doDecryptData(res.data, [
-              'no_support_service',
-              'kode_cabang',
-              'kode_satuan',
-              'kode_toko',
-              'qty',
-              'status',
-              '_id',
-              'input_date',
-              'tanggal',
-              'harga',
-              'total_harga',
-            ]);
-            dispatch({
-              type: actionTypes.GetDataSupportService,
-              payload: { feedback: dataDecrypt },
-            });
-          }
-        );
+        AxiosGet(
+          `support-service/by-kode/${val.central_store_code.value || val.central_store_code}/${
+            val.branch_store_code.value || val.branch_store_code
+          }`
+        ).then((res) => {
+          const dataDecrypt = doDecryptData(res.data, [
+            'no_support_service',
+            'kode_cabang',
+            'kode_satuan',
+            'kode_toko',
+            'qty',
+            'status',
+            '_id',
+            'input_date',
+            'tanggal',
+            'harga',
+            'total_harga',
+          ]);
+          dispatch({
+            type: actionTypes.GetDataSupportService,
+            payload: { feedback: dataDecrypt },
+          });
+        });
       });
     };
   },
@@ -106,7 +108,9 @@ export const actions = {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       getLocal('dataCustomer').then((val) => {
         AxiosGet(
-          `production-service/by-kode/${val.central_store_code}/${val.branch_store_code}`
+          `production-service/by-kode/${val.central_store_code.value || val.central_store_code}/${
+            val.branch_store_code.value || val.branch_store_code
+          }`
         ).then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'no_production_service',

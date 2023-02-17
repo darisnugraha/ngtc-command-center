@@ -353,7 +353,7 @@ export const actions = {
                         // eslint-disable-next-line
                         key: no,
                         harga: element.harga,
-                        kode_produk: element.kode_produk,
+                        kode_produk: element.kode_produk.value || element.kode_produk,
                         nama_produk: element.nama_produk,
                         qty: element.qty || 1,
                         satuan: element.satuan,
@@ -380,7 +380,7 @@ export const actions = {
                         // eslint-disable-next-line
                         key: no,
                         harga: element.harga,
-                        kode_produk: element.kode_produk,
+                        kode_produk: element.kode_produk.value || element.kode_produk,
                         nama_produk: element.nama_produk,
                         qty: element.qty || 1,
                         satuan: element.satuan,
@@ -408,7 +408,7 @@ export const actions = {
                   const row: listProductModel = {
                     key: 1,
                     harga: data.price,
-                    kode_produk: data.product,
+                    kode_produk: data.product.value || data.product,
                     nama_produk: data.product_name,
                     qty: data.qty || 1,
                     satuan: data.unit,
@@ -431,7 +431,7 @@ export const actions = {
                     // eslint-disable-next-line
                     key: no,
                     harga: data.price,
-                    kode_produk: data.product,
+                    kode_produk: data.product.value || data.product,
                     nama_produk: data.product_name,
                     qty: data.qty || 1,
                     satuan: data.unit,
@@ -474,7 +474,7 @@ export const actions = {
                       // eslint-disable-next-line
                       key: no,
                       harga: element.harga,
-                      kode_produk: element.kode_produk,
+                      kode_produk: element.kode_produk.value || element.kode_produk,
                       nama_produk: element.nama_produk,
                       qty: element.qty || 1,
                       satuan: element.satuan,
@@ -500,7 +500,7 @@ export const actions = {
                       // eslint-disable-next-line
                       key: no,
                       harga: element.harga,
-                      kode_produk: element.kode_produk,
+                      kode_produk: element.kode_produk.value || element.kode_produk,
                       nama_produk: element.nama_produk,
                       qty: element.qty || 1,
                       satuan: element.satuan,
@@ -528,7 +528,7 @@ export const actions = {
                 const row: listProductModel = {
                   key: 1,
                   harga: data.price,
-                  kode_produk: data.product,
+                  kode_produk: data.product.value || data.product,
                   nama_produk: data.product_name,
                   qty: data.qty || 1,
                   satuan: data.unit,
@@ -551,7 +551,7 @@ export const actions = {
                   // eslint-disable-next-line
                   key: no,
                   harga: data.price,
-                  kode_produk: data.product,
+                  kode_produk: data.product.value || data.product,
                   nama_produk: data.product_name,
                   qty: data.qty || 1,
                   satuan: data.unit,
@@ -938,7 +938,7 @@ export const actions = {
                         }[] = [];
                         resProd.forEach((element: any) => {
                           const row = {
-                            kode_produk: element.kode_produk,
+                            kode_produk: element.kode_produk.value || element.kode_produk,
                             nama_produk: element.nama_produk,
                             jenis_produk: element.tipe_produk,
                             satuan: element.satuan,
@@ -966,9 +966,9 @@ export const actions = {
                           dataDisc.push(row);
                         });
                         const onSendData = {
-                          kode_toko: resCust.central_store_code,
+                          kode_toko: resCust.central_store_code.value || resCust.central_store_code,
                           nama_toko: resCust.central_store_name,
-                          kode_cabang: resCust.branch_store_code,
+                          kode_cabang: resCust.branch_store_code.value || resCust.branch_store_code,
                           nama_cabang: resCust.branch_store_name,
                           nama_customer: resCust.customer_name || '-',
                           alamat_cabang: resCust.address,

@@ -69,7 +69,7 @@ export const actions = {
         kode_consumable: data.consumable_code,
         nama_consumable: data.consumable_name,
         kode_supplier: data.supplier.value || data.supplier,
-        satuan: data.unit,
+        satuan: data.unit.value || data.unit,
         harga: data.price,
       };
 

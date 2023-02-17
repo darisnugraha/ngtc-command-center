@@ -180,8 +180,6 @@ export const actions = {
   },
   addPotentialCustomer: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      console.log(data);
-
       dispatch(utility.actions.showLoadingButton());
       const onSendData = {
         kode_toko: data.store_code || '-',

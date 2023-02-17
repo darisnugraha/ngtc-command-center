@@ -192,7 +192,7 @@ export const actions = {
         kota: data.city || '-',
         telepon: data.telephone || '-',
         email: data.email || '-',
-        kode_staff: data.staff_code,
+        kode_staff: data.staff_code || data.staff,
         nama_staff: data.staff_name,
         nama_divisi: data.division,
       };
@@ -245,6 +245,7 @@ export const actions = {
             '_id',
             'input_date',
           ]);
+          dispatch(change('FormPotentialCustomer', 'staff', code));
           dispatch(change('FormPotentialCustomer', 'staff_name', dataDecrypt[0].nama_staff));
           dispatch(change('FormPotentialCustomer', 'division', dataDecryptDivision[0].nama_divisi));
           dispatch(

@@ -45,6 +45,16 @@ const FormPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: an
         </div>
         <div className='col-lg-6 d-none'>
           <Field
+            name='staff'
+            type='text'
+            component={RenderField}
+            label='Staff'
+            placeHolder='Insert Staff'
+            normalize={upper}
+          />
+        </div>
+        <div className='col-lg-6 d-none'>
+          <Field
             name='staff_name'
             type='text'
             component={RenderField}

@@ -203,9 +203,11 @@ export const actions = {
           });
         })
         .catch((err) => {
-          const dataErr = err.response.data;
-          toast.error(dataErr);
-          dispatch(utility.actions.hideLoading());
+          err.response.data.message.forEach((element: any) => {
+            const dataErr = element;
+            toast.error(dataErr);
+            dispatch(utility.actions.hideLoading());
+          });
         });
     };
   },

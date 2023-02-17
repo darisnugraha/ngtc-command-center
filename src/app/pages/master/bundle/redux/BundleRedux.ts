@@ -180,9 +180,9 @@ export const actions = {
         const datanewArr: any = [];
         dataDecrypt.detail_produk.forEach((element: any) => {
           const row = {
-            product_code: element.kode_produk,
+            product_code: element.kode_produk.value || element.kode_produk,
             product_name: element.nama_produk,
-            product_type: element.jenis_produk,
+            product_type: element.jenis_produk.value || element.jenis_produk,
             unit: element.satuan,
             price: element.harga,
             type: element.type,
@@ -470,6 +470,10 @@ export const actions = {
           getLocal('detailProduct', ['price']).then(async (res) => {
             if (res.length === 0) {
               const dataDetail: any = [];
+              // eslint-disable-next-line
+              data.product_type = data.product_type.value || data.product_type;
+              // eslint-disable-next-line
+              data.product_code = data.product_code.value || data.product_code;
               dataDetail.push(data);
               await saveLocal('detailProduct', dataDetail, ['price']);
               toast.success('Success Add Data !');
@@ -477,6 +481,10 @@ export const actions = {
               dispatch(actions.closeModalProduct());
             } else {
               const dataDetail: any = res;
+              // eslint-disable-next-line
+              data.product_type = data.product_type.value || data.product_type;
+              // eslint-disable-next-line
+              data.product_code = data.product_code.value || data.product_code;
               dataDetail.push(data);
               await saveLocal('detailProduct', dataDetail, ['price']);
               toast.success('Success Add Data !');

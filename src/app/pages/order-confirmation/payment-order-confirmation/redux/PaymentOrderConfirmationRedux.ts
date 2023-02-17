@@ -926,8 +926,8 @@ export const actions = {
       const onSendData = {
         tanggal: moment(data.date).format('yyyy-MM-DD'),
         no_order_konfirmasi: data.no_order_confirmation,
-        tipe_pembayaran: data.payment_type,
-        bank: data.bank_name,
+        tipe_pembayaran: data.payment_type.value || data.payment_type,
+        bank: data.bank_name.value || data.bank_name,
         no_rekening: data.account_number || '-',
         // eslint-disable-next-line
         bayar_rp: parseInt(data.nominal),

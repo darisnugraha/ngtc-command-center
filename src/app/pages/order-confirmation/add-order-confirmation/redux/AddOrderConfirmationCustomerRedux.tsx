@@ -159,6 +159,8 @@ export const actions = {
   },
   addCustomer: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      // eslint-disable-next-line
+      data.staff = data.staff.value || data.staff;
       saveLocal('dataCustomer', data).then(() => {
         dispatch({ type: actionTypes.setStep, payload: { step: 2 } });
       });

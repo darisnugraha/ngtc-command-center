@@ -373,7 +373,9 @@ export const actions = {
         payload: { feedbackProductDetail: undefined },
       });
       const state = getState();
-      const data = state.form.FormAddProductComponent.values.product_type;
+      const data =
+        state.form.FormAddProductComponent.values.product_type.value ||
+        state.form.FormAddProductComponent.values.product_type;
 
       if (data === 'SOFTWARE') {
         AxiosGet(`product/by-kode/${id}`).then((res: any) => {
@@ -389,6 +391,7 @@ export const actions = {
             type: actionTypes.GetProductDetail,
             payload: { feedbackProductDetail: dataDecrypt },
           });
+
           // eslint-disable-next-line
           dispatch(change('FormAddProductComponent', 'id', dataDecrypt._id));
           dispatch(change('FormAddProductComponent', 'product_name', dataDecrypt.nama_produk));
@@ -417,7 +420,7 @@ export const actions = {
           dispatch(change('FormAddProductComponent', 'price', dataDecrypt.harga));
           dispatch(change('FormAddProductComponent', 'type', '-'));
         });
-      } else {
+      } else if (data === 'CONSUMABLE') {
         AxiosGet(`consumable/by-kode/${id}`).then((res: any) => {
           const dataDecrypt = doDecryptData(res.data[0], [
             'kode_consumable',
@@ -431,6 +434,7 @@ export const actions = {
             type: actionTypes.GetProductDetail,
             payload: { feedbackProductDetail: dataDecrypt },
           });
+
           // eslint-disable-next-line
           dispatch(change('FormAddProductComponent', 'id', dataDecrypt._id));
           dispatch(change('FormAddProductComponent', 'product_name', dataDecrypt.nama_consumable));
@@ -453,8 +457,9 @@ export const actions = {
         toast.info('Fill The Form First !');
       } else {
         // eslint-disable-next-line
+        const typeProd = data.product_type.value || data.product_type;
         if (
-          data.product_type === undefined ||
+          typeProd === undefined ||
           data.product_name === undefined ||
           data.unit === undefined ||
           data.price === undefined ||

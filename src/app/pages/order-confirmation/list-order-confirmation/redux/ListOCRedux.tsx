@@ -199,13 +199,13 @@ export const actions = {
         let newArrData = [];
         const row = {
           harga: data.price,
-          kode_produk: data.product,
+          kode_produk: data.product.value || data.product,
           nama_produk: data.product_name,
           // eslint-disable-next-line
           qty: parseInt(data.qty),
           satuan: data.unit,
           sub_total: data.sub_total,
-          jenis_produk: data.product_type,
+          jenis_produk: data.product_type.value || data.product_type,
           type: data.type || '-',
         };
         const cek = res.find((el: any) => el.nama_produk === data.product_name);
@@ -732,10 +732,10 @@ export const actions = {
       const onSendData = {
         startDate: moment(data.date[0]).format('yyyy-MM-DD'),
         endDate: moment(data.date[1]).format('yyyy-MM-DD'),
-        kode_staff: data.staff_name,
-        no_order_konfirmasi: data.no_oc,
-        kode_toko: data.central_store_name,
-        status: data.status_payment,
+        kode_staff: data.staff_name.value || data.staff_name,
+        no_order_konfirmasi: data.no_oc.value || data.no_oc,
+        kode_toko: data.central_store_name.value || data.central_store_name,
+        status: data.status_payment.value || data.status_payment,
       };
       AxiosGet(
         `order-confirmation/filter?startDate=${onSendData.startDate}&endDate=${onSendData.endDate}&no_order_konfirmasi=${onSendData.no_order_konfirmasi}&kode_toko=${onSendData.kode_toko}&kode_staff=${onSendData.kode_staff}&status=${onSendData.status}`

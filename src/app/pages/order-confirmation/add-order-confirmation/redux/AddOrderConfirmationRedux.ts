@@ -318,18 +318,19 @@ export const actions = {
       }
     };
   },
-  addDataProduct: (data: any, oc_type: String) => {
+  addDataProduct: (data: any, oc_type: any) => {
     // eslint-disable-next-line
     return async (
       dispatch: ThunkDispatch<{}, {}, AnyAction>,
       getState: () => any
     ): Promise<void> => {
       const state = getState();
-      const typeProd = state.addorderconfirmation.typeProduct;
+      const typeProd =
+        state.addorderconfirmation.typeProduct.value || state.addorderconfirmation.typeProduct;
       getLocal('type_oc').then((resType) => {
         if (resType.length === 0) {
           const type = [];
-          type.push(oc_type);
+          type.push(oc_type.value || oc_type);
           saveLocal('type_oc', type).then(() => {
             if (data.product_type === 'PACKAGE') {
               AxiosGet(`bundle/by-kode/${data.product}`).then((response: any) => {
@@ -412,7 +413,7 @@ export const actions = {
                     qty: data.qty || 1,
                     satuan: data.unit,
                     sub_total: data.sub_total,
-                    tipe_produk: data.product_type || typeProd,
+                    tipe_produk: data.product_type.value || data.product_type || typeProd,
                     type: data.type || '-',
                   };
                   dataArr.push(row);
@@ -435,7 +436,7 @@ export const actions = {
                     qty: data.qty || 1,
                     satuan: data.unit,
                     sub_total: data.sub_total,
-                    tipe_produk: data.product_type || typeProd,
+                    tipe_produk: data.product_type.value || data.product_type || typeProd,
                     type: data.type || '-',
                   };
                   dataArr.push(row);
@@ -532,7 +533,7 @@ export const actions = {
                   qty: data.qty || 1,
                   satuan: data.unit,
                   sub_total: data.sub_total,
-                  tipe_produk: data.product_type || typeProd,
+                  tipe_produk: data.product_type.value || data.product_type || typeProd,
                   type: data.type || '-',
                 };
                 dataArr.push(row);
@@ -555,7 +556,7 @@ export const actions = {
                   qty: data.qty || 1,
                   satuan: data.unit,
                   sub_total: data.sub_total,
-                  tipe_produk: data.product_type || typeProd,
+                  tipe_produk: data.product_type.value || data.product_type || typeProd,
                   type: data.type || '-',
                 };
                 dataArr.push(row);
@@ -681,7 +682,7 @@ export const actions = {
           qty: data.qty || 1,
           satuan: data.unit,
           sub_total: data.sub_total,
-          tipe_produk: data.product_type,
+          tipe_produk: data.product_type.value || data.product_type,
           type: data.type || '-',
         };
         dataArr.push(row);
@@ -727,7 +728,7 @@ export const actions = {
           const dataArr = [];
           const row = {
             key: 1,
-            kode_diskon: data.discount_code,
+            kode_diskon: data.discount_code.value || data.discount_code,
             nama_diskon: data.discount_name,
             persentase: data.discount_percentage || 0,
             diskon_rp: data.discount_rp || 0,

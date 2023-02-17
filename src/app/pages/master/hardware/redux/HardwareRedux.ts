@@ -64,7 +64,7 @@ export const actions = {
       const onSendData = {
         kode_hardware: data.hardware_code,
         nama_hardware: data.hardware_name,
-        kode_supplier: data.supplier,
+        kode_supplier: data.supplier.value || data.supplier,
         satuan: data.unit,
         harga: data.price,
       };
@@ -129,7 +129,7 @@ export const actions = {
       const onSendData = {
         kode_hardware: data.hardware_code,
         nama_hardware: data.hardware_name,
-        kode_supplier: data.supplier,
+        kode_supplier: data.supplier.value || data.supplier,
         satuan: data.unit,
         harga: data.price,
       };

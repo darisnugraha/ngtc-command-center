@@ -65,9 +65,9 @@ export const actions = {
       const onSendData = {
         kode_produk: data.product_code,
         nama_produk: data.product_name,
-        satuan: data.unit,
+        satuan: data.unit.value || data.unit,
         harga: data.price,
-        type: data.type,
+        type: data.type.value || data.type,
       };
 
       AxiosPost('product', onSendData)
@@ -156,8 +156,8 @@ export const actions = {
       const onSendData = {
         kode_produk: data.product_code,
         nama_produk: data.product_name,
-        satuan: data.unit,
-        type: data.type,
+        satuan: data.unit.value || data.unit,
+        type: data.type.value || data.type,
         harga: data.price,
       };
       AxiosPut(`product/${data.id}`, onSendData)

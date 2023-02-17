@@ -75,9 +75,9 @@ export const actions = {
       const dataHead = {
         tgl_awal: startDate,
         tgl_akhir: endDate,
-        no_order_konfirmasi: data.no_oc,
-        kode_toko: data.central_store,
-        kode_cabang: data.branch_store,
+        no_order_konfirmasi: data.no_oc.value || data.no_oc,
+        kode_toko: data.central_store.value || data.central_store,
+        kode_cabang: data.branch_store || data.branch_store,
       };
 
       AxiosGet(

@@ -79,7 +79,7 @@ export const actions = {
         alamat_korespondensi: data.correspondence_address || '-',
         telepon: data.telephone || '-',
         email: data.email || '-',
-        tipe_toko: data.type_store || '-',
+        tipe_toko: data.type_store.value || data.type_store || '-',
       };
 
       AxiosPost('store', onSendData)
@@ -106,7 +106,7 @@ export const actions = {
         alamat_korespondensi: data.correspondence_address,
         telepon: data.telephone || '-',
         email: data.email || '-',
-        tipe_toko: data.type_store || '-',
+        tipe_toko: data.type_store.value || data.type_store || '-',
       };
 
       AxiosPut(`store/${data.id}`, onSendData)
@@ -130,13 +130,13 @@ export const actions = {
             kode_cabang: data.branch_store_code || '-',
             nama_cabang: data.branch_store_name || '-',
             nama_customer: data.customer_name || '-',
-            kode_toko: data.central_store_code || '-',
+            kode_toko: data.central_store_code.value || data.central_store_code || '-',
             email: data.email || '-',
             telepon: data.telephone || '-',
             kota: data.city || '-',
             alamat_cabang: data.address || '-',
             alamat_korespondensi: data.correspondence_address || '-',
-            tipe_cabang: data.type_branch || '-',
+            tipe_cabang: data.type_branch.value || data.type_branch || '-',
           },
         ],
       };
@@ -160,13 +160,13 @@ export const actions = {
         kode_cabang: data.branch_store_code,
         nama_cabang: data.branch_store_name,
         nama_customer: data.customer_name,
-        kode_toko: data.central_store_code,
+        kode_toko: data.central_store_code.value || data.central_store_code || '-',
         email: data.email,
         telepon: data.telephone,
         kota: data.city,
         alamat_cabang: data.address,
         alamat_korespondensi: data.correspondence_address,
-        tipe_cabang: data.type_branch || '-',
+        tipe_cabang: data.type_branch.value || data.type_branch || '-',
       };
 
       AxiosPut(`branch/${data.id}`, onSendData)

@@ -180,6 +180,8 @@ export const actions = {
   },
   addPotentialCustomer: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      console.log(data);
+
       dispatch(utility.actions.showLoadingButton());
       const onSendData = {
         kode_toko: data.store_code || '-',
@@ -192,7 +194,7 @@ export const actions = {
         kota: data.city || '-',
         telepon: data.telephone || '-',
         email: data.email || '-',
-        kode_staff: data.staff_code || data.staff,
+        kode_staff: data.staff,
         nama_staff: data.staff_name,
         nama_divisi: data.division,
       };

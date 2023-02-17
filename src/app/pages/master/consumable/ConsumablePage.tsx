@@ -45,7 +45,7 @@ const ConsumablePage: FC<PropsFromRedux> = () => {
     {
       dataField: 'kode_consumable',
       text: 'Consumable Code',
-      align: 'center',
+      align: 'left',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
@@ -53,7 +53,7 @@ const ConsumablePage: FC<PropsFromRedux> = () => {
     {
       dataField: 'nama_consumable',
       text: 'Consumable Name',
-      align: 'center',
+      align: 'left',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },

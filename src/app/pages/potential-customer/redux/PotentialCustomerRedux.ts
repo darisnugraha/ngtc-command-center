@@ -202,8 +202,9 @@ export const actions = {
             window.location.reload();
           });
         })
-        .catch(() => {
-          toast.error('Error Add Data !');
+        .catch((err) => {
+          const dataErr = err.response.data;
+          toast.error(dataErr);
           dispatch(utility.actions.hideLoading());
         });
     };

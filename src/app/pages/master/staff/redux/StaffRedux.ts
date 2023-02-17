@@ -155,7 +155,7 @@ export const actions = {
       const onSendData = {
         kode_staff: data.staff_code,
         nama_staff: data.staff_name,
-        kode_divisi: data.division,
+        kode_divisi: data.division.value || data.division,
         nama_bank: data.bank || '-',
         telepon: data.telephone,
         no_rekening: data.account_number || '-',

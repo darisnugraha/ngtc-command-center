@@ -15,6 +15,8 @@ import FormPrintPDF from './component/FormPrintPDF';
 import FormEditCustomer from './component/FormEditCustomer';
 import FormEditProductList from './component/FormEditProductList';
 import TableDataProduct from './component/TableDataProduct';
+import FormEditDiskon from './component/FormEditDiskon';
+import TableDataDiskon from './component/TableDataDiskon';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
 const connector = connect(mapState);
@@ -104,6 +106,9 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
       text: 'Status',
       align: 'center',
       formatter: (cell) => {
+        if (cell === 'CLOSE') {
+          return <p className='text-hover-primary d-block mb-1 fs-6'>CANCEL</p>;
+        }
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;
       },
     },
@@ -251,7 +256,15 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
                 }}
               />
               <hr />
+              <FormEditDiskon
+                onSubmit={(data: any) => {
+                  dispatch(redux.actions.saveLocalDiskon(data));
+                }}
+              />
+              <hr />
               <TableDataProduct />
+              <hr />
+              <TableDataDiskon />
               <div className='row justify-content-end mt-5'>
                 <div className='col-lg-3 d-grid'>
                   <button

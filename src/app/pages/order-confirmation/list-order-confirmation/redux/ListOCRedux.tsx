@@ -28,6 +28,7 @@ export const actionTypes = {
   setProduct: '[LISTOC] Set Product',
   GetDetailDataProduct: '[LISTOC] Get Detail Product',
   setLocalProduct: '[LISTOC] Save Local Product',
+  setLocalDiskon: '[LISTOC] Save Local Diskon',
 };
 
 export interface IListOCState {
@@ -39,6 +40,7 @@ export interface IListOCState {
   dataProduct?: Array<any>;
   detailProduct?: any;
   feedbackProduct?: Array<any>;
+  feedbackDiskon?: Array<any>;
 }
 
 const initialListOCState: IListOCState = {
@@ -50,6 +52,7 @@ const initialListOCState: IListOCState = {
   dataProduct: [],
   detailProduct: undefined,
   feedbackProduct: [],
+  feedbackDiskon: [],
 };
 
 export const reducer = persistReducer(
@@ -80,6 +83,10 @@ export const reducer = persistReducer(
       case actionTypes.setLocalProduct: {
         const data = action.payload?.feedbackProduct;
         return { ...state, feedbackProduct: data };
+      }
+      case actionTypes.setLocalDiskon: {
+        const data = action.payload?.feedbackDiskon;
+        return { ...state, feedbackDiskon: data };
       }
 
       default:
@@ -152,6 +159,7 @@ export const actions = {
           dispatch({ type: actionTypes.GetListOCByNo, payload: { feedbackNo: dataDecrypt } });
           dispatch({ type: actionTypes.setTypeOC, payload: { typeOC: dataDecrypt[0].jenis_ok } });
           dispatch(actions.setLocalProd(no_order_konfirmasi));
+          dispatch(actions.setLocalDiskon(no_order_konfirmasi));
           dispatch(modal.actions.show());
         }
       );
@@ -188,6 +196,38 @@ export const actions = {
             'harga',
           ]).then(() => {
             dispatch(actions.getLocalProd());
+          });
+        }
+      );
+    };
+  },
+  setLocalDiskon: (no_order_konfirmasi: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      AxiosGet(`order-confirmation/by-no?no_order_konfirmasi=${no_order_konfirmasi}`).then(
+        (res) => {
+          const dataDecrypt = doDecryptData(res.data, [
+            'kode_diskon',
+            'nama_diskon',
+            'persentase',
+            'sub_total',
+          ]);
+          const dataDiskon: any = [];
+          dataDecrypt[0].detail_diskon.forEach((element: any) => {
+            const row = {
+              kode_diskon: element.kode_diskon,
+              nama_diskon: element.nama_diskon,
+              persentase: element.persentase,
+              sub_total: element.sub_total,
+            };
+            dataDiskon.push(row);
+          });
+          saveLocal('dataDiskon', dataDiskon, [
+            'kode_diskon',
+            'nama_diskon',
+            'persentase',
+            'diskon_rp',
+          ]).then(() => {
+            dispatch(actions.getLocalDiskon());
           });
         }
       );
@@ -232,6 +272,52 @@ export const actions = {
       });
     };
   },
+  saveLocalDiskon: (data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      getLocal('dataDiskon', ['kode_diskon', 'nama_diskon', 'persentase', 'diskon_rp']).then(
+        (res) => {
+          let newArrData = [];
+          const row = {
+            kode_diskon: data.discount_code.value || data.discount_code,
+            nama_diskon: data.discount_name,
+            persentase: data.discount_percentage || 0,
+            diskon_rp: data.discount_rp || 0,
+          };
+          const cek = res.find((el: any) => el.kode_diskon === row.kode_diskon);
+
+          if (cek !== undefined) {
+            toast.error('Data Already In Table');
+          } else {
+            // eslint-disable-next-line
+            if (res.length === 0) {
+              newArrData.push(row);
+              saveLocal('dataDiskon', newArrData, [
+                'kode_diskon',
+                'nama_diskon',
+                'persentase',
+                'diskon_rp',
+              ]).then(() => {
+                toast.success('Success Add Discount !');
+                dispatch(actions.getLocalDiskon());
+              });
+            } else {
+              newArrData = res;
+              newArrData.push(row);
+              saveLocal('dataDiskon', newArrData, [
+                'kode_diskon',
+                'nama_diskon',
+                'persentase',
+                'diskon_rp',
+              ]).then(() => {
+                toast.success('Success Add Discount !');
+                dispatch(actions.getLocalDiskon());
+              });
+            }
+          }
+        }
+      );
+    };
+  },
   postProduct: () => {
     return async (
       dispatch: ThunkDispatch<{}, {}, AnyAction>,
@@ -239,25 +325,45 @@ export const actions = {
     ): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
       getLocal('dataProduct', ['qty', 'sub_total', 'harga']).then((res) => {
-        const state = getState();
-        const dataOK = state.listorderconfirmation.feedbackNo[0];
-        const onSendData = {
-          no_order_konfirmasi: dataOK.no_order_konfirmasi,
-          detail_produk: res,
-        };
-        AxiosPut('order-confirmation/update/product', onSendData)
-          .then(() => {
-            toast.success('Success Edit Data !');
-            localStorage.removeItem('dataProduct');
-            dispatch(actions.getListOC());
-            dispatch(utility.actions.hideLoading());
-            dispatch(modal.actions.hide());
-          })
-          .catch((err: any) => {
-            dispatch(utility.actions.hideLoading());
-            const dataErr = err.response.data;
-            toast.error(dataErr.message);
-          });
+        getLocal('dataDiskon', ['kode_diskon', 'nama_diskon', 'persentase', 'diskon_rp']).then(
+          (disc) => {
+            const state = getState();
+            const dataOK = state.listorderconfirmation.feedbackNo[0];
+            const dataDisc: {
+              kode_diskon: any;
+              nama_diskon: any;
+              persentase: any;
+              sub_total: any;
+            }[] = [];
+            disc.forEach((element: any) => {
+              const row = {
+                kode_diskon: element.kode_diskon,
+                nama_diskon: element.nama_diskon,
+                persentase: element.persentase / 100,
+                sub_total: element.diskon_rp,
+              };
+              dataDisc.push(row);
+            });
+            const onSendData = {
+              no_order_konfirmasi: dataOK.no_order_konfirmasi,
+              detail_produk: res,
+              detail_diskon: dataDisc,
+            };
+            AxiosPut('order-confirmation/update/product', onSendData)
+              .then(() => {
+                toast.success('Success Edit Data !');
+                localStorage.removeItem('dataProduct');
+                dispatch(actions.getListOC());
+                dispatch(utility.actions.hideLoading());
+                dispatch(modal.actions.hide());
+              })
+              .catch((err: any) => {
+                dispatch(utility.actions.hideLoading());
+                const dataErr = err.response.data;
+                toast.error(dataErr.message);
+              });
+          }
+        );
       });
     };
   },
@@ -266,6 +372,15 @@ export const actions = {
       getLocal('dataProduct', ['qty', 'sub_total', 'harga']).then((res) => {
         dispatch({ type: actionTypes.setLocalProduct, payload: { feedbackProduct: res } });
       });
+    };
+  },
+  getLocalDiskon: () => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      getLocal('dataDiskon', ['kode_diskon', 'nama_diskon', 'persentase', 'diskon_rp']).then(
+        (res) => {
+          dispatch({ type: actionTypes.setLocalDiskon, payload: { feedbackDiskon: res } });
+        }
+      );
     };
   },
   deleteOC: (id: string) => {
@@ -321,6 +436,40 @@ export const actions = {
       });
     };
   },
+  deleteDiscount: (kode: string) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You wont be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          getLocal('dataDiskon', ['kode_diskon', 'nama_diskon', 'persentase', 'diskon_rp']).then(
+            (res) => {
+              const dataFill = res.filter((element: any) => element.kode_diskon !== kode);
+              saveLocal('dataDiskon', dataFill, [
+                'kode_diskon',
+                'nama_diskon',
+                'persentase',
+                'diskon_rp',
+              ])
+                .then(() => {
+                  toast.success('Success Delete Data !');
+                  dispatch(actions.getLocalDiskon());
+                })
+                .catch(() => {
+                  toast.error('Failed Delete Data !');
+                });
+            }
+          );
+        }
+      });
+    };
+  },
   showModalPrint: (id: String) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(change('FormPrintPDF', 'id', id));
@@ -357,6 +506,41 @@ export const actions = {
               )
             );
           }
+          if (dataDecrypt[0]?.waktu_pengiriman !== '-') {
+            dispatch(change('FormPrintPDF', 'waktu_pengiriman', dataDecrypt[0]?.waktu_pengiriman));
+          } else {
+            dispatch(
+              change(
+                'FormPrintPDF',
+                'waktu_pengiriman',
+                '60 Hari setelah order konfirmasi disetujui'
+              )
+            );
+          }
+          if (dataDecrypt[0]?.sistem_pembayaran !== '-') {
+            dispatch(
+              change('FormPrintPDF', 'sistem_pembayaran', dataDecrypt[0]?.sistem_pembayaran)
+            );
+          } else {
+            dispatch(
+              change(
+                'FormPrintPDF',
+                'sistem_pembayaran',
+                '60% pada saat order konfirmasi disetujui'
+              )
+            );
+          }
+          if (dataDecrypt[0]?.keterangan !== '-') {
+            dispatch(change('FormPrintPDF', 'keterangan', dataDecrypt[0]?.keterangan));
+          } else {
+            dispatch(
+              change(
+                'FormPrintPDF',
+                'keterangan',
+                'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan'
+              )
+            );
+          }
           if (dataDecrypt[0]?.deskripsi_footer !== '-') {
             dispatch(change('FormPrintPDF', 'footer_desc', dataDecrypt[0]?.deskripsi_footer));
           } else {
@@ -364,7 +548,7 @@ export const actions = {
               change(
                 'FormPrintPDF',
                 'footer_desc',
-                'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan'
+                'Demikianlah Order Konfirmasi ini kami sampaikan. Apabila setuju dengan kondisi tersebut diatas, mohon Order Konfirmasi ini ditandatangani dan dikirimkan kembali kepada kami.'
               )
             );
           }
@@ -379,10 +563,23 @@ export const actions = {
             )
           );
           dispatch(
+            change('FormPrintPDF', 'waktu_pengiriman', '60 Hari setelah order konfirmasi disetujui')
+          );
+          dispatch(
+            change('FormPrintPDF', 'sistem_pembayaran', '60% pada saat order konfirmasi disetujui')
+          );
+          dispatch(
+            change(
+              'FormPrintPDF',
+              'keterangan',
+              'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan'
+            )
+          );
+          dispatch(
             change(
               'FormPrintPDF',
               'footer_desc',
-              'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan'
+              'Demikianlah Order Konfirmasi ini kami sampaikan. Apabila setuju dengan kondisi tersebut diatas, mohon Order Konfirmasi ini ditandatangani dan dikirimkan kembali kepada kami.'
             )
           );
           dispatch(modal.actions.show());
@@ -421,6 +618,9 @@ export const actions = {
         const onsend = {
           no_order_konfirmasi: dataDecrypt[0]?.no_order_konfirmasi,
           deskripsi_header: data.header_desc,
+          waktu_pengiriman: data.waktu_pengiriman,
+          sistem_pembayaran: data.sistem_pembayaran,
+          keterangan: data.keterangan,
           deskripsi_footer: data.footer_desc,
         };
         AxiosPost('order-confirmation/save-desc', onsend)

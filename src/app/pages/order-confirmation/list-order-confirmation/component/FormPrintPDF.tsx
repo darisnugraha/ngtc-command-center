@@ -30,6 +30,33 @@ const FormPrintPDF: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
         </div>
         <div className='col-lg-12'>
           <Field
+            name='waktu_pengiriman'
+            type='text'
+            component={RenderField}
+            label='Waktu Pengiriman'
+            placeHolder='Insert Waktu Pengiriman'
+          />
+        </div>
+        <div className='col-lg-12'>
+          <Field
+            name='sistem_pembayaran'
+            type='text'
+            component={RenderField}
+            label='Sistem Pembayaran'
+            placeHolder='Insert Sistem Pembayaran'
+          />
+        </div>
+        <div className='col-lg-12'>
+          <Field
+            name='keterangan'
+            type='textarea'
+            component={RenderTextArea}
+            label='Keterangan'
+            placeHolder='Insert Keterangan'
+          />
+        </div>
+        <div className='col-lg-12'>
+          <Field
             name='footer_desc'
             type='textarea'
             component={RenderTextArea}

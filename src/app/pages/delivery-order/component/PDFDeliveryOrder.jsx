@@ -3,7 +3,7 @@ import 'jspdf-autotable';
 // import angkaTerbilang from '@develoka/angka-terbilang-js';
 
 const PDFDeliveryOrder = (data, head) => {
-  const doc = new jsPDF('p', 'mm', 'a4');
+  const doc = new jsPDF('p', 'mm', 'letter');
   doc.setProperties({
     title: 'Invoice',
   });

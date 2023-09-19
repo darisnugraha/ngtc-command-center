@@ -10,6 +10,7 @@ import * as reduxStaff from '../master/staff/redux/StaffRedux';
 import * as reduxStore from '../master/customer/redux/CustomerRedux';
 import * as modal from '../../modules/modal/GlobalModalRedux';
 import FormPotentialCustomer from './component/FormPotentialCustomer';
+import FormEditPotentialCustomer from './component/FormEditPotentialCustomer';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
 const connector = connect(mapState);
@@ -30,9 +31,20 @@ const PotentialCustomerPage: FC<PropsFromRedux> = () => {
   const [dataSource, setDataSource] = useState(dataTab);
   const [value, setValue] = useState('');
   const [search, setSearch] = useState(false);
+  const [form, setForm] = useState('');
 
   // eslint-disable-next-line
   const dataTable = dataSource.length === 0 ? (search ? dataSource : dataTab) : dataSource;
+
+  const handleClickPotentialCustomer = () => {
+    dispatch(modal.actions.show());
+    setForm('ADD');
+  };
+
+  const handleEdit = (data: any) => {
+    dispatch(redux.actions.handleEdit(data));
+    setForm('EDIT');
+  };
 
   const columns: ColumnDescription[] = [
     {
@@ -63,7 +75,7 @@ const PotentialCustomerPage: FC<PropsFromRedux> = () => {
     {
       dataField: 'alamat',
       text: 'Address',
-      align: 'center',
+      align: 'left',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
@@ -151,7 +163,7 @@ const PotentialCustomerPage: FC<PropsFromRedux> = () => {
     },
     {
       dataField: '',
-      text: 'Action',
+      text: 'Validation',
       align: 'center',
       headerClasses: 'ps-4 min-w-100px rounded-end',
       formatter: (cell, row) => {
@@ -169,42 +181,79 @@ const PotentialCustomerPage: FC<PropsFromRedux> = () => {
               onClick={() => {
                 dispatch(redux.actions.handleValidation(row.no_calon_customer));
               }}
-              className='btn btn-sm btn-success'
+              className='btn btn-icon btn-success'
               // eslint-disable-next-line
-              disabled={row.status === 'DONE' ? true : false}
+              disabled={row.status === 'DONE' || row.status === 'CLOSE' ? true : false}
             >
               <span className='svg-icon svg-icon-1'>
                 <KTSVG path='/media/icons/duotune/general/gen043.svg' />
               </span>
-              Validation
             </button>
           </>
         );
       },
     },
+    {
+      dataField: '',
+      text: 'Action',
+      align: 'center',
+      headerClasses: 'ps-4 min-w-100px rounded-end',
+      formatter: (cell, row) => {
+        return (
+          <div className='row'>
+            <div className='col-lg-6'>
+              <button
+                type='button'
+                onClick={() => handleEdit(row)}
+                className='btn btn-icon btn-warning'
+                // eslint-disable-next-line
+                disabled={row.status === 'DONE' || row.status === 'CLOSE' ? true : false}
+              >
+                <i className='bi bi-vector-pen fs-4' />
+              </button>
+            </div>
+            <div className='col-lg-6'>
+              <button
+                type='button'
+                onClick={() => {
+                  // eslint-disable-next-line
+                  dispatch(redux.actions.deletePotentialCustomer(row._id));
+                }}
+                className='btn btn-icon btn-danger'
+                // eslint-disable-next-line
+                disabled={row.status === 'DONE' || row.status === 'CLOSE' ? true : false}
+              >
+                <i className='bi bi-trash fs-4' />
+              </button>
+            </div>
+          </div>
+        );
+      },
+    },
   ];
-
-  const handleClickPotentialCustomer = () => {
-    dispatch(modal.actions.show());
-  };
-
   const handleClosePotentialCustomer = () => {
     dispatch(redux.actions.closeModal());
   };
 
-  const isEdit: any = false;
-
   return (
     <>
       <GlobalModal
-        title={`${isEdit ? 'Edit' : 'Add'} Potential Customer`}
+        title={`${form === 'EDIT' ? 'Edit' : 'Add'} Potential Customer`}
         onClose={() => handleClosePotentialCustomer()}
       >
-        <FormPotentialCustomer
-          onSubmit={(data: any) => {
-            dispatch(redux.actions.addPotentialCustomer(data));
-          }}
-        />
+        {form === 'ADD' ? (
+          <FormPotentialCustomer
+            onSubmit={(data: any) => {
+              dispatch(redux.actions.addPotentialCustomer(data));
+            }}
+          />
+        ) : (
+          <FormEditPotentialCustomer
+            onSubmit={(data: any) => {
+              dispatch(redux.actions.editPotentialCustomer(data));
+            }}
+          />
+        )}
       </GlobalModal>
       <div className='card mb-5 mb-xl-8'>
         {/* begin::Header */}

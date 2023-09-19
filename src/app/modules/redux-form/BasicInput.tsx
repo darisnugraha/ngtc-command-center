@@ -21,7 +21,9 @@ export const RenderField: FC = (field: any) => {
               field.label === 'Telephone' ||
               field.label === 'User Id' ||
               field.label === 'User Name' ||
-              field.label === 'Password'
+              field.label === 'Password' ||
+              field.label === 'Waktu Pengiriman' ||
+              field.label === 'Sistem Pembayaran'
                 ? ''
                 : 'uppercase',
           }}

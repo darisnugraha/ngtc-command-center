@@ -84,7 +84,7 @@ export const actions = {
 
       AxiosPost('store', onSendData)
         .then(() => {
-          Swal.fire('Good job!', 'Success Add Data !', 'success').then(() => {
+          Swal.fire('Success!', 'Success Add Data !', 'success').then(() => {
             window.location.reload();
           });
         })
@@ -111,7 +111,7 @@ export const actions = {
 
       AxiosPut(`store/${data.id}`, onSendData)
         .then(() => {
-          Swal.fire('Good job!', 'Success Edit Data !', 'success').then(() => {
+          Swal.fire('Success!', 'Success Edit Data !', 'success').then(() => {
             window.location.reload();
           });
         })
@@ -143,7 +143,7 @@ export const actions = {
 
       AxiosPost('branch', onSendData)
         .then(() => {
-          Swal.fire('Good job!', 'Success Add Data !', 'success').then(() => {
+          Swal.fire('Success!', 'Success Add Data !', 'success').then(() => {
             window.location.reload();
           });
         })
@@ -171,7 +171,7 @@ export const actions = {
 
       AxiosPut(`branch/${data.id}`, onSendData)
         .then(() => {
-          Swal.fire('Good job!', 'Success Edit Data !', 'success').then(() => {
+          Swal.fire('Success!', 'Success Edit Data !', 'success').then(() => {
             window.location.reload();
           });
         })
@@ -259,7 +259,7 @@ export const actions = {
         if (result.isConfirmed) {
           AxiosDelete(`store/${id}`)
             .then(() => {
-              Swal.fire('Good job!', 'Success Delete Data !', 'success').then(() => {
+              Swal.fire('Success!', 'Success Delete Data !', 'success').then(() => {
                 window.location.reload();
               });
             })
@@ -285,7 +285,7 @@ export const actions = {
         if (result.isConfirmed) {
           AxiosDelete(`branch/${id}`)
             .then(() => {
-              Swal.fire('Good job!', 'Success Delete Data !', 'success').then(() => {
+              Swal.fire('Success!', 'Success Delete Data !', 'success').then(() => {
                 window.location.reload();
               });
             })

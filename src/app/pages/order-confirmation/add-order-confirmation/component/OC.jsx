@@ -4,7 +4,7 @@ import moment from 'moment';
 import { toAbsoluteUrl } from '../../../../../_metronic/helpers';
 
 const OCPDF = (data, head) => {
-  const doc = new jsPDF('p', 'mm', 'a4');
+  const doc = new jsPDF('p', 'mm', 'letter');
   doc.setProperties({
     title: 'Order Confirmation',
   });
@@ -14,7 +14,7 @@ const OCPDF = (data, head) => {
   doc.setFontSize(8);
   doc.text(
     `Bandung, ${moment(data[0].tanggal_order_konfirmasi).format('DD MMMM YYYY')}`,
-    145,
+    155,
     final + 15
   );
   doc.text('Kepada Yth : ', 15, final + 15);
@@ -27,10 +27,18 @@ const OCPDF = (data, head) => {
   }
   doc.text(toko, 15, final + 20);
   doc.setFont(undefined, 'normal');
-  doc.text(data[0].alamat_cabang, 15, final + 25);
-  doc.text(data[0].kota, 15, final + 35);
-  doc.text('Telp : ', 15, final + 40);
-  doc.text(data[0].telepon, 23, final + 40);
+  if (data[0].alamat_cabang.length > 55) {
+    doc.text(data[0].alamat_cabang.slice(0, 56), 15, final + 25);
+    doc.text(data[0].alamat_cabang.slice(56, data[0].alamat_cabang.length), 15, final + 30);
+    doc.text(data[0].kota, 15, final + 37);
+    doc.text('Telp : ', 15, final + 42);
+    doc.text(data[0].telepon, 23, final + 42);
+  } else {
+    doc.text(data[0].alamat_cabang, 15, final + 25);
+    doc.text(data[0].kota, 15, final + 30);
+    doc.text('Telp : ', 15, final + 40);
+    doc.text(data[0].telepon, 23, final + 40);
+  }
   doc.setFont(undefined, 'bold');
   doc.text('UP : ', 15, final + 50);
   doc.text(data[0].nama_customer, 23, final + 50);
@@ -502,21 +510,21 @@ const OCPDF = (data, head) => {
       },
     ],
     [
-      { content: `Hormat Kami ,`, styles: { halign: 'center' } },
-      { content: `Menyetujui`, styles: { halign: 'center' } },
+      { content: `Hormat Kami ,`, styles: { halign: 'left', cellPadding: { left: 10 } } },
+      { content: `Menyetujui ,`, styles: { halign: 'center' } },
     ],
-    [{ content: `\n\n\n\n\n\n` }, { content: `\n\n\n\n\n\n` }],
+    [{ content: `\n\n\n\n` }, { content: `\n\n\n\n` }],
     [
-      { content: `Budi Kristiyanto ,`, styles: { halign: 'center' } },
+      { content: `Budi Kristiyanto`, styles: { halign: 'left', cellPadding: { left: 8 } } },
       { content: data[0].nama_customer, styles: { halign: 'center' } },
     ],
-    [
-      {
-        content: `* Pembayaran dapat di transfer melalui rekening *`,
-        colSpan: 2,
-        styles: { fontStyle: 'bold' },
-      },
-    ],
+    // [
+    //   {
+    //     content: `* Pembayaran dapat di transfer melalui rekening *`,
+    //     colSpan: 2,
+    //     styles: { fontStyle: 'bold' },
+    //   },
+    // ],
   ];
   rowFo.push();
 
@@ -544,9 +552,11 @@ const OCPDF = (data, head) => {
     },
   });
   rowDesc = [];
-  finalY = doc.lastAutoTable.finalY + 5;
-
-  let finalTableY = finalY + 5;
+  finalY = doc.lastAutoTable.finalY + 3;
+  doc.setFont(undefined, 'bold');
+  doc.setFontSize(6);
+  doc.text('* Pembayaran dapat di transfer melalui rekening *', 15, finalY);
+  let finalTableY = finalY + 2;
 
   let tableRowsBank = [];
   let tableColumnBank = [];

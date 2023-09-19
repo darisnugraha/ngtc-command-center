@@ -923,7 +923,7 @@ export const actions = {
                           subTotalSupport +
                           subTotalProduction;
 
-                        const grandTotalDiscount =
+                        const grandTotalDiscount: any =
                           grandTotal - (totalDiscountAllRp + grandTotal * (AllPersen / 100)) || 0;
 
                         const dataProd: {
@@ -984,9 +984,13 @@ export const actions = {
                           detail_diskon: dataDisc,
                           no_support_service: resSupp[0]?.no_support_service || '-',
                           no_production_service: resProdServ[0]?.no_production_service || '-',
-                          total_harga: grandTotalDiscount,
+                          // eslint-disable-next-line
+                          total_harga: parseInt(grandTotalDiscount),
                           deskripsi_header: '-',
+                          waktu_pengiriman: '-',
+                          sistem_pembayaran: '-',
                           deskripsi_footer: '-',
+                          keterangan: '-',
                         };
                         AxiosPost('order-confirmation', onSendData)
                           .then((res: any) => {
@@ -1031,7 +1035,7 @@ export const actions = {
                                 `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
                               )
                                 .then(() => {
-                                  Swal.fire('Good job!', 'Success Add Data !', 'success').then(
+                                  Swal.fire('Success!', 'Success Add Data !', 'success').then(
                                     () => {
                                       OCPDF(dataDecrypt, desc);
                                       localStorage.removeItem('dataCustomer');
@@ -1118,6 +1122,9 @@ export const actions = {
       const sendData = state.addorderconfirmation.dataSend;
       sendData.deskripsi_header = data.description_header;
       sendData.deskripsi_footer = data.description_footer;
+      sendData.waktu_pengiriman = data.waktu_pengiriman;
+      sendData.sistem_pembayaran = data.sistem_pembayaran;
+      sendData.keterangan = data.keterangan;
       AxiosPost('order-confirmation', sendData)
         .then(() => {
           localStorage.removeItem('dataCustomer');

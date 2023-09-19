@@ -73,7 +73,7 @@ export const actions = {
 
       AxiosPost('supplier', onSendData)
         .then(() => {
-          Swal.fire('Good job!', 'Success Add Data !', 'success').then(() => {
+          Swal.fire('Success!', 'Success Add Data !', 'success').then(() => {
             window.location.reload();
           });
         })
@@ -135,7 +135,7 @@ export const actions = {
         if (result.isConfirmed) {
           AxiosDelete(`supplier/${id}`)
             .then(() => {
-              Swal.fire('Good job!', 'Success Delete Data !', 'success').then(() => {
+              Swal.fire('Success!', 'Success Delete Data !', 'success').then(() => {
                 window.location.reload();
               });
             })
@@ -161,7 +161,7 @@ export const actions = {
 
       AxiosPut(`supplier/${data.id}`, onSendData)
         .then(() => {
-          Swal.fire('Good job!', 'Success Edit Data !', 'success').then(() => {
+          Swal.fire('Success!', 'Success Edit Data !', 'success').then(() => {
             window.location.reload();
           });
         })

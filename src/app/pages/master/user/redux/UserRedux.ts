@@ -103,7 +103,7 @@ export const actions = {
       };
       AxiosPostLogin('auth/register', onSendData)
         .then(() => {
-          Swal.fire('Good job!', 'Success Add Data !', 'success').then(() => {
+          Swal.fire('Success!', 'Success Add Data !', 'success').then(() => {
             window.location.reload();
           });
         })
@@ -124,7 +124,7 @@ export const actions = {
       AxiosPut(`users/${data.id}`, onSendData)
         .then(() => {
           dispatch(actions.getUser());
-          Swal.fire('Good job!', 'Success Edit Data !', 'success').then(() => {
+          Swal.fire('Success!', 'Success Edit Data !', 'success').then(() => {
             window.location.reload();
           });
         })
@@ -149,7 +149,7 @@ export const actions = {
         if (result.isConfirmed) {
           AxiosDelete(`users/${id}`)
             .then(() => {
-              Swal.fire('Good job!', 'Success Delete Data !', 'success').then(() => {
+              Swal.fire('Success!', 'Success Delete Data !', 'success').then(() => {
                 window.location.reload();
               });
             })

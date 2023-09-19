@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup';
 import SubmitButton from '../../../../modules/button';
-import { RenderTextArea } from '../../../../modules/redux-form/BasicInput';
+import { RenderField, RenderTextArea } from '../../../../modules/redux-form/BasicInput';
 
 interface Props {}
 
@@ -27,6 +27,33 @@ const FormAddDescription: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             component={RenderTextArea}
             label='Description Header'
             placeHolder='Insert Description Header'
+          />
+        </div>
+        <div className='col-lg-12'>
+          <Field
+            name='waktu_pengiriman'
+            type='text'
+            component={RenderField}
+            label='Waktu Pengiriman'
+            placeHolder='Insert Waktu Pengiriman'
+          />
+        </div>
+        <div className='col-lg-12'>
+          <Field
+            name='sistem_pembayaran'
+            type='text'
+            component={RenderField}
+            label='Sistem Pembayaran'
+            placeHolder='Insert Sistem Pembayaran'
+          />
+        </div>
+        <div className='col-lg-12'>
+          <Field
+            name='keterangan'
+            type='textarea'
+            component={RenderTextArea}
+            label='Keterangan'
+            placeHolder='Insert Keterangan'
           />
         </div>
         <div className='col-lg-12'>

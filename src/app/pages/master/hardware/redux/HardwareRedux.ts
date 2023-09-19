@@ -71,7 +71,7 @@ export const actions = {
 
       AxiosPost('hardware', onSendData)
         .then(() => {
-          Swal.fire('Good job!', 'Success Add Data !', 'success').then(() => {
+          Swal.fire('Success!', 'Success Add Data !', 'success').then(() => {
             window.location.reload();
           });
         })
@@ -136,7 +136,7 @@ export const actions = {
 
       AxiosPut(`hardware/${data.id}`, onSendData)
         .then(() => {
-          Swal.fire('Good job!', 'Success Edit Data !', 'success').then(() => {
+          Swal.fire('Success!', 'Success Edit Data !', 'success').then(() => {
             window.location.reload();
           });
         })
@@ -160,7 +160,7 @@ export const actions = {
         if (result.isConfirmed) {
           AxiosDelete(`hardware/${id}`)
             .then(() => {
-              Swal.fire('Good job!', 'Success Delete Data !', 'success').then(() => {
+              Swal.fire('Success!', 'Success Delete Data !', 'success').then(() => {
                 window.location.reload();
               });
             })

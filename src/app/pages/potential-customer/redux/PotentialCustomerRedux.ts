@@ -9,6 +9,8 @@ import { doDecryptData } from '../../../../setup/encrypt.js';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
 import * as utility from '../../../../setup/redux/UtilityRedux';
 import * as redux from '../../master/customer/redux/CustomerRedux';
+import { AxiosDelete } from '../../../../setup/axios/AxiosDelete';
+import { AxiosPut } from '../../../../setup/axios/AxiosPut';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -85,6 +87,8 @@ export const actions = {
           'tanggal',
           'no_calon_customer',
           'tipe_toko',
+          'kode_staff',
+          'tipe_cabang',
         ]);
         const dataSave: any = [];
         let no = 1;
@@ -198,7 +202,7 @@ export const actions = {
       };
       AxiosPost('applicant', onSendData)
         .then(() => {
-          Swal.fire('Good job!', 'Success Add Data !', 'success').then(() => {
+          Swal.fire('Success!', 'Success Add Data !', 'success').then(() => {
             window.location.reload();
           });
         })
@@ -211,6 +215,86 @@ export const actions = {
         });
     };
   },
+  handleEdit: (data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch(modal.actions.show());
+      // eslint-disable-next-line
+      dispatch(change('FormEditPotentialCustomer', 'id', data._id));
+      dispatch(change('FormEditPotentialCustomer', 'staff_code', data.kode_staff));
+      dispatch(change('FormEditPotentialCustomer', 'staff', data.kode_staff));
+      dispatch(change('FormEditPotentialCustomer', 'staff_name', data.nama_staff));
+      dispatch(change('FormEditPotentialCustomer', 'division', data.divisi));
+      dispatch(change('FormEditPotentialCustomer', 'store_code', data.kode_toko));
+      dispatch(change('FormEditPotentialCustomer', 'store_name', data.nama_toko));
+      dispatch(change('FormEditPotentialCustomer', 'customer_name', data.nama_customer));
+      dispatch(change('FormEditPotentialCustomer', 'city', data.kota));
+      dispatch(change('FormEditPotentialCustomer', 'telephone', data.telepon));
+      dispatch(change('FormEditPotentialCustomer', 'email', data.email));
+      dispatch(change('FormEditPotentialCustomer', 'address', data.alamat));
+      dispatch(
+        change('FormEditPotentialCustomer', 'correspondence_address', data.alamat_korespondensi)
+      );
+    };
+  },
+  deletePotentialCustomer: (id: string) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You wont be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          AxiosDelete(`applicant/${id}`)
+            .then(() => {
+              Swal.fire('Success!', 'Success Delete Data !', 'success').then(() => {
+                window.location.reload();
+              });
+            })
+            .catch(() => {
+              toast.error('Failed Delete Data !');
+              dispatch(utility.actions.hideLoading());
+            });
+        }
+      });
+    };
+  },
+  editPotentialCustomer: (data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      dispatch(utility.actions.showLoadingButton());
+      const onSendData = {
+        kode_toko: data.store_code || '-',
+        nama_toko: data.store_name || '-',
+        kode_cabang: 'PUSAT',
+        nama_cabang: 'PUSAT',
+        nama_customer: data.customer_name || '-',
+        alamat: data.address || '-',
+        alamat_korespondensi: data.correspondence_address || '-',
+        kota: data.city || '-',
+        telepon: data.telephone || '-',
+        email: data.email || '-',
+        kode_staff: data.staff,
+        nama_staff: data.staff_name,
+        nama_divisi: data.division,
+      };
+      AxiosPut(`applicant/${data.id}`, onSendData)
+        .then(() => {
+          Swal.fire('Success!', 'Edit Data Success !', 'success').then(() => {
+            dispatch(actions.getPotentialCustomer());
+            dispatch(redux.actions.getStore());
+            window.location.reload();
+          });
+        })
+        .catch((err) => {
+          const dataErr = err.response?.data;
+          toast.error(dataErr.message || 'Error');
+          dispatch(utility.actions.hideLoading());
+        });
+    };
+  },
   handleValidation: (no_trx: string) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       const onSendData = {
@@ -218,7 +302,7 @@ export const actions = {
       };
       AxiosPost('applicant/validate', onSendData)
         .then(() => {
-          Swal.fire('Good job!', 'Validation Data Success !', 'success').then(() => {
+          Swal.fire('Success!', 'Validation Data Success !', 'success').then(() => {
             dispatch(actions.getPotentialCustomer());
             dispatch(redux.actions.getStore());
             window.location.reload();

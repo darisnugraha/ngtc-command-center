@@ -463,9 +463,9 @@ const OCPDF = (data, head) => {
   finalY = doc.lastAutoTable.finalY + 5;
 
   let rowDesc = [
-    [{ content: `2. Waktu Pengiriman` }, { content: head.waktu_pengiriman }],
-    [{ content: `3. Sistem Pembayaran` }, { content: head.sistem_pembayaran }],
-    [{ content: `4. Keterangan` }, { content: head.keterangan }],
+    [{ content: `2. Waktu Pengiriman` }, { content: head.waktu_pengiriman || '-' }],
+    [{ content: `3. Sistem Pembayaran` }, { content: head.sistem_pembayaran || '-' }],
+    [{ content: `4. Keterangan` }, { content: head.keterangan || '-' }],
   ];
   rowDesc.push();
 

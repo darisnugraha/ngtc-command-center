@@ -75,13 +75,15 @@ export const actions = {
       const dataHead = {
         tgl_awal: startDate,
         tgl_akhir: endDate,
-        no_order_konfirmasi: data.no_oc.value || data.no_oc,
-        kode_toko: data.central_store.value || data.central_store,
-        kode_cabang: data.branch_store || data.branch_store,
+        no_order_konfirmasi: data.no_oc.value === undefined ? data.no_oc : data.no_oc.value,
+        kode_toko:
+          data.central_store.value === undefined ? data.central_store : data.central_store.value,
+        kode_cabang:
+          data.branch_store.value === undefined ? data.branch_store : data.branch_store.value,
       };
 
       AxiosGet(
-        `order-confirmation/report?startDate=${startDate}&endDate=${endDate}&no_order_konfirmasi=${data.no_oc}&kode_toko=${data.central_store}&kode_cabang=${data.branch_store}`
+        `order-confirmation/report?startDate=${startDate}&endDate=${endDate}&no_order_konfirmasi=${dataHead.no_order_konfirmasi}&kode_toko=${dataHead.kode_toko}&kode_cabang=${dataHead.kode_cabang}`
       ).then((res) => {
         const dataDecrypt = doDecryptData(res.data, [
           'status',

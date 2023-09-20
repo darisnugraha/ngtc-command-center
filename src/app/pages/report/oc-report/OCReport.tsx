@@ -11,7 +11,9 @@ import OCRecapReportExcel from './component/OCRecapExcel.jsx';
 import OCDetailPDF from './component/OCDetailPDF.jsx';
 import OCDetailReportExcel from './component/OCDetailExcel.jsx';
 
-const mapState = (state: RootState) => ({ auth: state.modal });
+const mapState = (state: RootState) => ({
+  auth: state.modal,
+});
 const connector = connect(mapState);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

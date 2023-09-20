@@ -8,13 +8,16 @@ import { SelectDateRange } from '../../../../modules/redux-form/DatePicker';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
 import * as redux from '../redux/OCReportRedux';
 import AddOCReportValidation from '../validation/OCReportValidation';
+import { getToday } from '../../../../../setup/function.js';
 
 interface Props {}
 
 // eslint-disable-next-line
 const mapState = (state: RootState) => {
   return {
-    initialValues: {},
+    initialValues: {
+      date: [getToday(), getToday()],
+    },
   };
 };
 

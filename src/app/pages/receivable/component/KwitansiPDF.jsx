@@ -3,6 +3,7 @@ import 'jspdf-autotable';
 import { toAbsoluteUrl } from '../../../../_metronic/helpers';
 import angkaTerbilang from '@develoka/angka-terbilang-js';
 import moment from 'moment';
+import { isPos } from '../../../../setup/function';
 
 const KwitansiPDF = (data, head) => {
   const doc = new jsPDF('l', 'mm', 'a4');
@@ -63,11 +64,14 @@ const KwitansiPDF = (data, head) => {
       align: 'center',
     });
   }
-  const string = doc.output('bloburl');
-  const x = window.open();
-  x.document.open();
-  x.document.write(
-    `<html>
+  if (isPos()) {
+    doc.save(`${data[0].bayar_rp}.pdf`);
+  } else {
+    const string = doc.output('bloburl');
+    const x = window.open();
+    x.document.open();
+    x.document.write(
+      `<html>
     <head>
     <title>Kwitansi</title>
     </head>
@@ -75,7 +79,8 @@ const KwitansiPDF = (data, head) => {
     <embed width='100%' height='100%'src='${string}'></embed>
     </body>
     </html>`
-  );
+    );
+  }
 };
 
 export default KwitansiPDF;

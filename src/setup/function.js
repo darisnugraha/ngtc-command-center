@@ -74,3 +74,33 @@ export const NumberOnly = (value, previousValue) => {
 };
 
 export const upper = (value) => value && value.toUpperCase();
+
+export const getToday = (indo) => {
+  return indo
+    ? ('0' + new Date().getDate()).slice(-2) +
+        '-' +
+        ('0' + (new Date().getMonth() + 1)).slice(-2) +
+        '-' +
+        new Date().getFullYear()
+    : new Date().getFullYear() +
+        '-' +
+        ('0' + (new Date().getMonth() + 1)).slice(-2) +
+        '-' +
+        ('0' + new Date().getDate()).slice(-2);
+};
+
+export const isPos = () => {
+  // const version = process.env.REACT_APP_VERSION;
+  const ua = navigator.userAgent;
+
+  if (
+    /(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua) &&
+    /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
+      ua
+    )
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};

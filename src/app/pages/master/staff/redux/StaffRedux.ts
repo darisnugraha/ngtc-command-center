@@ -66,7 +66,7 @@ export const actions = {
         kode_staff: data.staff_code,
         nama_staff: data.staff_name,
         kode_divisi: data.division.value || data.division,
-        nama_bank: data.bank || '-',
+        nama_bank: data.bank.value === undefined ? data.bank : data.bank.value,
         telepon: data.telephone,
         no_rekening: data.account_number || '-',
       };
@@ -156,7 +156,7 @@ export const actions = {
         kode_staff: data.staff_code,
         nama_staff: data.staff_name,
         kode_divisi: data.division.value || data.division,
-        nama_bank: data.bank || '-',
+        nama_bank: data.bank.value === undefined ? data.bank : data.bank.value,
         telepon: data.telephone,
         no_rekening: data.account_number || '-',
       };

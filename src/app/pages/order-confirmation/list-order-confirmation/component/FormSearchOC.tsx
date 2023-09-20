@@ -1,12 +1,13 @@
 import moment from 'moment';
 import React, { useState } from 'react';
-import { connect, useSelector } from 'react-redux';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import { Field, InjectedFormProps, change, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup/index.js';
 import SubmitButton from '../../../../modules/button';
 import { SelectDateRange } from '../../../../modules/redux-form/DatePicker';
 // import { RenderField } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
+import { RenderField } from '../../../../modules/redux-form/BasicInput';
 
 interface Props {}
 
@@ -25,6 +26,7 @@ const mapState = (state: RootState) => {
 
 const FormSearchOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const { handleSubmit } = props;
+  const dispatch = useDispatch();
   // eslint-disable-next-line
   const [startDate, setStartDate] = useState(new Date());
   // eslint-disable-next-line
@@ -114,46 +116,86 @@ const FormSearchOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
         </div>
         <div className='col-lg-6'>
           <Field
-            name='staff_name'
+            name='staff_name_list'
             type='text'
             component={RenderFieldSelect}
             options={listStaff}
             label='Staff Name'
             placeHolder='Select Staff Name'
             defaultValue={{ value: 'all', label: 'All' }}
+            onChange={(e: any) => dispatch(change('FormSearchOC', 'staff_name', e.value))}
+          />
+        </div>
+        <div className='d-none'>
+          <Field
+            name='staff_name'
+            type='text'
+            component={RenderField}
+            label='ID'
+            placeHolder='Insert ID'
           />
         </div>
         <div className='col-lg-6'>
           <Field
-            name='no_oc'
+            name='no_oc_list'
             type='text'
             component={RenderFieldSelect}
             options={listOC}
             label='No OC'
             placeHolder='Select No OC'
             defaultValue={{ value: 'all', label: 'All' }}
+            onChange={(e: any) => dispatch(change('FormSearchOC', 'no_oc', e.value))}
+          />
+        </div>
+        <div className='d-none'>
+          <Field
+            name='no_oc'
+            type='text'
+            component={RenderField}
+            label='ID'
+            placeHolder='Insert ID'
           />
         </div>
         <div className='col-lg-6'>
           <Field
-            name='central_store_name'
+            name='central_store_name_list'
             type='text'
             component={RenderFieldSelect}
             options={listStore}
             label='Central Store'
             placeHolder='Select Central Store'
             defaultValue={{ value: 'all', label: 'All' }}
+            onChange={(e: any) => dispatch(change('FormSearchOC', 'central_store_name', e.value))}
+          />
+        </div>
+        <div className='d-none'>
+          <Field
+            name='central_store_name'
+            type='text'
+            component={RenderField}
+            label='ID'
+            placeHolder='Insert ID'
           />
         </div>
         <div className='col-lg-6'>
           <Field
-            name='status_payment'
+            name='status_payment_list'
             type='text'
             component={RenderFieldSelect}
             options={StatusPayment}
             label='Status Payment'
             placeHolder='Select Status Payment'
             defaultValue={{ value: 'all', label: 'All' }}
+            onChange={(e: any) => dispatch(change('FormSearchOC', 'status_payment', e.value))}
+          />
+        </div>
+        <div className='d-none'>
+          <Field
+            name='status_payment'
+            type='text'
+            component={RenderField}
+            label='ID'
+            placeHolder='Insert ID'
           />
         </div>
       </div>

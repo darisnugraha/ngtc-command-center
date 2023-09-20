@@ -97,39 +97,43 @@ const ValidationPayment: FC<PropsFromRedux> = () => {
       headerClasses: 'ps-4 min-w-100px rounded-end',
       formatter: (cell, row) => {
         return (
-          <>
-            <button
-              type='button'
-              onClick={() => {
-                // eslint-disable-next-line
-                dispatch(redux.actions.getBuktiBayar(row.no_piutang));
-              }}
-              className='btn btn-bg-light btn-active-color-primary btn-sm me-1'
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <span
-                  className='spinner-border spinner-border-sm'
-                  style={{ marginRight: '10px' }}
-                  role='status'
-                  aria-hidden='true'
-                />
-              ) : null}
-              Proof Of Payment{' '}
-              <KTSVG path='/media/icons/duotune/finance/fin002.svg' className='svg-icon-3' />
-            </button>
-            <button
-              type='button'
-              onClick={() => {
-                // eslint-disable-next-line
-                dispatch(redux.actions.validationPayment(row.no_piutang));
-              }}
-              className='btn btn-bg-light btn-active-color-success btn-sm me-1'
-            >
-              Validation{' '}
-              <KTSVG path='/media/icons/duotune/arrows/arr016.svg' className='svg-icon-3' />
-            </button>
-          </>
+          <div className='row'>
+            <div className='col-lg-12 mb-2'>
+              <button
+                type='button'
+                onClick={() => {
+                  // eslint-disable-next-line
+                  dispatch(redux.actions.getBuktiBayar(row.no_piutang));
+                }}
+                className='btn btn-bg-light btn-active-color-primary btn-sm me-1'
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <span
+                    className='spinner-border spinner-border-sm'
+                    style={{ marginRight: '10px' }}
+                    role='status'
+                    aria-hidden='true'
+                  />
+                ) : null}
+                Proof Of Payment{' '}
+                <KTSVG path='/media/icons/duotune/finance/fin002.svg' className='svg-icon-3' />
+              </button>
+            </div>
+            <div className='col-lg-12'>
+              <button
+                type='button'
+                onClick={() => {
+                  // eslint-disable-next-line
+                  dispatch(redux.actions.validationPayment(row.no_piutang));
+                }}
+                className='btn btn-bg-light btn-active-color-success btn-sm me-1'
+              >
+                Validation{' '}
+                <KTSVG path='/media/icons/duotune/arrows/arr016.svg' className='svg-icon-3' />
+              </button>
+            </div>
+          </div>
         );
       },
     },

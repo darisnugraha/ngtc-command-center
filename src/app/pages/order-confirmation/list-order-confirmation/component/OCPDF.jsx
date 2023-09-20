@@ -2,6 +2,7 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import moment from 'moment';
 import { toAbsoluteUrl } from '../../../../../_metronic/helpers';
+import { isPos } from '../../../../../setup/function';
 
 const OCPDF = (data, head) => {
   const doc = new jsPDF('p', 'mm', 'letter');
@@ -694,19 +695,23 @@ const OCPDF = (data, head) => {
     var imgData = toAbsoluteUrl('/media/kop/footer.png');
     doc.addImage(imgData, 'PNG', 14, verticalPos, pageWidth - 28, 25);
   }
-  const string = doc.output('bloburl');
-  const x = window.open();
-  x.document.open();
-  x.document.write(
-    `<html>
-    <head>
-    <title>Order Confirmation</title>
-    </head>
-    <body style='margin:0 !important'>
-    <embed width='100%' height='100%'src='${string}'></embed>
-    </body>
-    </html>`
-  );
+  if (isPos()) {
+    doc.save(`${data[0].no_order_konfirmasi}.pdf`);
+  } else {
+    const string = doc.output('bloburl');
+    const x = window.open();
+    x.document.open();
+    x.document.write(
+      `<html>
+      <head>
+      <title>Order Confirmation</title>
+      </head>
+      <body style='margin:0 !important'>
+      <embed width='100%' height='100%'src='${string}'></embed>
+      </body>
+      </html>`
+    );
+  }
 };
 
 export default OCPDF;

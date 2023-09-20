@@ -2,6 +2,7 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 // import { toAbsoluteUrl } from '../../../../../_metronic/helpers';
 import moment from 'moment';
+import { isPos } from '../../../../../setup/function';
 
 const OCRecapReportPDF = (data, head) => {
   const doc = new jsPDF('l', 'mm', 'a4');
@@ -124,11 +125,14 @@ const OCRecapReportPDF = (data, head) => {
       align: 'center',
     });
   }
-  const string = doc.output('bloburl');
-  const x = window.open();
-  x.document.open();
-  x.document.write(
-    `<html>
+  if (isPos()) {
+    doc.save('ORDER_CONFIRMATION_REPORT_REKAP.pdf');
+  } else {
+    const string = doc.output('bloburl');
+    const x = window.open();
+    x.document.open();
+    x.document.write(
+      `<html>
     <head>
     <title>Order Confirmation</title>
     </head>
@@ -136,7 +140,8 @@ const OCRecapReportPDF = (data, head) => {
     <embed width='100%' height='100%'src='${string}'></embed>
     </body>
     </html>`
-  );
+    );
+  }
 };
 
 export default OCRecapReportPDF;

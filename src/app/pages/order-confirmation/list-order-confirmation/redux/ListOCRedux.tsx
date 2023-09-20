@@ -216,7 +216,7 @@ export const actions = {
             const row = {
               kode_diskon: element.kode_diskon,
               nama_diskon: element.nama_diskon,
-              persentase: element.persentase,
+              persentase: element.persentase * 100,
               sub_total: element.sub_total,
             };
             dataDiskon.push(row);
@@ -513,7 +513,7 @@ export const actions = {
               change(
                 'FormPrintPDF',
                 'waktu_pengiriman',
-                '60 Hari setelah order konfirmasi disetujui'
+                '... Hari setelah order konfirmasi disetujui'
               )
             );
           }
@@ -526,7 +526,7 @@ export const actions = {
               change(
                 'FormPrintPDF',
                 'sistem_pembayaran',
-                '60% pada saat order konfirmasi disetujui'
+                '...% pada saat order konfirmasi disetujui'
               )
             );
           }
@@ -834,7 +834,7 @@ export const actions = {
       const state = getState();
       const type = state.listorderconfirmation.typeProduct;
       if (type === 'SOFTWARE') {
-        AxiosGet(`product/by-kode/${code}`).then((res) => {
+        AxiosGet(`product/by-kode?kode_produk=${code}`).then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'kode_produk',
             'status',
@@ -855,7 +855,7 @@ export const actions = {
           dispatch(change('FormEditProductList', 'type', dataDecrypt[0].type || '-'));
         });
       } else if (type === 'CONSUMABLE') {
-        AxiosGet(`consumable/by-kode/${code}`).then((res) => {
+        AxiosGet(`consumable/by-kode?kode_consumable=${code}`).then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'kode_consumable',
             'kode_supplier',
@@ -877,7 +877,7 @@ export const actions = {
           dispatch(change('FormEditProductList', 'type', dataDecrypt[0].type || '-'));
         });
       } else if (type === 'HARDWARE') {
-        AxiosGet(`hardware/by-kode/${code}`).then((res) => {
+        AxiosGet(`hardware/by-kode?kode_hardware=${code}`).then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'kode_hardware',
             'kode_supplier',
@@ -928,15 +928,15 @@ export const actions = {
   searchAction: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
       dispatch(utility.actions.showLoadingButton());
-
       const onSendData = {
         startDate: moment(data.date[0]).format('yyyy-MM-DD'),
         endDate: moment(data.date[1]).format('yyyy-MM-DD'),
-        kode_staff: data.staff_name.value || data.staff_name,
-        no_order_konfirmasi: data.no_oc.value || data.no_oc,
-        kode_toko: data.central_store_name.value || data.central_store_name,
-        status: data.status_payment.value || data.status_payment,
+        kode_staff: data.staff_name,
+        no_order_konfirmasi: data.no_oc,
+        kode_toko: data.central_store_name,
+        status: data.status_payment,
       };
+
       AxiosGet(
         `order-confirmation/filter?startDate=${onSendData.startDate}&endDate=${onSendData.endDate}&no_order_konfirmasi=${onSendData.no_order_konfirmasi}&kode_toko=${onSendData.kode_toko}&kode_staff=${onSendData.kode_staff}&status=${onSendData.status}`
       )
@@ -974,7 +974,7 @@ export const actions = {
         })
         .catch((err) => {
           const dataErr = err.response?.data;
-          toast.error(dataErr.message || 'Error');
+          toast.error(dataErr?.message || 'Error');
           dispatch(utility.actions.hideLoading());
         });
     };

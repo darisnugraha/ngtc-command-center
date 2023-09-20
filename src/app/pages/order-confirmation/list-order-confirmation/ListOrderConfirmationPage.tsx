@@ -128,7 +128,7 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
       formatter: (cell, row) => {
         return (
           <div className='row'>
-            <div className='col-lg-2'>
+            <div className='col-lg-4 bt-2'>
               <button
                 type='button'
                 onClick={() => {
@@ -140,7 +140,7 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
                 <i className='bi bi-eye-fill' />
               </button>
             </div>
-            <div className='col-lg-2'>
+            <div className='col-lg-4 bt-2'>
               <button
                 type='button'
                 onClick={() => {
@@ -153,7 +153,7 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
                 <KTSVG path='/media/icons/duotune/general/gen005.svg' className='svg-icon-3' />
               </button>
             </div>
-            <div className='col-lg-2'>
+            <div className='col-lg-4 mb-2'>
               <button
                 type='button'
                 onClick={() => {
@@ -166,7 +166,7 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
                 <KTSVG path='/media/icons/duotune/art/art005.svg' className='svg-icon-3' />
               </button>
             </div>
-            <div className='col-lg-2'>
+            <div className='col-lg-4'>
               <button
                 type='button'
                 onClick={() => {
@@ -179,7 +179,7 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
                 <KTSVG path='/media/icons/duotune/general/gen041.svg' className='svg-icon-3' />
               </button>
             </div>
-            <div className='col-lg-2'>
+            <div className='col-lg-4'>
               <button
                 type='button'
                 onClick={() => {
@@ -191,7 +191,7 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
                 <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
               </button>
             </div>
-            <div className='col-lg-2'>
+            <div className='col-lg-4'>
               <button
                 type='button'
                 onClick={() => {

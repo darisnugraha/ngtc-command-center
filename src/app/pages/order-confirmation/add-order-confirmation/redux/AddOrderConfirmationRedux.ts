@@ -1022,8 +1022,12 @@ export const actions = {
                               const desc = {
                                 header_desc:
                                   'Sebelumnya kami ucapkan terima kasih atas kerjasama yang telah terjalin selama ini. Bersama ini kami sampaikan Order Konfirmasi Harga Software Nagatech Gold Store Solution web based (Online) dengan kondisi sbb :',
-                                footer_desc:
+                                waktu_pengiriman: '... Hari setelah order konfirmasi disetujui',
+                                sistem_pembayaran: '...% pada saat order konfirmasi disetujui',
+                                keterangan:
                                   'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan',
+                                footer_desc:
+                                  'Demikianlah Order Konfirmasi ini kami sampaikan. Apabila setuju dengan kondisi tersebut diatas, mohon Order Konfirmasi ini ditandatangani dan dikirimkan kembali kepada kami.',
                               };
                               const pdf64 = OC(dataDecrypt, desc);
                               const file = dataURLtoPDFFile(

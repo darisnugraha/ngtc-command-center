@@ -21,6 +21,7 @@ export const actionTypes = {
   GetStoreByCode: '[POTENTIALCUSTOMER] Get Data Store By Code Potential Customer',
   GetBranchByCode: '[POTENTIALCUSTOMER] Get Data Branch By Code Potential Customer',
   CloseModal: '[POTENTIALCUSTOMER] Close Modal Potential Customer',
+  setDataEdit: '[POTENTIALCUSTOMER] Set Data Edit',
 };
 export interface IPotentialCustomerState {
   isSending?: boolean;
@@ -28,6 +29,7 @@ export interface IPotentialCustomerState {
   feedbackStoreDetail?: any;
   feedbackBranchList?: Array<any>;
   feedbackBranchDetail?: any;
+  dataEdit?: any;
 }
 
 const initialPotentialCustomerState: IPotentialCustomerState = {
@@ -36,6 +38,7 @@ const initialPotentialCustomerState: IPotentialCustomerState = {
   feedbackStoreDetail: undefined,
   feedbackBranchList: [],
   feedbackBranchDetail: undefined,
+  dataEdit: undefined,
 };
 
 export const reducer = persistReducer(
@@ -64,6 +67,12 @@ export const reducer = persistReducer(
           feedbackBranchDetail: undefined,
           feedbackStoreDetail: undefined,
           feedbackBranchList: [],
+        };
+      }
+      case actionTypes.setDataEdit: {
+        return {
+          ...state,
+          dataEdit: action.payload?.dataEdit,
         };
       }
 
@@ -234,6 +243,10 @@ export const actions = {
       dispatch(
         change('FormEditPotentialCustomer', 'correspondence_address', data.alamat_korespondensi)
       );
+      dispatch({
+        type: actionTypes.setDataEdit,
+        payload: { dataEdit: data },
+      });
     };
   },
   deletePotentialCustomer: (id: string) => {

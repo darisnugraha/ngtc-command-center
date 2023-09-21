@@ -216,8 +216,8 @@ export const actions = {
             const row = {
               kode_diskon: element.kode_diskon,
               nama_diskon: element.nama_diskon,
-              persentase: element.persentase * 100,
-              sub_total: element.sub_total,
+              persentase: element.persentase * 100 || 0,
+              sub_total: element.sub_total || 0,
             };
             dataDiskon.push(row);
           });
@@ -339,8 +339,8 @@ export const actions = {
               const row = {
                 kode_diskon: element.kode_diskon,
                 nama_diskon: element.nama_diskon,
-                persentase: element.persentase / 100,
-                sub_total: element.diskon_rp,
+                persentase: element.persentase / 100 || 0,
+                sub_total: element.diskon_rp || 0,
               };
               dataDisc.push(row);
             });

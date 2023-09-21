@@ -17,6 +17,9 @@ const FormEditPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props
   const bool = true;
 
   const dataStaff: any = useSelector<RootState>(({ staff }) => staff.feedback);
+  const dataEdit: any = useSelector<RootState>(
+    ({ potentialcustomer }) => potentialcustomer.dataEdit
+  );
 
   return (
     <form onSubmit={handleSubmit}>
@@ -41,6 +44,7 @@ const FormEditPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props
             onChange={(e: any) => {
               dispatch(redux.actions.getStaffDetailByCode(e.value));
             }}
+            defaultValue={{ value: dataEdit.kode_staff, label: dataEdit.nama_staff }}
           />
         </div>
         <div className='col-lg-6'>

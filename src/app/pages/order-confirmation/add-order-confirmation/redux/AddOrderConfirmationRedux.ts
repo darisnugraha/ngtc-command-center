@@ -227,7 +227,7 @@ export const actions = {
       const state = getState();
       const type = state.addorderconfirmation.typeProduct;
       if (type === 'SOFTWARE') {
-        AxiosGet(`product/by-kode/${code}`).then((res) => {
+        AxiosGet(`product/by-kode?kode_produk=${code}`).then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'kode_produk',
             'status',
@@ -248,7 +248,7 @@ export const actions = {
           dispatch(change('FormAddProductOC', 'sub_total', dataDecrypt[0].harga * 1));
         });
       } else if (type === 'CONSUMABLE') {
-        AxiosGet(`consumable/by-kode/${code}`).then((res) => {
+        AxiosGet(`consumable/by-kode?kode_consumable=${code}`).then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'kode_consumable',
             'kode_supplier',
@@ -270,7 +270,7 @@ export const actions = {
           dispatch(change('FormAddProductOC', 'sub_total', dataDecrypt[0].harga * 1));
         });
       } else if (type === 'HARDWARE') {
-        AxiosGet(`hardware/by-kode/${code}`).then((res) => {
+        AxiosGet(`hardware/by-kode?kode_hardware=${code}`).then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'kode_hardware',
             'kode_supplier',

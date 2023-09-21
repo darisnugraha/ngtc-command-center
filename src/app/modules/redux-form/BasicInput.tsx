@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-expressions */
 import clsx from 'clsx';
 import React, { FC } from 'react';
+import { isPos } from '../../../setup/function.js';
 
 export const RenderField: FC = (field: any) => {
   // const [value, setValue] = useState('');
@@ -132,9 +133,11 @@ export const RenderTextArea = (field: any) => (
         rows={4}
         readOnly={field.readOnly}
         onKeyPress={(e) => {
-          const keyCode = e.which || e.keyCode;
-          if (keyCode === 13 && !e.shiftKey) {
-            e.preventDefault();
+          if (!isPos()) {
+            const keyCode = e.which || e.keyCode;
+            if ((keyCode === 13 || e.code === 'enter' || e.code === 'Enter') && !e.shiftKey) {
+              e.preventDefault();
+            }
           }
         }}
         defaultValue={field.defaultValue}

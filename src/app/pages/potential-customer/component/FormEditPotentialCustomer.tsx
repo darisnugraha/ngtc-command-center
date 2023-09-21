@@ -42,7 +42,7 @@ const FormEditPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props
             label='Staff'
             placeHolder='Select Staff'
             onChange={(e: any) => {
-              dispatch(redux.actions.getStaffDetailByCode(e.value));
+              dispatch(redux.actions.getStaffDetailByCodeEdit(e.value));
             }}
             defaultValue={{ value: dataEdit.kode_staff, label: dataEdit.nama_staff }}
           />

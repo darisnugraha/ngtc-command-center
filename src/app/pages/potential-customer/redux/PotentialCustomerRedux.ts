@@ -354,6 +354,35 @@ export const actions = {
       });
     };
   },
+  getStaffDetailByCodeEdit: (code: string) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      AxiosGet(`staff/by-kode/${code}`).then((res) => {
+        const dataDecrypt = doDecryptData(res.data, [
+          'kode_staff',
+          'status',
+          '_id',
+          'input_date',
+          'kode_divisi',
+        ]);
+        AxiosGet(`division/by-kode/${dataDecrypt[0].kode_divisi}`).then((resDivisi) => {
+          const dataDecryptDivision = doDecryptData(resDivisi.data, [
+            'kode_divisi',
+            'status',
+            '_id',
+            'input_date',
+          ]);
+          dispatch(change('FormEditPotentialCustomer', 'staff', code));
+          dispatch(change('FormEditPotentialCustomer', 'staff_name', dataDecrypt[0].nama_staff));
+          dispatch(
+            change('FormEditPotentialCustomer', 'division', dataDecryptDivision[0].nama_divisi)
+          );
+          dispatch(
+            change('FormEditPotentialCustomer', 'division_code', dataDecryptDivision[0].kode_divisi)
+          );
+        });
+      });
+    };
+  },
   closeModal: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch({ type: actionTypes.CloseModal });

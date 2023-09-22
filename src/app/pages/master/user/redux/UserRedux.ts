@@ -99,7 +99,7 @@ export const actions = {
         user_name: data.user_name,
         user_id: data.user_id,
         password: data.password,
-        level: data.level.value || data.level,
+        level: data.level.value === undefined ? data.level : data.level.value,
       };
       AxiosPostLogin('auth/register', onSendData)
         .then(() => {
@@ -119,7 +119,7 @@ export const actions = {
       dispatch(utility.actions.showLoadingButton());
       const onSendData = {
         user_name: data.user_name,
-        level: data.level.value || data.level,
+        level: data.level.value === undefined ? data.level : data.level.value,
       };
       AxiosPut(`users/${data.id}`, onSendData)
         .then(() => {

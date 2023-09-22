@@ -5,7 +5,7 @@ import { toAbsoluteUrl } from '../../../../../_metronic/helpers';
 import { isPos } from '../../../../../setup/function';
 
 const OCPDF = (data, head) => {
-  const doc = new jsPDF('p', 'mm', 'letter');
+  const doc = new jsPDF('p', 'mm', [210, 297 * 2]);
   doc.setProperties({
     title: 'Order Confirmation',
   });
@@ -22,50 +22,108 @@ const OCPDF = (data, head) => {
   doc.setFont(undefined, 'bold');
   let toko = '';
   if (data[0].nama_cabang === 'PUSAT') {
-    toko = data[0].nama_toko;
+    toko = data[0].nama_toko.split(' ');
+    let tokobarisSatu = '';
+    let tokobarisDua = '';
+    if (toko.length > 4) {
+      for (let index = 0; index < toko.length; index++) {
+        if (index > 2) {
+          tokobarisDua += toko[index] + ' ';
+        } else {
+          tokobarisSatu += toko[index] + ' ';
+        }
+      }
+      doc.text(tokobarisSatu, 15, final + 20);
+      doc.text(tokobarisDua, 15, final + 24);
+    } else {
+      doc.text(data[0].nama_toko, 15, final + 20);
+    }
   } else {
-    toko = data[0].nama_cabang;
+    toko = data[0].nama_cabang.split(' ');
+    let tokobarisSatu = '';
+    let tokobarisDua = '';
+    if (toko.length > 4) {
+      for (let index = 0; index < toko.length; index++) {
+        if (index > 2) {
+          tokobarisDua += toko[index] + ' ';
+        } else {
+          tokobarisSatu += toko[index] + ' ';
+        }
+      }
+      doc.text(tokobarisSatu, 15, final + 20);
+      doc.text(tokobarisDua, 15, final + 25);
+    } else {
+      doc.text(data[0].nama_cabang, 15, final + 20);
+    }
   }
-  doc.text(toko, 15, final + 20);
+
   doc.setFont(undefined, 'normal');
-  if (data[0].alamat_cabang.length > 55) {
-    doc.text(data[0].alamat_cabang.slice(0, 56), 15, final + 25);
-    doc.text(data[0].alamat_cabang.slice(56, data[0].alamat_cabang.length), 15, final + 30);
-    doc.text(data[0].kota, 15, final + 37);
-    doc.text('Telp : ', 15, final + 42);
-    doc.text(data[0].telepon, 23, final + 42);
+  let tambahanY = 0;
+  const alamat = data[0].alamat_cabang.split(' ');
+  console.log(alamat);
+  let alamatbarissatu = '';
+  let alamatbarisdua = '';
+  let alamatbaristiga = '';
+  if (alamat.length > 5) {
+    for (let index = 0; index < alamat.length; index++) {
+      if (index < 4) {
+        alamatbarissatu += alamat[index] + ' ';
+      } else if (index < 8) {
+        alamatbarisdua += alamat[index] + ' ';
+      } else {
+        alamatbaristiga += alamat[index] + ' ';
+      }
+    }
+    doc.text(alamatbarissatu, 15, final + 30);
+    doc.text(alamatbarisdua, 15, final + 34);
+    if (alamatbaristiga !== '' || alamatbaristiga !== ' ') {
+      tambahanY = 5;
+      doc.text(alamatbaristiga, 15, final + 38);
+    }
+    doc.text(data[0].kota, 15, final + 42 + tambahanY);
+    doc.text('Telp : ', 15, final + 47 + tambahanY);
+    doc.text(data[0].telepon, 23, final + 47 + tambahanY);
   } else {
-    doc.text(data[0].alamat_cabang, 15, final + 25);
-    doc.text(data[0].kota, 15, final + 30);
-    doc.text('Telp : ', 15, final + 40);
-    doc.text(data[0].telepon, 23, final + 40);
+    if (data[0].alamat_cabang.length > 55) {
+      doc.text(data[0].alamat_cabang.slice(0, 56), 15, final + 30);
+      doc.text(data[0].alamat_cabang.slice(56, data[0].alamat_cabang.length), 15, final + 35);
+      doc.text(data[0].kota, 15, final + 42);
+      doc.text('Telp : ', 15, final + 47);
+      doc.text(data[0].telepon, 23, final + 47);
+    } else {
+      doc.text(data[0].alamat_cabang, 15, final + 25);
+      doc.text(data[0].kota, 15, final + 35);
+      doc.text('Telp : ', 15, final + 40);
+      doc.text(data[0].telepon, 23, final + 40);
+      tambahanY = -5;
+    }
   }
   doc.setFont(undefined, 'bold');
-  doc.text('UP : ', 15, final + 50);
-  doc.text(data[0].nama_customer, 23, final + 50);
-  doc.text('Order Konfirmasi', 93, final + 55);
-  doc.line(92, final + 56, 118, final + 56);
+  doc.text('UP : ', 15, final + 55 + tambahanY);
+  doc.text(data[0].nama_customer, 23, final + 55 + tambahanY);
+  doc.text('Order Konfirmasi', 93, final + 60 + tambahanY);
+  doc.line(92, final + 61 + tambahanY, 118, final + 61 + tambahanY);
   doc.setFont(undefined, 'normal');
   if (data[0].no_order_konfirmasi.includes('REVISI')) {
-    doc.text(data[0].no_order_konfirmasi, 85, final + 60);
+    doc.text(data[0].no_order_konfirmasi, 85, final + 65 + tambahanY);
   } else {
-    doc.text(data[0].no_order_konfirmasi, 90, final + 60);
+    doc.text(data[0].no_order_konfirmasi, 90, final + 65 + tambahanY);
   }
-  doc.text('Dengan Hormat ,', 23, final + 65);
+  doc.text('Dengan Hormat ,', 23, final + 70 + tambahanY);
   const headerDesc = head.header_desc;
   const jumlah_header_desc = headerDesc.length;
   if (jumlah_header_desc > 0) {
-    doc.text(headerDesc.slice(0, 127), 26, final + 70);
+    doc.text(headerDesc.slice(0, 127), 26, final + 75 + tambahanY);
   }
   if (jumlah_header_desc > 157) {
-    doc.text(headerDesc.slice(127, 254), 15, final + 75);
+    doc.text(headerDesc.slice(127, 254), 15, final + 80 + tambahanY);
   }
   // doc.text(head.header_desc, 26, 70);
 
   let tableRows = [];
   let tableColumn = [];
 
-  let finalY = final + 80;
+  let finalY = final + 85 + tambahanY;
 
   tableColumn = [
     [
@@ -494,11 +552,11 @@ const OCPDF = (data, head) => {
   });
   rowDesc = [];
   finalY = doc.lastAutoTable.finalY + 5;
-  if (finalY > 195) {
-    doc.addPage();
-    doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
-    finalY = 35;
-  }
+  // if (finalY > 195) {
+  //   doc.addPage();
+  //   doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
+  //   finalY = 35;
+  // }
   let rowFo = [
     [
       {
@@ -512,7 +570,7 @@ const OCPDF = (data, head) => {
     ],
     [{ content: `\n\n\n\n` }, { content: `\n\n\n\n` }],
     [
-      { content: `Budi Kristiyanto`, styles: { halign: 'left', cellPadding: { left: 9 } } },
+      { content: data[0].nama_staff, styles: { halign: 'left', cellPadding: { left: 9 } } },
       { content: data[0].nama_customer, styles: { halign: 'center' } },
     ],
     // [
@@ -606,10 +664,12 @@ const OCPDF = (data, head) => {
   tableColumnBank = [];
   finalTableY = doc.lastAutoTable.finalY + 5;
 
-  const pages = doc.internal.getNumberOfPages();
+  // const pages = doc.internal.getNumberOfPages();
   const pageWidth = doc.internal.pageSize.width;
-  const pageHeight = doc.internal.pageSize.height;
-  const verticalPos = pageHeight - 32;
+  // const pageHeight = doc.internal.pageSize.height;
+  // const verticalPos = pageHeight - 32;
+  var imgData = toAbsoluteUrl('/media/kop/footer.png');
+  doc.addImage(imgData, 'PNG', 14, finalTableY + 5, pageWidth - 28, 25);
 
   // doc.addPage();
   // doc.text(
@@ -685,16 +745,16 @@ const OCPDF = (data, head) => {
   // tableColumnBank = [];
   // finalTableY = doc.lastAutoTable.finalY + 5;
 
-  for (let j = 1; j < pages + 1; j += 1) {
-    const horizontalPos = pageWidth / 2;
-    const verticalPos = pageHeight - 32;
-    doc.setPage(j);
-    // doc.text(`${j} of ${pages}`, horizontalPos, verticalPos, {
-    //   align: 'center',
-    // });
-    var imgData = toAbsoluteUrl('/media/kop/footer.png');
-    doc.addImage(imgData, 'PNG', 14, verticalPos, pageWidth - 28, 25);
-  }
+  // for (let j = 1; j < pages + 1; j += 1) {
+  //   const horizontalPos = pageWidth / 2;
+  //   const verticalPos = pageHeight - 32;
+  //   doc.setPage(j);
+  //   // doc.text(`${j} of ${pages}`, horizontalPos, verticalPos, {
+  //   //   align: 'center',
+  //   // });
+  //   var imgData = toAbsoluteUrl('/media/kop/footer.png');
+  //   doc.addImage(imgData, 'PNG', 14, verticalPos, pageWidth - 28, 25);
+  // }
   if (isPos()) {
     doc.save(`${data[0].no_order_konfirmasi}.pdf`);
   } else {

@@ -515,7 +515,7 @@ const OCPDF = (data, head) => {
     ],
     [{ content: `\n\n\n\n` }, { content: `\n\n\n\n` }],
     [
-      { content: `Budi Kristiyanto`, styles: { halign: 'left', cellPadding: { left: 8 } } },
+      { content: data[0].nama_staff, styles: { halign: 'left', cellPadding: { left: 9 } } },
       { content: data[0].nama_customer, styles: { halign: 'center' } },
     ],
     // [

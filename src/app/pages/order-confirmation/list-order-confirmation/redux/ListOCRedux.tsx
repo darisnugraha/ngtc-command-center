@@ -344,10 +344,84 @@ export const actions = {
               };
               dataDisc.push(row);
             });
+            // Software
+            const totalSoftware = res
+              .filter((val: any) => val.jenis_produk === 'SOFTWARE')
+              .reduce((a: any, b: any) => a + b.harga * b.qty, 0);
+            const DiscountSoftware = dataDisc
+              .filter(
+                (value: any) => value.nama_diskon.includes('SOFTWARE') && value.persentase !== 0
+              )
+              .reduce((a: any, b: any) => a + b.persentase, 0);
+            const DiscountSoftwareRp = dataDisc
+              .filter(
+                (value: any) => value.nama_diskon.includes('SOFTWARE') && value.sub_total !== 0
+              )
+              .reduce((a: any, b: any) => a + b.sub_total, 0);
+            const grandSoftware =
+              totalSoftware - (totalSoftware * DiscountSoftware + DiscountSoftwareRp);
+            // Hardware
+            const totalHardware = res
+              .filter((val: any) => val.jenis_produk === 'HARDWARE')
+              .reduce((a: any, b: any) => a + b.harga * b.qty, 0);
+            const DiscountHardware = dataDisc
+              .filter(
+                (value: any) => value.nama_diskon.includes('HARDWARE') && value.persentase !== 0
+              )
+              .reduce((a: any, b: any) => a + b.persentase, 0);
+            const DiscountHardwareRp = dataDisc
+              .filter(
+                (value: any) => value.nama_diskon.includes('HARDWARE') && value.sub_total !== 0
+              )
+              .reduce((a: any, b: any) => a + b.sub_total, 0);
+            const grandHardware =
+              totalHardware - (totalHardware * DiscountHardware + DiscountHardwareRp);
+            // Consumable
+            const totalConsumable = res
+              .filter((val: any) => val.jenis_produk === 'CONSUMABLE')
+              .reduce((a: any, b: any) => a + b.harga * b.qty, 0);
+            const DiscountConsumable = dataDisc
+              .filter(
+                (value: any) => value.nama_diskon.includes('CONSUMABLE') && value.persentase !== 0
+              )
+              .reduce((a: any, b: any) => a + b.persentase, 0);
+            const DiscountConsumableRp = dataDisc
+              .filter(
+                (value: any) => value.nama_diskon.includes('CONSUMABLE') && value.sub_total !== 0
+              )
+              .reduce((a: any, b: any) => a + b.sub_total, 0);
+            const grandConsumable =
+              totalConsumable - (totalConsumable * DiscountConsumable + DiscountConsumableRp);
+
+            const grandTotal = grandSoftware + grandHardware + grandConsumable;
+            const diskonTotal = dataDisc
+              .filter(
+                (value: any) =>
+                  !value.nama_diskon.includes('SOFTWARE') &&
+                  !value.nama_diskon.includes('HARDWARE') &&
+                  !value.nama_diskon.includes('CONSUMABLE') &&
+                  !value.nama_diskon.includes('SUPPORT') &&
+                  !value.nama_diskon.includes('PRODUCTION') &&
+                  value.persentase !== 0
+              )
+              .reduce((a: any, b: any) => a + b.persentase, 0);
+            const diskonTotalRp = dataDisc
+              .filter(
+                (value: any) =>
+                  !value.nama_diskon.includes('SOFTWARE') &&
+                  !value.nama_diskon.includes('HARDWARE') &&
+                  !value.nama_diskon.includes('CONSUMABLE') &&
+                  !value.nama_diskon.includes('SUPPORT') &&
+                  !value.nama_diskon.includes('PRODUCTION') &&
+                  value.sub_total !== 0
+              )
+              .reduce((a: any, b: any) => a + b.sub_total, 0);
+            const grandDiskon = grandTotal - (grandTotal * diskonTotal + diskonTotalRp);
             const onSendData = {
               no_order_konfirmasi: dataOK.no_order_konfirmasi,
               detail_produk: res,
               detail_diskon: dataDisc,
+              total_harga: grandDiskon,
             };
             AxiosPut('order-confirmation/update/product', onSendData)
               .then(() => {

@@ -684,37 +684,37 @@ export const actions = {
           'jenis_ok',
           'jenis_produk',
         ]);
-        // const pdf64 = OC(dataDecrypt, data);
-        // const file = dataURLtoPDFFile(
-        //   pdf64,
-        //   `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
-        // );
-        // const onsend = {
-        //   no_order_konfirmasi: dataDecrypt[0]?.no_order_konfirmasi,
-        //   deskripsi_header: data.header_desc,
-        //   waktu_pengiriman: data.waktu_pengiriman,
-        //   sistem_pembayaran: data.sistem_pembayaran,
-        //   keterangan: data.keterangan,
-        //   deskripsi_footer: data.footer_desc,
-        // };
+        const pdf64 = OC(dataDecrypt, data);
+        const file = dataURLtoPDFFile(
+          pdf64,
+          `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+        );
+        const onsend = {
+          no_order_konfirmasi: dataDecrypt[0]?.no_order_konfirmasi,
+          deskripsi_header: data.header_desc,
+          waktu_pengiriman: data.waktu_pengiriman,
+          sistem_pembayaran: data.sistem_pembayaran,
+          keterangan: data.keterangan,
+          deskripsi_footer: data.footer_desc,
+        };
         OCPDF(dataDecrypt, data);
-        // AxiosPost('order-confirmation/save-desc', onsend)
-        //   .then(() => {
-        //     postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
-        //       .then(() => {
-        //         OCPDF(dataDecrypt, data);
-        //         dispatch(utility.actions.hideLoading());
-        //       })
-        //       .catch(() => {
-        //         OCPDF(dataDecrypt, data);
-        //         dispatch(utility.actions.hideLoading());
-        //       });
-        //   })
-        //   .catch((err) => {
-        //     const dataErr = err.response.data;
-        //     toast.error(dataErr.message);
-        //     dispatch(utility.actions.hideLoading());
-        //   });
+        AxiosPost('order-confirmation/save-desc', onsend)
+          .then(() => {
+            postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
+              .then(() => {
+                OCPDF(dataDecrypt, data);
+                dispatch(utility.actions.hideLoading());
+              })
+              .catch(() => {
+                OCPDF(dataDecrypt, data);
+                dispatch(utility.actions.hideLoading());
+              });
+          })
+          .catch((err) => {
+            const dataErr = err.response.data;
+            toast.error(dataErr.message);
+            dispatch(utility.actions.hideLoading());
+          });
       });
     };
   },

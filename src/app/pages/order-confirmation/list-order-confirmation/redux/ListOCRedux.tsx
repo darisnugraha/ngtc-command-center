@@ -684,36 +684,37 @@ export const actions = {
           'jenis_ok',
           'jenis_produk',
         ]);
-        const pdf64 = OC(dataDecrypt, data);
-        const file = dataURLtoPDFFile(
-          pdf64,
-          `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
-        );
-        const onsend = {
-          no_order_konfirmasi: dataDecrypt[0]?.no_order_konfirmasi,
-          deskripsi_header: data.header_desc,
-          waktu_pengiriman: data.waktu_pengiriman,
-          sistem_pembayaran: data.sistem_pembayaran,
-          keterangan: data.keterangan,
-          deskripsi_footer: data.footer_desc,
-        };
-        AxiosPost('order-confirmation/save-desc', onsend)
-          .then(() => {
-            postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
-              .then(() => {
-                OCPDF(dataDecrypt, data);
-                dispatch(utility.actions.hideLoading());
-              })
-              .catch(() => {
-                OCPDF(dataDecrypt, data);
-                dispatch(utility.actions.hideLoading());
-              });
-          })
-          .catch((err) => {
-            const dataErr = err.response.data;
-            toast.error(dataErr.message);
-            dispatch(utility.actions.hideLoading());
-          });
+        // const pdf64 = OC(dataDecrypt, data);
+        // const file = dataURLtoPDFFile(
+        //   pdf64,
+        //   `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`
+        // );
+        // const onsend = {
+        //   no_order_konfirmasi: dataDecrypt[0]?.no_order_konfirmasi,
+        //   deskripsi_header: data.header_desc,
+        //   waktu_pengiriman: data.waktu_pengiriman,
+        //   sistem_pembayaran: data.sistem_pembayaran,
+        //   keterangan: data.keterangan,
+        //   deskripsi_footer: data.footer_desc,
+        // };
+        OCPDF(dataDecrypt, data);
+        // AxiosPost('order-confirmation/save-desc', onsend)
+        //   .then(() => {
+        //     postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)
+        //       .then(() => {
+        //         OCPDF(dataDecrypt, data);
+        //         dispatch(utility.actions.hideLoading());
+        //       })
+        //       .catch(() => {
+        //         OCPDF(dataDecrypt, data);
+        //         dispatch(utility.actions.hideLoading());
+        //       });
+        //   })
+        //   .catch((err) => {
+        //     const dataErr = err.response.data;
+        //     toast.error(dataErr.message);
+        //     dispatch(utility.actions.hideLoading());
+        //   });
       });
     };
   },
@@ -908,7 +909,7 @@ export const actions = {
       const state = getState();
       const type = state.listorderconfirmation.typeProduct;
       if (type === 'SOFTWARE') {
-        AxiosGet(`product/by-kode?kode_produk=${code}`).then((res) => {
+        AxiosGet(`product/by-kode/${code}`).then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'kode_produk',
             'status',
@@ -929,7 +930,7 @@ export const actions = {
           dispatch(change('FormEditProductList', 'type', dataDecrypt[0].type || '-'));
         });
       } else if (type === 'CONSUMABLE') {
-        AxiosGet(`consumable/by-kode?kode_consumable=${code}`).then((res) => {
+        AxiosGet(`consumable/by-kode/${code}`).then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'kode_consumable',
             'kode_supplier',

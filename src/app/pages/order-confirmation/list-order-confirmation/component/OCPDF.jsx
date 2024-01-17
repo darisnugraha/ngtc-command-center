@@ -5,12 +5,19 @@ import { toAbsoluteUrl } from '../../../../../_metronic/helpers';
 import { isPos } from '../../../../../setup/function';
 
 const OCPDF = (data, head) => {
-  const doc = new jsPDF('p', 'mm', [210, 297 * 2]);
+  let topFooterRekening = 0;
+  let heightFooterRekening = 0;
+  let lastPositionTableItem = 0;
+  let heightDetailItemTable = 0;
+  let heightDescriptionTable = 0;
+  let heightFooterFollowUpTable = 0;
+  let grandTotalSoftware = 0;
+  let PersentaseSoftware = 0;
+  let DiskonSubTotal = 0;
+  const doc = new jsPDF('p', 'mm', [210, 297]);
   doc.setProperties({
     title: 'Order Confirmation',
   });
-  var imgData = toAbsoluteUrl('/media/kop/header.png');
-  doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
   let final = 20;
   doc.setFontSize(8);
   doc.text(
@@ -60,7 +67,6 @@ const OCPDF = (data, head) => {
   doc.setFont(undefined, 'normal');
   let tambahanY = 0;
   const alamat = data[0].alamat_cabang.split(' ');
-  console.log(alamat);
   let alamatbarissatu = '';
   let alamatbarisdua = '';
   let alamatbaristiga = '';
@@ -171,14 +177,12 @@ const OCPDF = (data, head) => {
   ];
   tableRows.push(footer);
 
-  let grandTotalSoftware = 0;
+
   const dataDiscountSoftware = data[0].detail_diskon.find((element) =>
     element.nama_diskon.includes('SOFTWARE')
   );
   const softwarePercent = dataDiscountSoftware?.persentase || 0;
-  let PersentaseSoftware = 0;
   const DiskonRp = dataDiscountSoftware?.sub_total || 0;
-  let DiskonSubTotal = 0;
 
   if (softwarePercent === 0 && DiskonRp !== 0) {
     const dataProdSoftware = data[0].detail_produk.filter(
@@ -412,6 +416,118 @@ const OCPDF = (data, head) => {
   ];
   tableRows.push(total);
 
+  //START calculate Height Table Item 
+  var initHeightItem = 0;
+  doc.autoTable({
+    head: tableColumn,
+    body: tableRows,
+    startY: -999999,
+    theme: 'plain',
+    pageBreak: 'auto',
+    rowPageBreak: 'avoid',
+    margin: { top: 10, bottom: 30 },
+    bodyStyles: {
+      fontSize: 7,
+      halign: 'center',
+      valign: 'middle',
+    },
+    headStyles: {
+      fontSize: 7,
+      fillColor: '#E8E5E5',
+      textColor: '#000',
+      valign: 'middle',
+      halign: 'center',
+    },
+    didParseCell: function (HookData) {
+      initHeightItem = HookData.settings.startY
+    },
+    willDrawCell: function (data) {
+      // add borders around the head cells
+      if (data.row.section === 'body' && data.column.index != 4 && data.column.index != 6) {
+        if (data.row.section === 'body' && data.column.index == 5) {
+          // draw top border
+          doc.line(data.cell.x + data.cell.width, data.cell.y, data.cell.x, data.cell.y);
+          // draw bottom border
+          doc.line(
+            data.cell.x + data.cell.width,
+            data.cell.y,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+          doc.line(
+            data.cell.x,
+            data.cell.y + data.cell.height,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+        } else if (data.row.section === 'body' && data.column.index == 7) {
+          // draw top border
+          doc.line(data.cell.x + data.cell.width, data.cell.y, data.cell.x, data.cell.y);
+          // draw bottom border
+          doc.line(
+            data.cell.x + data.cell.width,
+            data.cell.y,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+          doc.line(
+            data.cell.x,
+            data.cell.y + data.cell.height,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+        } else {
+          // draw bottom border
+          doc.line(
+            data.cell.x + data.cell.width,
+            data.cell.y,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+          doc.line(
+            data.cell.x,
+            data.cell.y + data.cell.height,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+          // draw top border
+          doc.line(data.cell.x + data.cell.width, data.cell.y, data.cell.x, data.cell.y);
+          // draw left border
+          doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x, data.cell.y);
+        }
+      } else {
+        if (data.row.section === 'body' && data.column.index == 4) {
+          // draw bottom border
+          doc.line(
+            data.cell.x,
+            data.cell.y + data.cell.height,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+          // draw top border
+          doc.line(data.cell.x + data.cell.width, data.cell.y, data.cell.x, data.cell.y);
+          // draw left border
+          doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x, data.cell.y);
+        }
+        if (data.row.section === 'body' && data.column.index == 6) {
+          // draw bottom border
+          doc.line(
+            data.cell.x,
+            data.cell.y + data.cell.height,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+          // draw top border
+          doc.line(data.cell.x + data.cell.width, data.cell.y, data.cell.x, data.cell.y);
+          // draw left border
+          doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x, data.cell.y);
+        }
+      }
+    },
+  });
+  heightDetailItemTable = doc.lastAutoTable.finalY - initHeightItem
+  //END calculate Height Table Item 
+
   doc.autoTable({
     head: tableColumn,
     body: tableRows,
@@ -419,7 +535,7 @@ const OCPDF = (data, head) => {
     theme: 'plain',
     pageBreak: 'auto',
     rowPageBreak: 'avoid',
-    margin: { top: 10 },
+    margin: { top: 10, bottom: 30 },
     bodyStyles: {
       fontSize: 7,
       halign: 'center',
@@ -526,7 +642,39 @@ const OCPDF = (data, head) => {
     [{ content: `4. Keterangan` }, { content: head.keterangan || '-' }],
   ];
   rowDesc.push();
-
+  lastPositionTableItem = doc.lastAutoTable.finalY;
+  var initHeightDesc = 0;
+  //START calculate Height Table Description
+  doc.autoTable({
+    head: [],
+    body: rowDesc,
+    startY: -9999999,
+    theme: 'plain',
+    pageBreak: 'auto',
+    rowPageBreak: 'avoid',
+    margin: { top: 10, bottom: 30 },
+    bodyStyles: {
+      fontSize: 7,
+      halign: 'left',
+      valign: 'top',
+    },
+    headStyles: {
+      fontSize: 7,
+      fillColor: '#fff',
+      textColor: '#000',
+      valign: 'middle',
+      halign: 'left',
+      lineWidth: 0.5,
+      lineColor: [0, 0, 0],
+    },
+    didParseCell: function (HookData) {
+      initHeightDesc = HookData.settings.startY
+    },
+  });
+  heightDescriptionTable = doc.lastAutoTable.finalY - initHeightDesc
+  console.log("[HEIGHT] DESCRIPTION:" + heightDescriptionTable);
+  console.log("[HEIGHT] ITEM:" + heightDetailItemTable);
+  //END calculate Height Table Description
   doc.autoTable({
     head: [],
     body: rowDesc,
@@ -534,7 +682,7 @@ const OCPDF = (data, head) => {
     theme: 'plain',
     pageBreak: 'auto',
     rowPageBreak: 'avoid',
-    margin: { top: 10 },
+    margin: { top: 30, bottom: 30 },
     bodyStyles: {
       fontSize: 7,
       halign: 'left',
@@ -549,127 +697,70 @@ const OCPDF = (data, head) => {
       lineWidth: 0.5,
       lineColor: [0, 0, 0],
     },
-  });
-  rowDesc = [];
-  finalY = doc.lastAutoTable.finalY + 5;
-  // if (finalY > 195) {
-  //   doc.addPage();
-  //   doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
-  //   finalY = 35;
-  // }
-  let rowFo = [
-    [
-      {
-        content: head.footer_desc,
-        colSpan: 2,
-      },
-    ],
-    [
-      { content: `Hormat Kami ,`, styles: { halign: 'left', cellPadding: { left: 10 } } },
-      { content: `Menyetujui ,`, styles: { halign: 'center' } },
-    ],
-    [{ content: `\n\n\n\n` }, { content: `\n\n\n\n` }],
-    [
-      { content: data[0].nama_staff, styles: { halign: 'left', cellPadding: { left: 9 } } },
-      { content: data[0].nama_customer, styles: { halign: 'center' } },
-    ],
-    // [
-    //   {
-    //     content: `* Pembayaran dapat di transfer melalui rekening *`,
-    //     colSpan: 2,
-    //     styles: { fontStyle: 'bold' },
-    //   },
-    // ],
-  ];
-  rowFo.push();
-
-  doc.autoTable({
-    head: [],
-    body: rowFo,
-    startY: finalY,
-    theme: 'plain',
-    pageBreak: 'auto',
-    rowPageBreak: 'avoid',
-    margin: { top: 10 },
-    bodyStyles: {
-      fontSize: 7,
-      halign: 'left',
-      valign: 'top',
-    },
-    headStyles: {
-      fontSize: 7,
-      fillColor: '#fff',
-      textColor: '#000',
-      valign: 'middle',
-      halign: 'left',
-      lineWidth: 0.5,
-      lineColor: [0, 0, 0],
+    addPageContent: pageContent => {
+      calculateFooterFollowUP(doc, head)
+      calculateFooterRekening(doc, data)
+      let totalHeightTable = heightDescriptionTable + heightDetailItemTable
+      console.log(totalHeightTable);
+      if (lastPositionTableItem > 195) {
+        console.log("[GENERATOR] Ini didalam lastPositionTableItem > 195");
+        if (pageContent.pageCount > 1) {
+          console.log("[GENERATOR] Ini didalam lastPositionTableItem > 195 && pageContent.pageCount > 1");
+          printFooterRekening(doc, data)
+          printFooterFollowUP(doc, head)
+          const pageWidth = doc.internal.pageSize.width;
+          var imgData = toAbsoluteUrl('/media/kop/footer.png');
+          doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
+          var imgData = toAbsoluteUrl('/media/kop/header.png');
+          doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
+        } else {
+          console.log("[GENERATOR] Ini didalam lastPositionTableItem > 195 && pageContent.pageCount < 1");
+          const pageWidth = doc.internal.pageSize.width;
+          var imgData = toAbsoluteUrl('/media/kop/footer.png');
+          doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
+          var imgData = toAbsoluteUrl('/media/kop/header.png');
+          doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
+        }
+      } else {
+        console.log("[GENERATOR] Ini didalam lastPositionTableItem < 195");
+        console.log(totalHeightTable + heightFooterFollowUpTable);
+        if (pageContent.pageCount === 1) {
+          if (totalHeightTable + heightFooterFollowUpTable < 144) {
+            console.log("[GENERATOR] Ini didalam lastPositionTableItem > 195 && totalHeightTable < 110");
+            printFooterRekening(doc, data)
+            printFooterFollowUP(doc, head)
+            const pageWidth = doc.internal.pageSize.width;
+            var imgData = toAbsoluteUrl('/media/kop/footer.png');
+            doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
+          } else {
+            const pageWidth = doc.internal.pageSize.width;
+            var imgData = toAbsoluteUrl('/media/kop/footer.png');
+            doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
+            var imgData = toAbsoluteUrl('/media/kop/header.png');
+            doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
+            console.log("[GENERATOR] Ini didalam lastPositionTableItem > 195 && totalHeightTable > 110");
+            doc.addPage()
+            printFooterRekening(doc, data)
+            printFooterFollowUP(doc, head)
+            var imgData = toAbsoluteUrl('/media/kop/footer.png');
+            doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
+          }
+          var imgData = toAbsoluteUrl('/media/kop/header.png');
+          doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
+        }
+      }
     },
   });
-  rowDesc = [];
-  finalY = doc.lastAutoTable.finalY + 3;
-  doc.setFont(undefined, 'bold');
-  doc.setFontSize(6);
-  doc.text('* Pembayaran dapat di transfer melalui rekening *', 15, finalY);
-  let finalTableY = finalY + 2;
+  console.log("[HEIGHT] FU:" + heightFooterFollowUpTable);
+  console.log("[HEIGHT] REKENING:" + heightFooterRekening);
 
-  let tableRowsBank = [];
-  let tableColumnBank = [];
-
-  if (data[0].jenis_ok === 'INCLUDE SOFTWARE') {
-    tableColumnBank = [
-      [
-        { content: `BCA` },
-        { content: `7405 8716 88` },
-        { content: `PT. NAGATECH SISTEM INTEGRATOR` },
-      ],
-      [
-        { content: `BANK MANDIRI` },
-        { content: `132-00-6260-1688` },
-        { content: `PT. NAGATECH SISTEM INTEGRATOR` },
-      ],
-    ];
-    tableRowsBank.push();
-  } else {
-    tableColumnBank = [
-      [{ content: `BCA` }, { content: `7405557878` }, { content: `BUDI KRISTIYANTO SH` }],
-    ];
-    tableRowsBank.push();
-  }
-
-  doc.autoTable({
-    head: tableColumnBank,
-    body: tableRowsBank,
-    startY: finalTableY,
-    theme: 'grid',
-    pageBreak: 'auto',
-    rowPageBreak: 'avoid',
-    margin: { top: 10 },
-    bodyStyles: {
-      fontSize: 7,
-      halign: 'center',
-      valign: 'middle',
-    },
-    headStyles: {
-      fontSize: 7,
-      fillColor: '#fff',
-      textColor: '#000',
-      valign: 'middle',
-      halign: 'center',
-      lineWidth: 0.5,
-      lineColor: [0, 0, 0],
-    },
-  });
-  tableRowsBank = [];
-  tableColumnBank = [];
-  finalTableY = doc.lastAutoTable.finalY + 5;
 
   // const pages = doc.internal.getNumberOfPages();
-  const pageWidth = doc.internal.pageSize.width;
+  // const pageWidth = doc.internal.pageSize.width;
   // const pageHeight = doc.internal.pageSize.height;
   // const verticalPos = pageHeight - 32;
-  var imgData = toAbsoluteUrl('/media/kop/footer.png');
-  doc.addImage(imgData, 'PNG', 14, finalTableY + 5, pageWidth - 28, 25);
+  // var imgData = toAbsoluteUrl('/media/kop/footer.png');
+  // doc.addImage(imgData, 'PNG', 14, finalTableY + 5, pageWidth - 28, 25);
 
   // doc.addPage();
   // doc.text(
@@ -772,6 +863,280 @@ const OCPDF = (data, head) => {
       </html>`
     );
   }
+
+
+  function printFooterRekening(doc, data) {
+    doc.setFont(undefined, 'bold');
+    doc.setFontSize(6);
+
+    let tableRowsBank = [];
+    let tableColumnBank = [];
+
+    if (data[0].jenis_ok === 'INCLUDE SOFTWARE') {
+      tableColumnBank = [
+        [
+          { content: `BCA` },
+          { content: `7405 8716 88` },
+          { content: `PT. NAGATECH SISTEM INTEGRATOR` },
+        ],
+        [
+          { content: `BANK MANDIRI` },
+          { content: `132-00-6260-1688` },
+          { content: `PT. NAGATECH SISTEM INTEGRATOR` },
+        ],
+      ];
+      tableRowsBank.push();
+    } else {
+      tableColumnBank = [
+        [{ content: `BCA` }, { content: `7405557878` }, { content: `BUDI KRISTIYANTO SH` }],
+      ];
+      tableRowsBank.push();
+    }
+    var height = 0;
+
+    doc.autoTable({
+      head: tableColumnBank,
+      body: tableRowsBank,
+      startY: -999999,
+      theme: 'grid',
+      pageBreak: 'auto',
+      rowPageBreak: 'avoid',
+      margin: { top: 10 },
+      bodyStyles: {
+        fontSize: 7,
+        halign: 'center',
+        valign: 'middle',
+        textColor: '#fff',
+      },
+      headStyles: {
+        fontSize: 7,
+        fillColor: '#fff',
+        textColor: '#fff',
+        valign: 'middle',
+        halign: 'center',
+        lineWidth: 0.5,
+        lineColor: "#fff",
+      },
+      didParseCell: function (HookData) {
+        height = HookData.settings.startY
+      }
+    });
+    height = doc.lastAutoTable.finalY - height
+    topFooterRekening = doc.internal.pageSize.height - 32 - height;
+    heightFooterRekening = height
+    doc.text('* Pembayaran dapat di transfer melalui rekening *', 15, doc.internal.pageSize.height - 29 - height);
+
+    doc.autoTable({
+      head: tableColumnBank,
+      body: tableRowsBank,
+      startY: doc.internal.pageSize.height - 27 - height,
+      theme: 'grid',
+      pageBreak: 'auto',
+      rowPageBreak: 'avoid',
+      margin: { top: 10 },
+      bodyStyles: {
+        fontSize: 7,
+        halign: 'center',
+        valign: 'middle',
+      },
+      headStyles: {
+        fontSize: 7,
+        fillColor: '#fff',
+        textColor: '#000',
+        valign: 'middle',
+        halign: 'center',
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+    });
+  }
+
+  function calculateFooterRekening(doc, data) {
+    doc.setFont(undefined, 'bold');
+    doc.setFontSize(6);
+
+    let tableRowsBank = [];
+    let tableColumnBank = [];
+
+    if (data[0].jenis_ok === 'INCLUDE SOFTWARE') {
+      tableColumnBank = [
+        [
+          { content: `BCA` },
+          { content: `7405 8716 88` },
+          { content: `PT. NAGATECH SISTEM INTEGRATOR` },
+        ],
+        [
+          { content: `BANK MANDIRI` },
+          { content: `132-00-6260-1688` },
+          { content: `PT. NAGATECH SISTEM INTEGRATOR` },
+        ],
+      ];
+      tableRowsBank.push();
+    } else {
+      tableColumnBank = [
+        [{ content: `BCA` }, { content: `7405557878` }, { content: `BUDI KRISTIYANTO SH` }],
+      ];
+      tableRowsBank.push();
+    }
+    var height = 0;
+
+    doc.autoTable({
+      head: tableColumnBank,
+      body: tableRowsBank,
+      startY: -999999,
+      theme: 'grid',
+      pageBreak: 'auto',
+      rowPageBreak: 'avoid',
+      margin: { top: 10 },
+      bodyStyles: {
+        fontSize: 7,
+        halign: 'center',
+        valign: 'middle',
+        textColor: '#fff',
+      },
+      headStyles: {
+        fontSize: 7,
+        fillColor: '#fff',
+        textColor: '#fff',
+        valign: 'middle',
+        halign: 'center',
+        lineWidth: 0.5,
+        lineColor: "#fff",
+      },
+      didParseCell: function (HookData) {
+        height = HookData.settings.startY
+      }
+    });
+    height = doc.lastAutoTable.finalY - height
+    topFooterRekening = doc.internal.pageSize.height - 32 - height;
+    heightFooterRekening = height
+  }
+
+
+  function printFooterFollowUP(doc, head) {
+    let rowFo = [
+      [
+        {
+          content: head.footer_desc,
+          colSpan: 2,
+        },
+      ],
+      [
+        { content: `Hormat Kami ,`, styles: { halign: 'left', cellPadding: { left: 10 } } },
+        { content: `Menyetujui ,`, styles: { halign: 'center' } },
+      ],
+      [{ content: `\n\n\n` }, { content: `\n\n\n` }],
+      [
+        { content: data[0]?.nama_staff ?? "DEFAULT", styles: { halign: 'left', cellPadding: { left: 9 } } },
+        { content: data[0].nama_customer, styles: { halign: 'center' } },
+      ],
+    ];
+    var height = 0;
+    doc.autoTable({
+      head: [],
+      body: rowFo,
+      startY: -999999,
+      theme: 'plain',
+      pageBreak: 'auto',
+      rowPageBreak: 'avoid',
+      margin: { top: 10 },
+      bodyStyles: {
+        fontSize: 7,
+        halign: 'left',
+        valign: 'top',
+        textColor: '#fff',
+      },
+      headStyles: {
+        fontSize: 7,
+        fillColor: '#fff',
+        textColor: '#fff',
+        valign: 'middle',
+        halign: 'left',
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+      didParseCell: function (HookData) {
+        height = HookData.settings.startY
+      }
+    });
+
+    height = doc.lastAutoTable.finalY - height
+    heightFooterFollowUpTable = height
+    doc.autoTable({
+      head: [],
+      body: rowFo,
+      startY: doc.internal.pageSize.height - heightFooterRekening - 27 - height - 3,
+      theme: 'plain',
+      pageBreak: 'auto',
+      rowPageBreak: 'avoid',
+      margin: { top: 10 },
+      bodyStyles: {
+        fontSize: 7,
+        halign: 'left',
+        valign: 'top',
+      },
+      headStyles: {
+        fontSize: 7,
+        fillColor: '#fff',
+        textColor: '#000',
+        valign: 'middle',
+        halign: 'left',
+        lineWidth: 0.0,
+        lineColor: [0, 0, 0],
+      },
+    });
+  }
+  function calculateFooterFollowUP(doc, head) {
+    let rowFo = [
+      [
+        {
+          content: head.footer_desc,
+          colSpan: 2,
+        },
+      ],
+      [
+        { content: `Hormat Kami ,`, styles: { halign: 'left', cellPadding: { left: 10 } } },
+        { content: `Menyetujui ,`, styles: { halign: 'center' } },
+      ],
+      [{ content: `\n\n\n` }, { content: `\n\n\n` }],
+      [
+        { content: data[0].nama_staff, styles: { halign: 'left', cellPadding: { left: 9 } } },
+        { content: data[0].nama_customer, styles: { halign: 'center' } },
+      ],
+    ];
+    var height = 0;
+    doc.autoTable({
+      head: [],
+      body: rowFo,
+      startY: -999999,
+      theme: 'plain',
+      pageBreak: 'auto',
+      rowPageBreak: 'avoid',
+      margin: { top: 10 },
+      bodyStyles: {
+        fontSize: 7,
+        halign: 'left',
+        valign: 'top',
+        textColor: '#fff',
+      },
+      headStyles: {
+        fontSize: 7,
+        fillColor: '#fff',
+        textColor: '#fff',
+        valign: 'middle',
+        halign: 'left',
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+      didParseCell: function (HookData) {
+        height = HookData.settings.startY
+      }
+    });
+
+    height = doc.lastAutoTable.finalY - height
+    heightFooterFollowUpTable = height
+  }
 };
 
 export default OCPDF;
+

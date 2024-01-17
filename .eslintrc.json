@@ -3,7 +3,11 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["plugin:react/recommended", "airbnb", "plugin:prettier/recommended"],
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "plugin:prettier/recommended"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -12,12 +16,27 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "ignorePatterns": ["**/src/stories/*", "**/src/_metronic/*"],
-  "plugins": ["react", "@typescript-eslint"],
+  "ignorePatterns": [
+    "**/src/stories/*",
+    "**/src/_metronic/*"
+  ],
+  "plugins": [
+    "react",
+    "@typescript-eslint"
+  ],
   "rules": {
-    "semi": ["error", "always"],
-    "quotes": ["error", "single"],
-    "func-names": ["error", "never"],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "func-names": [
+      "error",
+      "never"
+    ],
     "jsx-a11y/label-has-associated-control": "off",
     "jsx-a11y/label-has-for": "off",
     "react/jsx-props-no-spreading": "off",
@@ -35,14 +54,27 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": ["**/*.stories.*", "**/.storybook/**/*.*", "**/*.test.*"],
+        "devDependencies": [
+          "**/*.stories.*",
+          "**/.storybook/**/*.*",
+          "**/*.test.*"
+        ],
         "peerDependencies": true
       }
     ],
     "camelcase": "off",
     "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": ["error"],
-    "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
+    "@typescript-eslint/no-use-before-define": [
+      "error"
+    ],
+    "react/jsx-filename-extension": [
+      "warn",
+      {
+        "extensions": [
+          ".tsx"
+        ]
+      }
+    ],
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -58,7 +90,12 @@
         "unnamedComponents": "arrow-function"
       }
     ],
-    "react/no-unstable-nested-components": ["off", { "allowAsProps": true }]
+    "react/no-unstable-nested-components": [
+      "off",
+      {
+        "allowAsProps": true
+      }
+    ]
   },
   "settings": {
     "import/resolver": {

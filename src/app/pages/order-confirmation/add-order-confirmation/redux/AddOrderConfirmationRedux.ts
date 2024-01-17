@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { Action, AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { change, reset } from 'redux-form';
@@ -227,7 +229,7 @@ export const actions = {
       const state = getState();
       const type = state.addorderconfirmation.typeProduct;
       if (type === 'SOFTWARE') {
-        AxiosGet(`product/by-kode?kode_produk=${code}`).then((res) => {
+        AxiosGet(`product/by-kode/${code}`).then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'kode_produk',
             'status',
@@ -248,7 +250,7 @@ export const actions = {
           dispatch(change('FormAddProductOC', 'sub_total', dataDecrypt[0].harga * 1));
         });
       } else if (type === 'CONSUMABLE') {
-        AxiosGet(`consumable/by-kode?kode_consumable=${code}`).then((res) => {
+        AxiosGet(`consumable/by-kode/${code}`).then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'kode_consumable',
             'kode_supplier',
@@ -270,7 +272,7 @@ export const actions = {
           dispatch(change('FormAddProductOC', 'sub_total', dataDecrypt[0].harga * 1));
         });
       } else if (type === 'HARDWARE') {
-        AxiosGet(`hardware/by-kode?kode_hardware=${code}`).then((res) => {
+        AxiosGet(`hardware/by-kode/${code}`).then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'kode_hardware',
             'kode_supplier',
@@ -899,21 +901,21 @@ export const actions = {
                         // Total+Discount
                         const subTotalSoftware =
                           totalSoftware -
-                            (totalDiscountSoftwareRp + totalSoftware * (SoftwarePersen / 100)) || 0;
+                          (totalDiscountSoftwareRp + totalSoftware * (SoftwarePersen / 100)) || 0;
                         const subTotalHardware =
                           totalHardware -
-                            (totalDiscountHardwareRp + totalHardware * (HardwarePersen / 100)) || 0;
+                          (totalDiscountHardwareRp + totalHardware * (HardwarePersen / 100)) || 0;
                         const subTotalConsumable =
                           totalConsumable -
-                            (totalDiscountConsumableRp +
-                              totalConsumable * (ConsumablePersen / 100)) || 0;
+                          (totalDiscountConsumableRp +
+                            totalConsumable * (ConsumablePersen / 100)) || 0;
                         const subTotalSupport =
                           totalSupport -
-                            (totalDiscountSupportRp + totalSupport * (SupportPersen / 100)) || 0;
+                          (totalDiscountSupportRp + totalSupport * (SupportPersen / 100)) || 0;
                         const subTotalProduction =
                           totalProduction -
-                            (totalDiscountProductionRp +
-                              totalProduction * (ProductionPersen / 100)) || 0;
+                          (totalDiscountProductionRp +
+                            totalProduction * (ProductionPersen / 100)) || 0;
 
                         // TotalAll
                         const grandTotal =

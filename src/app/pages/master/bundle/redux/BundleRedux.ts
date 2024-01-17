@@ -378,7 +378,7 @@ export const actions = {
         state.form.FormAddProductComponent.values.product_type;
 
       if (data === 'SOFTWARE') {
-        AxiosGet(`product/by-kode?kode_produk=${id}`).then((res: any) => {
+        AxiosGet(`product/by-kode/${id}`).then((res: any) => {
           const dataDecrypt = doDecryptData(res.data[0], [
             'kode_produk',
             'status',
@@ -400,7 +400,7 @@ export const actions = {
           dispatch(change('FormAddProductComponent', 'type', dataDecrypt.type));
         });
       } else if (data === 'HARDWARE') {
-        AxiosGet(`hardware/by-kode?kode_hardware=${id}`).then((res: any) => {
+        AxiosGet(`hardware/by-kode/=${id}`).then((res: any) => {
           const dataDecrypt = doDecryptData(res.data[0], [
             'kode_hardware',
             'kode_supplier',
@@ -421,7 +421,7 @@ export const actions = {
           dispatch(change('FormAddProductComponent', 'type', '-'));
         });
       } else if (data === 'CONSUMABLE') {
-        AxiosGet(`consumable/by-kode?kode_consumable=${id}`).then((res: any) => {
+        AxiosGet(`consumable/by-kode/${id}`).then((res: any) => {
           const dataDecrypt = doDecryptData(res.data[0], [
             'kode_consumable',
             'kode_supplier',

@@ -697,7 +697,6 @@ export const actions = {
           keterangan: data.keterangan,
           deskripsi_footer: data.footer_desc,
         };
-        OCPDF(dataDecrypt, data);
         AxiosPost('order-confirmation/save-desc', onsend)
           .then(() => {
             postPDF(file, `${dataDecrypt[0]?.no_order_konfirmasi.replace(/\//g, '_')}`)

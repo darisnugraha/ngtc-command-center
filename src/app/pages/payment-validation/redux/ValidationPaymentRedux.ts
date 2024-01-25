@@ -941,12 +941,16 @@ export const actions = {
           const foto = dataURLtoFile(
             data.foto,
             // eslint-disable-next-line
-            `${onSendData.no_order_konfirmasi.replace(/\//g, '_')}${onSendData.tanggal}${onSendData.bayar_rp}`
+            `${onSendData.no_order_konfirmasi.replace(/\//g, '_')}${onSendData.tanggal}${
+              onSendData.bayar_rp
+            }`
           );
           postImage(
             foto,
             // eslint-disable-next-line
-            `${onSendData.no_order_konfirmasi.replace(/\//g, '_')}${onSendData.tanggal}${onSendData.bayar_rp}`
+            `${onSendData.no_order_konfirmasi.replace(/\//g, '_')}${onSendData.tanggal}${
+              onSendData.bayar_rp
+            }`
           )
             .then(() => {
               dispatch(utility.actions.hideLoading());
@@ -972,7 +976,9 @@ export const actions = {
       dispatch(utility.actions.showLoadingButton());
       AxiosGet(`receivable/by-no/${noPiutang}`).then((response: any) => {
         // eslint-disable-next-line
-        const nama_file = `${response.data[0].no_order_konfirmasi.replace(/\//g, '_')}${response.data[0].tanggal}${response.data[0].bayar_rp}`;
+        const nama_file = `${response.data[0].no_order_konfirmasi.replace(/\//g, '_')}${
+          response.data[0].tanggal
+        }${response.data[0].bayar_rp}`;
         getImage(nama_file)
           .then((res) => {
             dispatch({ type: actionTypes.GetProofOfPayment, payload: { proofOfPaymentIMG: res } });

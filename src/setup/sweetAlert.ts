@@ -1,3 +1,1 @@
-export function success(params: any) {
-  
-}
+export function success(params: any) {}

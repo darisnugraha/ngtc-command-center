@@ -120,17 +120,7 @@ const FormOCReport: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             name='no_oc'
             type='text'
             component={RenderFieldSelect}
-            options={
-              typeReport === 'DETAIL'
-                ? listOC.map((element: any) => {
-                    const row = {
-                      value: element.no_order_konfirmasi,
-                      label: element.no_order_konfirmasi,
-                    };
-                    return row;
-                  })
-                : dataOC
-            }
+            options={dataOC}
             label='No OC'
             placeHolder='Select No OC'
           />

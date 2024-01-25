@@ -14,7 +14,11 @@ import * as utility from '../../../../../setup/redux/UtilityRedux';
 import OCPDF from '../component/OCPDF.jsx';
 import { AxiosPut } from '../../../../../setup/axios/AxiosPut';
 import OC from '../../add-order-confirmation/component/OC.jsx';
-import { dataURLtoPDFFile, NumberOnly } from '../../../../../setup/function.js';
+import {
+  changeDateIndoToGlobal,
+  dataURLtoPDFFile,
+  NumberOnly,
+} from '../../../../../setup/function.js';
 import { postPDF } from '../../../../../setup/axios/Firebase';
 
 export interface ActionWithPayload<T> extends Action {
@@ -1002,18 +1006,22 @@ export const actions = {
   searchAction: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
       dispatch(utility.actions.showLoadingButton());
-      const onSendData = {
-        startDate: moment(data.date[0]).format('yyyy-MM-DD'),
-        endDate: moment(data.date[1]).format('yyyy-MM-DD'),
+      const onSendData: any = {
         kode_staff: data.staff_name,
         no_order_konfirmasi: data.no_oc,
         kode_toko: data.central_store_name,
         status: data.status_payment,
       };
+      if (Array.isArray(data.date)) {
+        onSendData.startDate = moment(data.date[0]).format('yyyy-MM-DD');
+        onSendData.endDate = moment(data.date[1]).format('yyyy-MM-DD');
+      } else {
+        const date = data.date.split('-');
 
-      AxiosGet(
-        `order-confirmation/filter?startDate=${onSendData.startDate}&endDate=${onSendData.endDate}&no_order_konfirmasi=${onSendData.no_order_konfirmasi}&kode_toko=${onSendData.kode_toko}&kode_staff=${onSendData.kode_staff}&status=${onSendData.status}`
-      )
+        onSendData.startDate = changeDateIndoToGlobal(date[0].trim());
+        onSendData.endDate = changeDateIndoToGlobal(date[1].trim());
+      }
+      AxiosGet('order-confirmation/filter', { params: onSendData })
         .then((res) => {
           const dataDecrypt = doDecryptData(res.data, [
             'status',

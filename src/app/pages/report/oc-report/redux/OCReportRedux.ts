@@ -6,6 +6,7 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { AxiosGet } from '../../../../../setup';
 import { doDecryptData, saveLocal } from '../../../../../setup/encrypt.js';
+import { changeDateIndoToGlobal } from '../../../../../setup/function.js';
 import * as utility from '../../../../../setup/redux/UtilityRedux';
 
 export interface ActionWithPayload<T> extends Action {
@@ -70,11 +71,7 @@ export const actions = {
   getReportOC: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
-      const startDate = moment(data.date[0]).format('yyyy-MM-DD');
-      const endDate = moment(data.date[1]).format('yyyy-MM-DD');
-      const dataHead = {
-        tgl_awal: startDate,
-        tgl_akhir: endDate,
+      const dataHead: any = {
         no_order_konfirmasi: data.no_oc.value === undefined ? data.no_oc : data.no_oc.value,
         kode_toko:
           data.central_store.value === undefined ? data.central_store : data.central_store.value,
@@ -82,9 +79,17 @@ export const actions = {
           data.branch_store.value === undefined ? data.branch_store : data.branch_store.value,
       };
 
-      AxiosGet(
-        `order-confirmation/report?startDate=${startDate}&endDate=${endDate}&no_order_konfirmasi=${dataHead.no_order_konfirmasi}&kode_toko=${dataHead.kode_toko}&kode_cabang=${dataHead.kode_cabang}`
-      ).then((res) => {
+      if (Array.isArray(data.date)) {
+        dataHead.startDate = moment(data.date[0]).format('yyyy-MM-DD');
+        dataHead.endDate = moment(data.date[1]).format('yyyy-MM-DD');
+      } else {
+        const date = data.date.split('-');
+
+        dataHead.startDate = changeDateIndoToGlobal(date[0].trim());
+        dataHead.endDate = changeDateIndoToGlobal(date[1].trim());
+      }
+
+      AxiosGet('order-confirmation/report', { params: dataHead }).then((res) => {
         const dataDecrypt = doDecryptData(res.data, [
           'status',
           '_id',

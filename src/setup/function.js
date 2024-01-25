@@ -74,6 +74,14 @@ export const NumberOnly = (value, previousValue) => {
 };
 
 export const upper = (value) => value && value.toUpperCase();
+export const normalizeAlphaWithUpper = (value) => {
+  if (!value) {
+    return value;
+  }
+
+  // Hanya memperbolehkan huruf dari a sampai z
+  return value.replace(/[^a-z0-9]/gi, '').toUpperCase();
+};
 
 export const getToday = (indo) => {
   return indo
@@ -103,4 +111,9 @@ export const isPos = () => {
   } else {
     return false;
   }
+};
+
+export const changeDateIndoToGlobal = (data) => {
+  const part = data.split('/');
+  return part.reverse().join('/');
 };

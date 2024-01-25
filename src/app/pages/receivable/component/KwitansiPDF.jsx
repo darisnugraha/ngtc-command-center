@@ -10,7 +10,7 @@ const KwitansiPDF = (data, head) => {
   doc.setProperties({
     title: 'Kwitansi',
   });
-  const moreSpace = 2;
+  const moreSpace = 12;
   var imgData = toAbsoluteUrl('/media/kop/header.png');
   const y = 34;
   doc.addImage(imgData, 'PNG', 15, 10, 260, 30);
@@ -19,41 +19,36 @@ const KwitansiPDF = (data, head) => {
   doc.setFont(undefined, 'normal');
 
   doc.text('Sudah Terima Dari :', 15, y + 25 + moreSpace);
-  doc.text(data[0].no_piutang, 195, y + 25 + moreSpace);
+  doc.text(data[0].no_piutang, 210, y + 25 + moreSpace);
   doc.setFont(undefined, 'bold');
   doc.text(head[0].nama_toko, 68, y + 25 + moreSpace);
   doc.setFont(undefined, 'normal');
   const alamat = head[0].alamat;
-  const jml_alamat = alamat.length;
-  if (jml_alamat > 20) {
-    doc.text(alamat.slice(0, 45), 68, y + 33 + moreSpace);
+  let initY = y + 33 + moreSpace;
+
+  function cutTextAtWordBoundary(text, maxLength) {
+    if (text.length <= maxLength) return text;
+    let cutOffIndex = text.lastIndexOf(' ', maxLength);
+    return cutOffIndex > -1 ? text.slice(0, cutOffIndex) : text.slice(0, maxLength);
   }
-  if (jml_alamat > 50) {
-    doc.text(alamat.slice(45, 92), 68, y + 43 + moreSpace);
+
+  let remainingAlamat = alamat;
+  let lineAlamat = 0;
+
+  while (remainingAlamat.length > 0) {
+    let textToDisplay = cutTextAtWordBoundary(remainingAlamat, 48);
+    doc.text(textToDisplay, 68, initY + lineAlamat * 10);
+    remainingAlamat = remainingAlamat.substring(textToDisplay.length).trim();
+    lineAlamat++;
   }
-  if (jml_alamat > 70) {
-    doc.text(alamat.slice(92, 135), 68, y + 53 + moreSpace);
-  }
-  doc.text('Banyaknya Uang', 15, y + 63 + moreSpace);
-  doc.text(':', 65, y + 63 + moreSpace);
-  doc.text(angkaTerbilang(data[0].bayar_rp).toUpperCase() + " RUPIAH", 68, y + 63 + moreSpace);
-  doc.text('Untuk Pembayaran', 15, y + 73 + moreSpace);
-  doc.text(':', 65, y + 73 + moreSpace);
-  // const desc = data[0].deskripsi;
-  // const jml_desc = desc.length;
-  // let finalY = y + 73 + moreSpace;
-  // if (jml_desc > 0) {
-  //   doc.text(desc.slice(0, 45), 68, finalY);
-  // }
-  // if (jml_desc > 50) {
-  //   doc.text(desc.slice(45, 92), 68, finalY + 10);
-  // }
-  // if (jml_desc > 70) {
-  //   doc.text(desc.slice(92, 135), 68, finalY + 20);
-  //   finalY = finalY + 10;
-  // }
+
+  doc.text('Banyaknya Uang', 15, y + 63 + moreSpace - 5);
+  doc.text(':', 65, y + 63 + moreSpace - 5);
+  doc.text(`Rp. ${data[0].bayar_rp.toLocaleString()}`, 68, y + 63 + moreSpace - 5);
+  doc.text('Untuk Pembayaran', 15, y + 73 + moreSpace - 5);
+  doc.text(':', 65, y + 73 + moreSpace - 5);
   const desc = data[0].deskripsi;
-  let finalY = y + 73 + moreSpace;
+  let finalY = y + 73 + moreSpace - 5;
 
   function cutTextAtWordBoundary(text, maxLength) {
     if (text.length <= maxLength) return text;
@@ -66,14 +61,24 @@ const KwitansiPDF = (data, head) => {
 
   while (remainingText.length > 0) {
     let textToDisplay = cutTextAtWordBoundary(remainingText, 58);
-    doc.text(textToDisplay, 68, finalY + (line * 10));
+    doc.text(textToDisplay, 68, finalY + line * 10);
     remainingText = remainingText.substring(textToDisplay.length).trim();
     line++;
   }
-  finalY = finalY + 10
+  finalY = finalY;
   doc.text(`Terbilang`, 15, finalY + 10);
   doc.text(':', 65, finalY + 10);
-  doc.text(`Rp ${data[0].bayar_rp.toLocaleString()}`, 68, finalY + 10);
+  const terbilang = angkaTerbilang(data[0].bayar_rp).toUpperCase() + ' RUPIAH';
+
+  let remainingTerbilang = terbilang;
+  let lineTerbilang = 0;
+
+  while (remainingTerbilang.length > 0) {
+    let textToDisplay = cutTextAtWordBoundary(remainingTerbilang, 58);
+    doc.text(textToDisplay, 68, finalY + 10 + lineTerbilang * 10);
+    remainingTerbilang = remainingTerbilang.substring(textToDisplay.length).trim();
+    lineTerbilang++;
+  }
   const date = moment(data[0].tanggal).format('DD MMMM YYYY');
   doc.text(`Bandung, ${date}`, 174, finalY + 30);
   doc.text('Ismahria Sujana', 187, finalY + 70);

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { change, Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup';
-import { upper } from '../../../../../setup/function.js';
+import { normalizeAlphaWithUpper, upper } from '../../../../../setup/function.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField, RenderTextArea } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
@@ -63,7 +63,7 @@ const FormStoreComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             component={RenderField}
             label='Store Code'
             placeHolder='Insert Store Code'
-            normalize={upper}
+            normalize={normalizeAlphaWithUpper}
           />
         </div>
         <div className='col-lg-6'>

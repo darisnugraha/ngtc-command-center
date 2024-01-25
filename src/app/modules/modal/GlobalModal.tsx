@@ -22,9 +22,10 @@ const GlobalModal: FC<Props> = ({ children, title, typeModal, onClose }) => {
       role='dialog'
       show={isShowing}
       dialogClassName={
-        title.includes('Bundle') || title.includes('Potential Customer') ||
-          title.includes('Receivable') ||
-          typeModal === 'DETAIL'
+        title.includes('Bundle') ||
+        title.includes('Potential Customer') ||
+        title.includes('Receivable') ||
+        typeModal === 'DETAIL'
           ? 'modal-xl'
           : 'modal-lg'
       }

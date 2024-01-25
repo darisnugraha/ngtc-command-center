@@ -177,7 +177,6 @@ const OCPDF = (data, head) => {
   ];
   tableRows.push(footer);
 
-
   const dataDiscountSoftware = data[0].detail_diskon.find((element) =>
     element.nama_diskon.includes('SOFTWARE')
   );
@@ -416,7 +415,7 @@ const OCPDF = (data, head) => {
   ];
   tableRows.push(total);
 
-  //START calculate Height Table Item 
+  //START calculate Height Table Item
   var initHeightItem = 0;
   doc.autoTable({
     head: tableColumn,
@@ -439,7 +438,7 @@ const OCPDF = (data, head) => {
       halign: 'center',
     },
     didParseCell: function (HookData) {
-      initHeightItem = HookData.settings.startY
+      initHeightItem = HookData.settings.startY;
     },
     willDrawCell: function (data) {
       // add borders around the head cells
@@ -525,8 +524,8 @@ const OCPDF = (data, head) => {
       }
     },
   });
-  heightDetailItemTable = doc.lastAutoTable.finalY - initHeightItem
-  //END calculate Height Table Item 
+  heightDetailItemTable = doc.lastAutoTable.finalY - initHeightItem;
+  //END calculate Height Table Item
 
   doc.autoTable({
     head: tableColumn,
@@ -668,12 +667,12 @@ const OCPDF = (data, head) => {
       lineColor: [0, 0, 0],
     },
     didParseCell: function (HookData) {
-      initHeightDesc = HookData.settings.startY
+      initHeightDesc = HookData.settings.startY;
     },
   });
-  heightDescriptionTable = doc.lastAutoTable.finalY - initHeightDesc
-  console.log("[HEIGHT] DESCRIPTION:" + heightDescriptionTable);
-  console.log("[HEIGHT] ITEM:" + heightDetailItemTable);
+  heightDescriptionTable = doc.lastAutoTable.finalY - initHeightDesc;
+  console.log('[HEIGHT] DESCRIPTION:' + heightDescriptionTable);
+  console.log('[HEIGHT] ITEM:' + heightDetailItemTable);
   //END calculate Height Table Description
   doc.autoTable({
     head: [],
@@ -697,24 +696,28 @@ const OCPDF = (data, head) => {
       lineWidth: 0.5,
       lineColor: [0, 0, 0],
     },
-    addPageContent: pageContent => {
-      calculateFooterFollowUP(doc, head)
-      calculateFooterRekening(doc, data)
-      let totalHeightTable = heightDescriptionTable + heightDetailItemTable
+    addPageContent: (pageContent) => {
+      calculateFooterFollowUP(doc, head);
+      calculateFooterRekening(doc, data);
+      let totalHeightTable = heightDescriptionTable + heightDetailItemTable;
       console.log(totalHeightTable);
       if (lastPositionTableItem > 195) {
-        console.log("[GENERATOR] Ini didalam lastPositionTableItem > 195");
+        console.log('[GENERATOR] Ini didalam lastPositionTableItem > 195');
         if (pageContent.pageCount > 1) {
-          console.log("[GENERATOR] Ini didalam lastPositionTableItem > 195 && pageContent.pageCount > 1");
-          printFooterRekening(doc, data)
-          printFooterFollowUP(doc, head)
+          console.log(
+            '[GENERATOR] Ini didalam lastPositionTableItem > 195 && pageContent.pageCount > 1'
+          );
+          printFooterRekening(doc, data);
+          printFooterFollowUP(doc, head);
           const pageWidth = doc.internal.pageSize.width;
           var imgData = toAbsoluteUrl('/media/kop/footer.png');
           doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
           var imgData = toAbsoluteUrl('/media/kop/header.png');
           doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
         } else {
-          console.log("[GENERATOR] Ini didalam lastPositionTableItem > 195 && pageContent.pageCount < 1");
+          console.log(
+            '[GENERATOR] Ini didalam lastPositionTableItem > 195 && pageContent.pageCount < 1'
+          );
           const pageWidth = doc.internal.pageSize.width;
           var imgData = toAbsoluteUrl('/media/kop/footer.png');
           doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
@@ -722,13 +725,15 @@ const OCPDF = (data, head) => {
           doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
         }
       } else {
-        console.log("[GENERATOR] Ini didalam lastPositionTableItem < 195");
+        console.log('[GENERATOR] Ini didalam lastPositionTableItem < 195');
         console.log(totalHeightTable + heightFooterFollowUpTable);
         if (pageContent.pageCount === 1) {
           if (totalHeightTable + heightFooterFollowUpTable < 144) {
-            console.log("[GENERATOR] Ini didalam lastPositionTableItem > 195 && totalHeightTable < 110");
-            printFooterRekening(doc, data)
-            printFooterFollowUP(doc, head)
+            console.log(
+              '[GENERATOR] Ini didalam lastPositionTableItem > 195 && totalHeightTable < 110'
+            );
+            printFooterRekening(doc, data);
+            printFooterFollowUP(doc, head);
             const pageWidth = doc.internal.pageSize.width;
             var imgData = toAbsoluteUrl('/media/kop/footer.png');
             doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
@@ -738,10 +743,12 @@ const OCPDF = (data, head) => {
             doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
             var imgData = toAbsoluteUrl('/media/kop/header.png');
             doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
-            console.log("[GENERATOR] Ini didalam lastPositionTableItem > 195 && totalHeightTable > 110");
-            doc.addPage()
-            printFooterRekening(doc, data)
-            printFooterFollowUP(doc, head)
+            console.log(
+              '[GENERATOR] Ini didalam lastPositionTableItem > 195 && totalHeightTable > 110'
+            );
+            doc.addPage();
+            printFooterRekening(doc, data);
+            printFooterFollowUP(doc, head);
             var imgData = toAbsoluteUrl('/media/kop/footer.png');
             doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
           }
@@ -751,9 +758,8 @@ const OCPDF = (data, head) => {
       }
     },
   });
-  console.log("[HEIGHT] FU:" + heightFooterFollowUpTable);
-  console.log("[HEIGHT] REKENING:" + heightFooterRekening);
-
+  console.log('[HEIGHT] FU:' + heightFooterFollowUpTable);
+  console.log('[HEIGHT] REKENING:' + heightFooterRekening);
 
   // const pages = doc.internal.getNumberOfPages();
   // const pageWidth = doc.internal.pageSize.width;
@@ -864,7 +870,6 @@ const OCPDF = (data, head) => {
     );
   }
 
-
   function printFooterRekening(doc, data) {
     doc.setFont(undefined, 'bold');
     doc.setFontSize(6);
@@ -915,16 +920,20 @@ const OCPDF = (data, head) => {
         valign: 'middle',
         halign: 'center',
         lineWidth: 0.5,
-        lineColor: "#fff",
+        lineColor: '#fff',
       },
       didParseCell: function (HookData) {
-        height = HookData.settings.startY
-      }
+        height = HookData.settings.startY;
+      },
     });
-    height = doc.lastAutoTable.finalY - height
+    height = doc.lastAutoTable.finalY - height;
     topFooterRekening = doc.internal.pageSize.height - 32 - height;
-    heightFooterRekening = height
-    doc.text('* Pembayaran dapat di transfer melalui rekening *', 15, doc.internal.pageSize.height - 29 - height);
+    heightFooterRekening = height;
+    doc.text(
+      '* Pembayaran dapat di transfer melalui rekening *',
+      15,
+      doc.internal.pageSize.height - 29 - height
+    );
 
     doc.autoTable({
       head: tableColumnBank,
@@ -1001,17 +1010,16 @@ const OCPDF = (data, head) => {
         valign: 'middle',
         halign: 'center',
         lineWidth: 0.5,
-        lineColor: "#fff",
+        lineColor: '#fff',
       },
       didParseCell: function (HookData) {
-        height = HookData.settings.startY
-      }
+        height = HookData.settings.startY;
+      },
     });
-    height = doc.lastAutoTable.finalY - height
+    height = doc.lastAutoTable.finalY - height;
     topFooterRekening = doc.internal.pageSize.height - 32 - height;
-    heightFooterRekening = height
+    heightFooterRekening = height;
   }
-
 
   function printFooterFollowUP(doc, head) {
     let rowFo = [
@@ -1027,7 +1035,10 @@ const OCPDF = (data, head) => {
       ],
       [{ content: `\n\n\n` }, { content: `\n\n\n` }],
       [
-        { content: data[0]?.nama_staff ?? "DEFAULT", styles: { halign: 'left', cellPadding: { left: 9 } } },
+        {
+          content: data[0]?.nama_staff ?? 'DEFAULT',
+          styles: { halign: 'left', cellPadding: { left: 9 } },
+        },
         { content: data[0].nama_customer, styles: { halign: 'center' } },
       ],
     ];
@@ -1056,12 +1067,12 @@ const OCPDF = (data, head) => {
         lineColor: [0, 0, 0],
       },
       didParseCell: function (HookData) {
-        height = HookData.settings.startY
-      }
+        height = HookData.settings.startY;
+      },
     });
 
-    height = doc.lastAutoTable.finalY - height
-    heightFooterFollowUpTable = height
+    height = doc.lastAutoTable.finalY - height;
+    heightFooterFollowUpTable = height;
     doc.autoTable({
       head: [],
       body: rowFo,
@@ -1129,14 +1140,13 @@ const OCPDF = (data, head) => {
         lineColor: [0, 0, 0],
       },
       didParseCell: function (HookData) {
-        height = HookData.settings.startY
-      }
+        height = HookData.settings.startY;
+      },
     });
 
-    height = doc.lastAutoTable.finalY - height
-    heightFooterFollowUpTable = height
+    height = doc.lastAutoTable.finalY - height;
+    heightFooterFollowUpTable = height;
   }
 };
 
 export default OCPDF;
-

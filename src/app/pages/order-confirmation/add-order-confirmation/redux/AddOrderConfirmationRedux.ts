@@ -1076,7 +1076,7 @@ export const actions = {
                           })
                           .catch((error) => {
                             dispatch(utility.actions.hideLoading());
-                            const dataErr = error.response.data;
+                            const dataErr = error.response?.data;
                             toast.error(dataErr.message || 'Failed Add Data !');
                           });
                         // dispatch({
@@ -1146,7 +1146,7 @@ export const actions = {
         })
         .catch((error) => {
           dispatch(utility.actions.hideLoading());
-          const dataErr = error.response.data;
+          const dataErr = error.response?.data;
           toast.error(dataErr.message || 'Failed Add Data !');
         });
     };

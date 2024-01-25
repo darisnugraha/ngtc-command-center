@@ -2,10 +2,14 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getLocal } from '../encrypt.js';
 
 const baseUrl = process.env.REACT_APP_BACKEND_URL;
-export async function AxiosGet<T>(url: string): Promise<AxiosResponse<T>> {
+export async function AxiosGet<T>(
+  url: string,
+  reqConfig?: AxiosRequestConfig
+): Promise<AxiosResponse<T>> {
   const token = await getLocal('token', []);
   const config: AxiosRequestConfig = {
     headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 1 },
+    ...reqConfig,
   };
   return axios.get<T>(baseUrl + url, config);
 }

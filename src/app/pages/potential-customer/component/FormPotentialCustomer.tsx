@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { change, Field, InjectedFormProps, reduxForm } from 'redux-form';
-import { upper } from '../../../../setup/function.js';
+import { normalizeAlphaWithUpper, upper } from '../../../../setup/function.js';
 import { RootState } from '../../../../setup/index.js';
 import SubmitButton from '../../../modules/button';
 import { RenderField, RenderTextArea } from '../../../modules/redux-form/BasicInput';
@@ -50,7 +50,7 @@ const FormPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: an
             component={RenderField}
             label='Staff Code'
             placeHolder='Insert Staff Code'
-            normalize={upper}
+            normalize={normalizeAlphaWithUpper}
             isEdit={bool}
             readOnly={bool}
           />
@@ -96,7 +96,7 @@ const FormPotentialCustomer: React.FC<InjectedFormProps<{}, Props>> = (props: an
             component={RenderField}
             label='Store Code'
             placeHolder='Insert Store Code'
-            normalize={upper}
+            normalize={normalizeAlphaWithUpper}
           />
         </div>
         <div className='col-lg-6'>

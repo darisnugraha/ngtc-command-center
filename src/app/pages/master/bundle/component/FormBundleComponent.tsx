@@ -1,8 +1,10 @@
+/* eslint-disable*/
+
 import React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup';
-import { upper } from '../../../../../setup/function.js';
+import { normalizeAlphaWithUpper, upper } from '../../../../../setup/function.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField } from '../../../../modules/redux-form/BasicInput';
 import AddBundleValidation from '../validasi/AddBundleValidation';
@@ -28,7 +30,7 @@ const FormBundleComponent: React.FC<InjectedFormProps<{}, Props>> = (props: any)
             placeHolder='Insert Bundle Code'
             isEdit={isEdit}
             readOnly={isEdit}
-            normalize={upper}
+            normalize={normalizeAlphaWithUpper}
           />
         </div>
         <div className='col-lg-6'>

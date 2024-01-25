@@ -1000,7 +1000,7 @@ export const actions = {
 
       AxiosPost('receivable/validation', onSendData)
         .then(() => {
-          AxiosGet(`receivable/by-no/${noPiutang}`).then((response: any) => {
+          AxiosGet(`receivable/by-no-v2/${noPiutang}`).then((response: any) => {
             const dataDecrypt = doDecryptData(response.data, [
               '_id',
               'no_piutang',

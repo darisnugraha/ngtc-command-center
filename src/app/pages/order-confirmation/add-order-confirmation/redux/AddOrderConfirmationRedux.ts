@@ -901,21 +901,21 @@ export const actions = {
                         // Total+Discount
                         const subTotalSoftware =
                           totalSoftware -
-                          (totalDiscountSoftwareRp + totalSoftware * (SoftwarePersen / 100)) || 0;
+                            (totalDiscountSoftwareRp + totalSoftware * (SoftwarePersen / 100)) || 0;
                         const subTotalHardware =
                           totalHardware -
-                          (totalDiscountHardwareRp + totalHardware * (HardwarePersen / 100)) || 0;
+                            (totalDiscountHardwareRp + totalHardware * (HardwarePersen / 100)) || 0;
                         const subTotalConsumable =
                           totalConsumable -
-                          (totalDiscountConsumableRp +
-                            totalConsumable * (ConsumablePersen / 100)) || 0;
+                            (totalDiscountConsumableRp +
+                              totalConsumable * (ConsumablePersen / 100)) || 0;
                         const subTotalSupport =
                           totalSupport -
-                          (totalDiscountSupportRp + totalSupport * (SupportPersen / 100)) || 0;
+                            (totalDiscountSupportRp + totalSupport * (SupportPersen / 100)) || 0;
                         const subTotalProduction =
                           totalProduction -
-                          (totalDiscountProductionRp +
-                            totalProduction * (ProductionPersen / 100)) || 0;
+                            (totalDiscountProductionRp +
+                              totalProduction * (ProductionPersen / 100)) || 0;
 
                         // TotalAll
                         const grandTotal =

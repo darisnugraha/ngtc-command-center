@@ -23,7 +23,7 @@ const KwitansiPDF = (data, head) => {
   doc.setFont(undefined, 'bold');
   doc.text(head[0].nama_toko, 68, y + 25 + moreSpace);
   doc.setFont(undefined, 'normal');
-  const alamat = head[0].alamat;
+  const alamat = data[0].alamat_cabang ?? '';
   let initY = y + 33 + moreSpace;
 
   function cutTextAtWordBoundary(text, maxLength) {

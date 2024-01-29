@@ -701,6 +701,8 @@ const OCPDF = (data, head) => {
       calculateFooterRekening(doc, data);
       let totalHeightTable = heightDescriptionTable + heightDetailItemTable;
       console.log(totalHeightTable);
+      console.log(lastPositionTableItem);
+      console.log(heightDescriptionTable);
       if (lastPositionTableItem > 195) {
         console.log('[GENERATOR] Ini didalam lastPositionTableItem > 195');
         if (pageContent.pageCount > 1) {
@@ -716,13 +718,23 @@ const OCPDF = (data, head) => {
           doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
         } else {
           console.log(
-            '[GENERATOR] Ini didalam lastPositionTableItem > 195 && pageContent.pageCount < 1'
+            '[GENERATOR] Ini didalam lastPositionTableItem > 195 && pageContent.pageCount <= 1'
           );
+          var imgData = toAbsoluteUrl('/media/kop/header.png');
+          doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
           const pageWidth = doc.internal.pageSize.width;
           var imgData = toAbsoluteUrl('/media/kop/footer.png');
           doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
-          var imgData = toAbsoluteUrl('/media/kop/header.png');
-          doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
+          if (lastPositionTableItem + heightDescriptionTable > 235 && lastPositionTableItem + heightDescriptionTable < 275) {
+            doc.addPage();
+            printFooterRekening(doc, data);
+            printFooterFollowUP(doc, head);
+            var imgData = toAbsoluteUrl('/media/kop/header.png');
+            doc.addImage(imgData, 'PNG', 15, 10, 180, 20);
+            var imgData = toAbsoluteUrl('/media/kop/footer.png');
+            doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
+          }
+
         }
       } else {
         console.log('[GENERATOR] Ini didalam lastPositionTableItem < 195');

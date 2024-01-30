@@ -4,6 +4,9 @@ import BootstrapTable, { ColumnDescription } from 'react-bootstrap-table-next';
 import { KTSVG } from '../../../../../_metronic/helpers';
 import { RootState } from '../../../../../setup';
 import * as redux from '../redux/ListOCRedux';
+import * as modalSecond from '../../../../modules/modal/ModalSecondRedux';
+import FormEditProduct from '../../add-order-confirmation/component/FormEditProduct';
+import ModalSecond from '../../../../modules/modal/ModalSecond';
 
 const TableDataProduct: FC = () => {
   const dispatch = useDispatch();
@@ -66,38 +69,63 @@ const TableDataProduct: FC = () => {
       headerClasses: 'ps-4 min-w-100px rounded-end',
       formatter: (cell, row) => {
         return (
-          <button
-            type='button'
-            onClick={() => {
-              dispatch(redux.actions.deleteProduct(row.kode_produk));
-            }}
-            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-          >
-            <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
-          </button>
+          <>
+            <button
+              type='button'
+              onClick={() => {
+                dispatch(redux.actions.editProduct(row.kode_produk));
+                dispatch(modalSecond.actions.show());
+              }}
+              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+            >
+              <KTSVG path='/media/icons/duotune/general/gen055.svg' className='svg-icon-3' />
+            </button>
+            <button
+              type='button'
+              onClick={() => {
+                dispatch(redux.actions.deleteProduct(row.kode_produk));
+              }}
+              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+            >
+              <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
+            </button>
+          </>
         );
       },
     },
   ];
 
+  const handleCloseEdit = () => {
+    dispatch(modalSecond.actions.hide());
+  };
+
   return (
-    <BootstrapTable
-      keyField='_id'
-      columns={columns}
-      data={dataTab}
-      wrapperClasses='table-responsive'
-      classes='table align-middle gs-0 gy-2'
-      headerClasses='fw-bolder text-center'
-      noDataIndication={() => {
-        return (
-          <div className='row'>
-            <div className='col-lg-12' style={{ textAlign: 'center' }}>
-              No Data
+    <>
+      <ModalSecond title='Edit Product' onClose={() => handleCloseEdit()}>
+        <FormEditProduct
+          onSubmit={(data: any) => {
+            dispatch(redux.actions.saveEditProduct(data));
+          }}
+        />
+      </ModalSecond>
+      <BootstrapTable
+        keyField='_id'
+        columns={columns}
+        data={dataTab}
+        wrapperClasses='table-responsive'
+        classes='table align-middle gs-0 gy-2'
+        headerClasses='fw-bolder text-center'
+        noDataIndication={() => {
+          return (
+            <div className='row'>
+              <div className='col-lg-12' style={{ textAlign: 'center' }}>
+                No Data
+              </div>
             </div>
-          </div>
-        );
-      }}
-    />
+          );
+        }}
+      />
+    </>
   );
 };
 

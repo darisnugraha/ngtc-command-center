@@ -108,6 +108,18 @@ const FormAddProductComponent: React.FC<InjectedFormProps<{}, Props>> = (props: 
         </div>
         <div className='col-lg-6'>
           <Field
+            name='qty'
+            type='number'
+            component={RenderField}
+            label='Quantity'
+            placeHolder='Insert Quantity'
+            onChange={(e: any) => {
+              dispatch(redux.actions.handleChangeQty(e.target.value));
+            }}
+          />
+        </div>
+        <div className='col-lg-6'>
+          <Field
             readOnly
             isEdit={disable}
             name='price'
@@ -115,6 +127,18 @@ const FormAddProductComponent: React.FC<InjectedFormProps<{}, Props>> = (props: 
             component={RenderField}
             label='Price'
             placeHolder='Insert Price'
+            {...currencyMask}
+          />
+        </div>
+        <div className='col-lg-6'>
+          <Field
+            readOnly
+            isEdit={disable}
+            name='sub_total'
+            type='text'
+            component={RenderField}
+            label='Sub Total'
+            placeHolder='Sub Total'
             {...currencyMask}
           />
         </div>

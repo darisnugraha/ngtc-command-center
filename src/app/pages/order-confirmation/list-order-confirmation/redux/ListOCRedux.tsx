@@ -1,3 +1,4 @@
+/* eslint-disable*/
 import { Action, AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -20,6 +21,7 @@ import {
   NumberOnly,
 } from '../../../../../setup/function.js';
 import { postPDF } from '../../../../../setup/axios/Firebase';
+import * as modalSecond from '../../../../modules/modal/ModalSecondRedux';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -512,6 +514,53 @@ export const actions = {
           });
         }
       });
+    };
+  },
+  editProduct: (kode_produk: String) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      console.log(kode_produk);
+
+      getLocal('dataProduct', ['sub_total', 'qty', 'harga']).then((res) => {
+        console.log(res);
+
+        const dataFind = res.find((element: any) => element.kode_produk === kode_produk);
+        dispatch(change('FormEditProduct', 'product_code', dataFind.kode_produk));
+        dispatch(change('FormEditProduct', 'product_name', dataFind.nama_produk));
+        dispatch(change('FormEditProduct', 'product_type', dataFind.jenis_produk));
+        dispatch(change('FormEditProduct', 'qty', dataFind.qty || 1));
+        dispatch(change('FormEditProduct', 'unit', dataFind.satuan));
+        dispatch(change('FormEditProduct', 'price', dataFind.harga));
+        dispatch(change('FormEditProduct', 'sub_total', dataFind.sub_total));
+        dispatch(change('FormEditProduct', '_id', dataFind._id));
+        dispatch(modalSecond.actions.show());
+      });
+    };
+  },
+  saveEditProduct: (data: any) => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      const listProduct: any[] = await getLocal('dataProduct', ['sub_total', 'qty', 'harga']);
+      console.log(data.product_code);
+
+      const indexEdited = listProduct.findIndex(
+        (element: any) => element.kode_produk == data.product_code
+      );
+      console.log(indexEdited);
+
+      listProduct.splice(indexEdited, 1, {
+        harga: data.price,
+        satuan: data.unit,
+        jenis_produk: data.product_type,
+        kode_produk: data.product_code,
+        nama_produk: data.product_name,
+        qty: Number(data.qty),
+        sub_total: Number(data.sub_total),
+        type: '-',
+        _id: data._id,
+      });
+      console.log(listProduct);
+      await saveLocal('dataProduct', listProduct, ['sub_total', 'qty', 'harga']);
+      dispatch(actions.getLocalProd());
+      dispatch(modalSecond.actions.hide());
     };
   },
   deleteDiscount: (kode: string) => {

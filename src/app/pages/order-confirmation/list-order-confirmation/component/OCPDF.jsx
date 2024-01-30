@@ -725,7 +725,10 @@ const OCPDF = (data, head) => {
           const pageWidth = doc.internal.pageSize.width;
           var imgData = toAbsoluteUrl('/media/kop/footer.png');
           doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
-          if (lastPositionTableItem + heightDescriptionTable > 235 && lastPositionTableItem + heightDescriptionTable < 275) {
+          if (
+            lastPositionTableItem + heightDescriptionTable > 235 &&
+            lastPositionTableItem + heightDescriptionTable < 275
+          ) {
             doc.addPage();
             printFooterRekening(doc, data);
             printFooterFollowUP(doc, head);
@@ -734,7 +737,6 @@ const OCPDF = (data, head) => {
             var imgData = toAbsoluteUrl('/media/kop/footer.png');
             doc.addImage(imgData, 'PNG', 14, doc.internal.pageSize.height - 27, pageWidth - 28, 25);
           }
-
         }
       } else {
         console.log('[GENERATOR] Ini didalam lastPositionTableItem < 195');

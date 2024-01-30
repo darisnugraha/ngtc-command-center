@@ -27,6 +27,7 @@ const TableListProduct: FC = () => {
       formatter: (cell) => {
         return <p className='ps-4 text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
+      footer: '',
     },
     {
       dataField: 'nama_produk',
@@ -116,25 +117,33 @@ const TableListProduct: FC = () => {
       },
     },
   ];
+  console.log(dataTab);
 
   return (
-    <BootstrapTable
-      keyField='_id'
-      columns={columns}
-      data={dataTab}
-      wrapperClasses='table-responsive'
-      classes='table align-middle gs-0 gy-2'
-      headerClasses='fw-bolder text-center'
-      noDataIndication={() => {
-        return (
-          <div className='row'>
-            <div className='col-lg-12' style={{ textAlign: 'center' }}>
-              No Data
+    <>
+      <BootstrapTable
+        keyField='_id'
+        columns={columns}
+        data={dataTab}
+        wrapperClasses='table-responsive'
+        classes='table align-middle gs-0 gy-2'
+        headerClasses='fw-bolder text-center'
+        noDataIndication={() => {
+          return (
+            <div className='row'>
+              <div className='col-lg-12' style={{ textAlign: 'center' }}>
+                No Data
+              </div>
             </div>
-          </div>
-        );
-      }}
-    />
+          );
+        }}
+      />
+      <div className='text-end'>
+        <h3>
+          Total : Rp. {dataTab.reduce((a: any, b: any) => a + b.sub_total, 0).toLocaleString()}
+        </h3>
+      </div>
+    </>
   );
 };
 

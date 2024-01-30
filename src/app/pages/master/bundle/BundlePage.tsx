@@ -147,8 +147,28 @@ const BundlePage: FC<PropsFromRedux> = () => {
           },
         },
         {
+          dataField: 'qty',
+          text: 'Quantity',
+          align: 'right',
+          formatter: (cell) => {
+            return <p className='text-hover-primary d-block mb-1 fs-6 pe-2'>{cell}</p>;
+          },
+        },
+        {
           dataField: 'harga',
           text: 'Price',
+          align: 'right',
+          formatter: (cell) => {
+            return (
+              <p className='text-hover-primary d-block mb-1 fs-6 pe-2'>
+                Rp. {cell.toLocaleString()}
+              </p>
+            );
+          },
+        },
+        {
+          dataField: 'sub_total',
+          text: 'Sub Total',
           align: 'right',
           formatter: (cell) => {
             return (

@@ -38,6 +38,14 @@ const TableBundleComponent: React.FC<Props> = () => {
       },
     },
     {
+      dataField: 'qty',
+      text: 'Qty',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
+      },
+    },
+    {
       dataField: 'unit',
       text: 'Unit',
       align: 'center',
@@ -48,6 +56,14 @@ const TableBundleComponent: React.FC<Props> = () => {
     {
       dataField: 'price',
       text: 'Price',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell?.toLocaleString()}</p>;
+      },
+    },
+    {
+      dataField: 'sub_total',
+      text: 'Sub Total',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell?.toLocaleString()}</p>;

@@ -93,7 +93,7 @@ export const actions = {
   addBundle: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
-      getLocal('detailProduct', ['price']).then((res) => {
+      getLocal('detailProduct', ['price', 'qty', 'sub_total']).then((res) => {
         if (res.length === 0) {
           toast.info('Add Product First !');
           dispatch(utility.actions.hideLoading());
@@ -106,6 +106,8 @@ export const actions = {
               kode_produk: element.product_code.value || element.product_code,
               nama_produk: element.product_name,
               satuan: element.unit,
+              qty: Number(element.qty),
+              sub_total: Number(element.sub_total),
               type: element.type,
             };
             dataArrnew.push(row);
@@ -115,7 +117,7 @@ export const actions = {
             nama_paket: data.bundle_name,
             detail_produk: dataArrnew,
             // eslint-disable-next-line
-            total_harga: res?.reduce((a: any, b: any) => a + parseInt(b.price), 0),
+            total_harga: res?.reduce((a: any, b: any) => a + parseInt(b.sub_total), 0),
           };
           AxiosPost('bundle', onSendData)
             .then(() => {
@@ -144,6 +146,8 @@ export const actions = {
           'jenis_produk',
           'harga',
           'total_harga',
+          'qty',
+          'sub_total',
         ]);
         const dataSave: any = [];
         let no = 1;
@@ -191,7 +195,7 @@ export const actions = {
           };
           datanewArr.push(row);
         });
-        saveLocal('detailProduct', datanewArr, ['price']).then(() => {
+        saveLocal('detailProduct', datanewArr, ['price', 'qty', 'sub_total']).then(() => {
           dispatch(modal.actions.show());
           dispatch(actions.getDataDetailProduct());
         });
@@ -227,7 +231,7 @@ export const actions = {
   updateBundle: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
-      getLocal('detailProduct', ['price']).then((res) => {
+      getLocal('detailProduct', ['price', 'qty', 'sub_total']).then((res) => {
         if (res.length === 0) {
           toast.info('Add Product First !');
           dispatch(utility.actions.hideLoading());
@@ -241,6 +245,8 @@ export const actions = {
               nama_produk: element.product_name,
               satuan: element.unit,
               type: element.type,
+              qty: element.qty,
+              sub_total: element.sub_total,
             };
             dataArrnew.push(row);
           });
@@ -397,6 +403,8 @@ export const actions = {
           dispatch(change('FormAddProductComponent', 'product_name', dataDecrypt.nama_produk));
           dispatch(change('FormAddProductComponent', 'unit', dataDecrypt.satuan));
           dispatch(change('FormAddProductComponent', 'price', dataDecrypt.harga));
+          dispatch(change('FormAddProductComponent', 'qty', 1));
+          dispatch(change('FormAddProductComponent', 'sub_total', dataDecrypt.harga * 1));
           dispatch(change('FormAddProductComponent', 'type', dataDecrypt.type));
         });
       } else if (data === 'HARDWARE') {
@@ -445,6 +453,23 @@ export const actions = {
       }
     };
   },
+
+  handleChangeQty: (qty: any) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      dispatch({
+        type: actionTypes.GetProductDetail,
+        payload: { feedbackProductDetail: undefined },
+      });
+      const state = getState();
+      const price = state.form.FormAddProductComponent.values.price || 0;
+
+      // eslint-disable-next-line
+      dispatch(change('FormAddProductComponent', 'sub_total', price * qty));
+    };
+  },
   addProduct: () => {
     return async (
       dispatch: ThunkDispatch<{}, {}, AnyAction>,
@@ -463,11 +488,13 @@ export const actions = {
           data.product_name === undefined ||
           data.unit === undefined ||
           data.price === undefined ||
-          data.type === undefined
+          data.type === undefined ||
+          data.qty === undefined ||
+          data.qty === 0
         ) {
           toast.info('Fill The Form First !');
         } else {
-          getLocal('detailProduct', ['price']).then(async (res) => {
+          getLocal('detailProduct', ['price', 'qty', 'sub_total']).then(async (res) => {
             if (res.length === 0) {
               const dataDetail: any = [];
               // eslint-disable-next-line
@@ -475,7 +502,7 @@ export const actions = {
               // eslint-disable-next-line
               data.product_code = data.product_code.value || data.product_code;
               dataDetail.push(data);
-              await saveLocal('detailProduct', dataDetail, ['price']);
+              await saveLocal('detailProduct', dataDetail, ['price', 'qty', 'sub_total']);
               toast.success('Success Add Data !');
               dispatch(actions.getDataDetailProduct());
               dispatch(actions.closeModalProduct());
@@ -486,7 +513,7 @@ export const actions = {
               // eslint-disable-next-line
               data.product_code = data.product_code.value || data.product_code;
               dataDetail.push(data);
-              await saveLocal('detailProduct', dataDetail, ['price']);
+              await saveLocal('detailProduct', dataDetail, ['price', 'qty', 'sub_total']);
               toast.success('Success Add Data !');
               dispatch(actions.getDataDetailProduct());
               dispatch(actions.closeModalProduct());
@@ -498,7 +525,7 @@ export const actions = {
   },
   getDataDetailProduct: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('detailProduct', ['price']).then((res) => {
+      getLocal('detailProduct', ['price', 'qty', 'sub_total']).then((res) => {
         dispatch({
           type: actionTypes.GetProductLocal,
           payload: { feedbackProductDetailLocal: res },
@@ -518,9 +545,9 @@ export const actions = {
         confirmButtonText: 'Yes, delete it!',
       }).then((result: any) => {
         if (result.isConfirmed) {
-          getLocal('detailProduct', ['price']).then((res) => {
+          getLocal('detailProduct', ['price', 'qty', 'sub_total']).then((res) => {
             const dataFill = res.filter((element: any) => element.id !== id);
-            saveLocal('detailProduct', dataFill, ['price']).then(() => {
+            saveLocal('detailProduct', dataFill, ['price', 'qty', 'sub_total']).then(() => {
               toast.success('Success Delete Data !');
               dispatch(actions.getDataDetailProduct());
             });

@@ -345,6 +345,8 @@ export const actions = {
                   'jenis_produk',
                   'harga',
                   'type',
+                  'qty',
+                  'sub_total'
                 ]);
                 getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
                   if (res.length === 0) {
@@ -359,7 +361,7 @@ export const actions = {
                         nama_produk: element.nama_produk,
                         qty: element.qty || 1,
                         satuan: element.satuan,
-                        sub_total: element.harga,
+                        sub_total: element.sub_total,
                         tipe_produk: element.jenis_produk || typeProd,
                         type: element.type || '-',
                       };
@@ -466,6 +468,8 @@ export const actions = {
                 'jenis_produk',
                 'harga',
                 'type',
+                'qty',
+                'sub_total',
               ]);
               getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
                 if (res.length === 0) {
@@ -480,7 +484,7 @@ export const actions = {
                       nama_produk: element.nama_produk,
                       qty: element.qty || 1,
                       satuan: element.satuan,
-                      sub_total: element.harga,
+                      sub_total: element.sub_total,
                       tipe_produk: element.jenis_produk || typeProd,
                       type: element.type || '-',
                     };
@@ -668,7 +672,7 @@ export const actions = {
             nama_produk: element.nama_produk,
             qty: element.qty || 1,
             satuan: element.satuan,
-            sub_total: element.harga,
+            sub_total: element.sub_total,
             tipe_produk: element.jenis_produk || element.tipe_produk,
             type: element.type || '-',
           };
@@ -901,21 +905,21 @@ export const actions = {
                         // Total+Discount
                         const subTotalSoftware =
                           totalSoftware -
-                            (totalDiscountSoftwareRp + totalSoftware * (SoftwarePersen / 100)) || 0;
+                          (totalDiscountSoftwareRp + totalSoftware * (SoftwarePersen / 100)) || 0;
                         const subTotalHardware =
                           totalHardware -
-                            (totalDiscountHardwareRp + totalHardware * (HardwarePersen / 100)) || 0;
+                          (totalDiscountHardwareRp + totalHardware * (HardwarePersen / 100)) || 0;
                         const subTotalConsumable =
                           totalConsumable -
-                            (totalDiscountConsumableRp +
-                              totalConsumable * (ConsumablePersen / 100)) || 0;
+                          (totalDiscountConsumableRp +
+                            totalConsumable * (ConsumablePersen / 100)) || 0;
                         const subTotalSupport =
                           totalSupport -
-                            (totalDiscountSupportRp + totalSupport * (SupportPersen / 100)) || 0;
+                          (totalDiscountSupportRp + totalSupport * (SupportPersen / 100)) || 0;
                         const subTotalProduction =
                           totalProduction -
-                            (totalDiscountProductionRp +
-                              totalProduction * (ProductionPersen / 100)) || 0;
+                          (totalDiscountProductionRp +
+                            totalProduction * (ProductionPersen / 100)) || 0;
 
                         // TotalAll
                         const grandTotal =

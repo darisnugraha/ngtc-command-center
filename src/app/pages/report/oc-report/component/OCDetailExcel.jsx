@@ -19,6 +19,7 @@ class OCDetailReportExcel extends Component {
   }
 
   render() {
+    var grandTotal = 0;
     return (
       <>
         <ReactHTMLTableToExcel
@@ -42,9 +43,6 @@ class OCDetailReportExcel extends Component {
               <th colSpan='12'>
                 {this.state.headLaporan.tgl_awal} s/d {this.state.headLaporan.tgl_akhir}
               </th>
-            </tr>
-            <tr>
-              <th colSpan='12'> TOKO : {this.props.data[0]?.nama_toko} </th>
             </tr>
             <tr>
               <th colSpan='12'></th>
@@ -88,142 +86,141 @@ class OCDetailReportExcel extends Component {
               <tr>
                 <td></td>
               </tr>
-              <tr>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Product Name</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Product Type</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Qty</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Unit</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Price</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Total Price</th>
-              </tr>
-              {this.props.data[0]?.detail_produk.map((item, index) => (
+              {this.props.data?.map((headDetail) => (
                 <>
                   <tr>
-                    <td>{item.nama_produk}</td>
-                    <td>{item.jenis_produk}</td>
-                    <td align='right'>{item.qty}</td>
-                    <td>{item.satuan}</td>
-                    <td align='right'>Rp. {item.harga.toLocaleString()}</td>
-                    <td align='right'>Rp. {item.sub_total.toLocaleString()}</td>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }} colSpan={3}>
+                      No Order Confirmation : {headDetail.no_order_konfirmasi}
+                    </th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }} colSpan={3}>
+                      Customer Name : {headDetail.nama_customer}
+                    </th>
                   </tr>
-                </>
-              ))}
-              <tr>
-                <th
-                  style={{ backgroundColor: '#E8E5E5', color: '#000', textAlign: 'right' }}
-                  colSpan={4}
-                >
-                  Grand Total Product :{' '}
-                </th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000', textAlign: 'right' }}>
-                  Rp.{' '}
-                  {this.props.data[0]?.detail_produk
-                    ?.reduce((a, b) => a + b.harga, 0)
-                    .toLocaleString()}
-                </th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000', textAlign: 'right' }}>
-                  Rp.{' '}
-                  {this.props.data[0]?.detail_produk
-                    ?.reduce((a, b) => a + b.sub_total, 0)
-                    .toLocaleString()}
-                </th>
-              </tr>
-              <tr>
-                <td></td>
-              </tr>
-              <tr>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>No Support Service</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Support Service Name</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Qty</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Unit</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Price</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Total Price</th>
-              </tr>
-              {this.props.data[0]?.support_service.map((item, index) => (
-                <>
                   <tr>
-                    <td>{item.no_support_service}</td>
-                    <td>{item.nama_support_service}</td>
-                    <td align='right'>{item.qty}</td>
-                    <td>{item.kode_satuan}</td>
-                    <td align='right'>Rp. {item.harga.toLocaleString()}</td>
-                    <td align='right'>Rp. {item.total_harga.toLocaleString()}</td>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Product Name</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Product Type</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Qty</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Unit</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Price</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Total Price</th>
                   </tr>
-                </>
-              ))}
-              <tr>
-                <td></td>
-              </tr>
-              <tr>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>No Production Service</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>
-                  Production Service Name
-                </th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Qty</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Unit</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Date</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Total Price</th>
-              </tr>
-              {this.props.data[0]?.production_service.map((item, index) => (
-                <>
+                  {headDetail?.detail_produk.map((item, index) => (
+                    <>
+                      <tr>
+                        <td>{item.nama_produk}</td>
+                        <td>{item.jenis_produk}</td>
+                        <td align='right'>{item.qty}</td>
+                        <td>{item.satuan}</td>
+                        <td align='right'>Rp. {item.harga.toLocaleString()}</td>
+                        <td align='right'>Rp. {item.sub_total.toLocaleString()}</td>
+                      </tr>
+                    </>
+                  ))}
                   <tr>
-                    <td>{item.no_production_service}</td>
-                    <td>{item.nama_production_service}</td>
-                    <td align='right'>{item.qty}</td>
-                    <td>{item.kode_satuan}</td>
-                    <td>{item.tanggal}</td>
-                    <td align='right'>Rp. {item.total_harga.toLocaleString()}</td>
+                    <th
+                      style={{ backgroundColor: '#E8E5E5', color: '#000', textAlign: 'right' }}
+                      colSpan={4}
+                    >
+                      Grand Total Product :{' '}
+                    </th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000', textAlign: 'right' }}>
+                      Rp.{' '}
+                      {headDetail?.detail_produk?.reduce((a, b) => a + b.harga, 0).toLocaleString()}
+                    </th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000', textAlign: 'right' }}>
+                      Rp.{' '}
+                      {headDetail?.detail_produk
+                        ?.reduce((a, b) => a + b.sub_total, 0)
+                        .toLocaleString()}
+                    </th>
                   </tr>
-                </>
-              ))}
-              <tr>
-                <td></td>
-              </tr>
-              <tr>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}></th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}></th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}></th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Discount Name</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Percentage</th>
-                <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Rupiah Discount</th>
-              </tr>
-              {this.props.data[0]?.detail_diskon.map((item, index) => (
-                <>
                   <tr>
                     <td></td>
+                  </tr>
+                  <tr>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>
+                      No Support Service
+                    </th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>
+                      Support Service Name
+                    </th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Qty</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Unit</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Price</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Total Price</th>
+                  </tr>
+                  {headDetail?.support_service.map((item, index) => (
+                    <>
+                      <tr>
+                        <td>{item.no_support_service}</td>
+                        <td>{item.nama_support_service}</td>
+                        <td align='right'>{item.qty}</td>
+                        <td>{item.kode_satuan}</td>
+                        <td align='right'>Rp. {item.harga.toLocaleString()}</td>
+                        <td align='right'>Rp. {item.total_harga.toLocaleString()}</td>
+                      </tr>
+                    </>
+                  ))}
+                  <tr>
                     <td></td>
+                  </tr>
+                  <tr>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>
+                      No Production Service
+                    </th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>
+                      Production Service Name
+                    </th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Qty</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Unit</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Date</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Total Price</th>
+                  </tr>
+                  {headDetail?.production_service.map((item, index) => (
+                    <>
+                      <tr>
+                        <td>{item.no_production_service}</td>
+                        <td>{item.nama_production_service}</td>
+                        <td align='right'>{item.qty}</td>
+                        <td>{item.kode_satuan}</td>
+                        <td>{item.tanggal}</td>
+                        <td align='right'>Rp. {item.total_harga.toLocaleString()}</td>
+                      </tr>
+                    </>
+                  ))}
+                  <tr>
                     <td></td>
-                    <td>{item.nama_diskon}</td>
-                    <td>{item.persentase}</td>
-                    <td align='right'>Rp. {item?.sub_total?.toLocaleString()}</td>
+                  </tr>
+                  <tr>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}></th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}></th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}></th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Discount Name</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Percentage</th>
+                    <th style={{ backgroundColor: '#E8E5E5', color: '#000' }}>Rupiah Discount</th>
+                  </tr>
+                  {headDetail?.detail_diskon.map((item, index) => (
+                    <>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{item.nama_diskon}</td>
+                        <td>{item.persentase}</td>
+                        <td align='right'>Rp. {item?.sub_total?.toLocaleString()}</td>
+                      </tr>
+                    </>
+                  ))}
+                  <tr>
+                    <th colSpan='6'></th>
+                  </tr>
+                  <tr>
+                    <th colSpan='6'></th>
                   </tr>
                 </>
               ))}
             </tbody>
           </>
-          <tfoot>
-            <tr>
-              <th
-                style={{
-                  backgroundColor: '#E8E5E5',
-                  color: '#000',
-                  textAlign: 'right',
-                }}
-                colSpan='5'
-              >
-                Grand Total
-              </th>
-              <th
-                style={{
-                  backgroundColor: '#E8E5E5',
-                  color: '#000',
-                  textAlign: 'right',
-                }}
-              >
-                Rp. {this.props.data[0]?.total_harga?.toLocaleString()}
-              </th>
-            </tr>
-          </tfoot>
         </table>
       </>
     );

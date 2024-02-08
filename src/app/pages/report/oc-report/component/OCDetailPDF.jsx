@@ -8,8 +8,9 @@ const OCDetailPDF = (data, head) => {
   const doc = new jsPDF('l', 'mm', 'a4');
 
   let finalY = 30;
-  doc.setFontSize(10);
+  doc.setFontSize(14);
   doc.text('Order Confirmation Report', 14, 15);
+  doc.setFontSize(10);
   doc.text('Nagatech SI', 180, 15);
   // var imgData = toAbsoluteUrl('/media/logos/nsi-logo.png');
   // doc.addImage(imgData, 'png', 250, 5, 30, 26);
@@ -23,7 +24,7 @@ const OCDetailPDF = (data, head) => {
       'DD-MM-YYYY'
     )}`,
     14,
-    25
+    20
   );
 
   let tableRows = [];
@@ -120,359 +121,362 @@ const OCDetailPDF = (data, head) => {
   finalY = doc.lastAutoTable.finalY + 20;
 
   let tableRowsProduct = [];
-  let tableColumnProduct = [];
-
-  tableColumnProduct = [
-    [
-      { content: `Product Name` },
-      { content: `Product Type` },
-      { content: `Qty` },
-      { content: `Unit` },
-      { content: `Price` },
-      { content: `Price Total` },
-    ],
-  ];
-
-  data[0].detail_produk.forEach((element) => {
-    const row = [
-      { content: element.nama_produk },
-      { content: element.jenis_produk },
-      { content: element.qty, styles: { halign: 'right' } },
-      { content: element.satuan },
-      { content: `Rp. ${element.harga.toLocaleString()}`, styles: { halign: 'right' } },
-      { content: `Rp. ${element.sub_total.toLocaleString()}`, styles: { halign: 'right' } },
+  data.forEach((item) => {
+    let tableColumnProduct = [
+      [
+        { content: 'No Order Confirmation: ' + item.no_order_konfirmasi, colSpan: 3 },
+        { content: 'Customer Name: ' + item.nama_customer, colSpan: 3 },
+      ],
+      [
+        { content: `Product Name` },
+        { content: `Product Type` },
+        { content: `Qty` },
+        { content: `Unit` },
+        { content: `Price` },
+        { content: `Price Total` },
+      ],
     ];
-    tableRowsProduct.push(row);
-  });
 
-  const footerProduct = [
-    {
-      content: 'Grand Total Product : ',
-      colSpan: 2,
-      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
-    },
-    {
-      content: data[0].detail_produk.reduce((a, b) => a + b.qty, 0),
-      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
-    },
-    {
-      content: '',
-      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
-    },
-    {
-      content: 'Rp. ' + data[0].detail_produk.reduce((a, b) => a + b.harga, 0).toLocaleString(),
-      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
-    },
-    {
-      content: 'Rp. ' + data[0].detail_produk.reduce((a, b) => a + b.sub_total, 0).toLocaleString(),
-      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
-    },
-  ];
-  tableRowsProduct.push(footerProduct);
+    item.detail_produk.forEach((element) => {
+      const row = [
+        { content: element.nama_produk },
+        { content: element.jenis_produk },
+        { content: element.qty, styles: { halign: 'right' } },
+        { content: element.satuan },
+        { content: `Rp. ${element.harga.toLocaleString()}`, styles: { halign: 'right' } },
+        { content: `Rp. ${element.sub_total.toLocaleString()}`, styles: { halign: 'right' } },
+      ];
+      tableRowsProduct.push(row);
+    });
 
-  const footerSupportService = [
-    {
-      content: `No Support Service`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Support Service Name`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Qty`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Unit`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Price`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Total Price`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-  ];
-  tableRowsProduct.push(footerSupportService);
-
-  data[0].support_service.forEach((element) => {
-    const footerListSupportService = [
-      { content: element.no_support_service },
-      { content: element.nama_support_service },
-      { content: element.qty },
+    const footerProduct = [
       {
-        content: element.kode_satuan,
+        content: 'Grand Total Product : ',
+        colSpan: 2,
+        styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
       },
       {
-        content: `Rp. ${element.harga.toLocaleString()}`,
-        styles: { halign: 'right' },
+        content: item.detail_produk.reduce((a, b) => a + b.qty, 0),
+        styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
       },
       {
-        content: `Rp. ${element.total_harga.toLocaleString()}`,
-        styles: { halign: 'right' },
+        content: '',
+        styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
+      },
+      {
+        content: 'Rp. ' + item.detail_produk.reduce((a, b) => a + b.harga, 0).toLocaleString(),
+        styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
+      },
+      {
+        content: 'Rp. ' + item.detail_produk.reduce((a, b) => a + b.sub_total, 0).toLocaleString(),
+        styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
       },
     ];
-    tableRowsProduct.push(footerListSupportService);
-  });
+    tableRowsProduct.push(footerProduct);
 
-  const footerProductionService = [
-    {
-      content: `No Production Service`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Production Service Name`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Qty`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Unit`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Date`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Total Price`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-  ];
-  tableRowsProduct.push(footerProductionService);
-
-  data[0].production_service.forEach((element) => {
-    const footerListProductionService = [
-      { content: element.no_production_service },
-      { content: element.nama_production_service },
-      { content: element.qty },
+    const footerSupportService = [
       {
-        content: element.kode_satuan,
+        content: `No Support Service`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
       },
-      { content: element.tanggal },
       {
-        content: `Rp. ${element.total_harga.toLocaleString()}`,
-        styles: { halign: 'right' },
+        content: `Support Service Name`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+      {
+        content: `Qty`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+      {
+        content: `Unit`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+      {
+        content: `Price`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+      {
+        content: `Total Price`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
       },
     ];
-    tableRowsProduct.push(footerListProductionService);
-  });
+    tableRowsProduct.push(footerSupportService);
 
-  const footerProductDiscountHead = [
-    {
-      content: ``,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: ``,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: ``,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Discount Name`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Percentage`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-    {
-      content: `Rupiah Discount`,
-      styles: {
-        fontSize: 7,
-        fillColor: '#E8E5E5',
-        textColor: '#000',
-        valign: 'middle',
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-    },
-  ];
-  tableRowsProduct.push(footerProductDiscountHead);
+    item.support_service.forEach((element) => {
+      const footerListSupportService = [
+        { content: element.no_support_service },
+        { content: element.nama_support_service },
+        { content: element.qty },
+        {
+          content: element.kode_satuan,
+        },
+        {
+          content: `Rp. ${element.harga.toLocaleString()}`,
+          styles: { halign: 'right' },
+        },
+        {
+          content: `Rp. ${element.total_harga.toLocaleString()}`,
+          styles: { halign: 'right' },
+        },
+      ];
+      tableRowsProduct.push(footerListSupportService);
+    });
 
-  data[0].detail_diskon.forEach((element) => {
-    const footerProductDiscount = [
-      { content: `` },
-      { content: `` },
-      { content: `` },
+    const footerProductionService = [
       {
-        content: `Discount ${element.nama_diskon} : `,
+        content: `No Production Service`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
       },
       {
-        content: `${element.persentase || 0} %`,
-        styles: { halign: 'right' },
+        content: `Production Service Name`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
       },
       {
-        content: `Rp. ${element.sub_total.toLocaleString()}`,
-        styles: { halign: 'right' },
+        content: `Qty`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+      {
+        content: `Unit`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+      {
+        content: `Date`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+      {
+        content: `Total Price`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
       },
     ];
-    tableRowsProduct.push(footerProductDiscount);
-  });
-  const footer = [
-    {
-      content: 'Grand Total : ',
-      colSpan: 5,
-      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
-    },
-    {
-      content: `Rp. ${data[0].total_harga.toLocaleString()}`,
-      styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
-    },
-  ];
-  tableRowsProduct.push(footer);
+    tableRowsProduct.push(footerProductionService);
 
-  doc.autoTable({
-    head: tableColumnProduct,
-    body: tableRowsProduct,
-    startY: finalY,
-    theme: 'plain',
-    pageBreak: 'auto',
-    rowPageBreak: 'avoid',
-    margin: { top: 10 },
-    bodyStyles: {
-      fontSize: 7,
-      halign: 'center',
-      valign: 'middle',
-    },
-    headStyles: {
-      fontSize: 7,
-      fillColor: '#E8E5E5',
-      textColor: '#000',
-      valign: 'middle',
-      halign: 'center',
-    },
+    item.production_service.forEach((element) => {
+      const footerListProductionService = [
+        { content: element.no_production_service },
+        { content: element.nama_production_service },
+        { content: element.qty },
+        {
+          content: element.kode_satuan,
+        },
+        { content: element.tanggal },
+        {
+          content: `Rp. ${element.total_harga.toLocaleString()}`,
+          styles: { halign: 'right' },
+        },
+      ];
+      tableRowsProduct.push(footerListProductionService);
+    });
+
+    const footerProductDiscountHead = [
+      {
+        content: ``,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+      {
+        content: ``,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+      {
+        content: ``,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+      {
+        content: `Discount Name`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+      {
+        content: `Percentage`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+      {
+        content: `Rupiah Discount`,
+        styles: {
+          fontSize: 7,
+          fillColor: '#E8E5E5',
+          textColor: '#000',
+          valign: 'middle',
+          halign: 'center',
+          fontStyle: 'bold',
+        },
+      },
+    ];
+    tableRowsProduct.push(footerProductDiscountHead);
+
+    item.detail_diskon.forEach((element) => {
+      const footerProductDiscount = [
+        { content: `` },
+        { content: `` },
+        { content: `` },
+        {
+          content: `Discount ${element.nama_diskon} : `,
+        },
+        {
+          content: `${element.persentase || 0} %`,
+          styles: { halign: 'right' },
+        },
+        {
+          content: `Rp. ${element.sub_total.toLocaleString()}`,
+          styles: { halign: 'right' },
+        },
+      ];
+      tableRowsProduct.push(footerProductDiscount);
+    });
+    const footer = [
+      {
+        content: 'Grand Total : ',
+        colSpan: 5,
+        styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
+      },
+      {
+        content: `Rp. ${item.total_harga.toLocaleString()}`,
+        styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000' },
+      },
+    ];
+    tableRowsProduct.push(footer);
+
+    doc.autoTable({
+      head: tableColumnProduct,
+      body: tableRowsProduct,
+      startY: finalY,
+      theme: 'plain',
+      pageBreak: 'avoid',
+      rowPageBreak: 'avoid',
+      margin: { top: 10 },
+      bodyStyles: {
+        fontSize: 7,
+        halign: 'center',
+        valign: 'middle',
+      },
+      headStyles: {
+        fontSize: 7,
+        fillColor: '#E8E5E5',
+        textColor: '#000',
+        valign: 'middle',
+        halign: 'center',
+      },
+    });
+    tableRowsProduct = [];
+    finalY = doc.lastAutoTable.finalY + 20;
   });
-  tableRowsProduct = [];
-  tableColumnProduct = [];
-  finalY = doc.lastAutoTable.finalY + 20;
 
   const pages = doc.internal.getNumberOfPages();
   const pageWidth = doc.internal.pageSize.width;

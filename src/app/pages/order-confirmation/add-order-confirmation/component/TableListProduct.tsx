@@ -117,7 +117,6 @@ const TableListProduct: FC = () => {
       },
     },
   ];
-  console.log(dataTab);
 
   return (
     <>

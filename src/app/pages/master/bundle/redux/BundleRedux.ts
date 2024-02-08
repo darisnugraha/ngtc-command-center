@@ -172,6 +172,8 @@ export const actions = {
           'kode_produk',
           'jenis_produk',
           'harga',
+          'qty',
+          'sub_total',
         ]);
         dispatch({
           type: actionTypes.GetBundleByID,
@@ -181,6 +183,7 @@ export const actions = {
         dispatch(change('FormBundleComponent', 'id', dataDecrypt._id));
         dispatch(change('FormBundleComponent', 'bundle_code', dataDecrypt.kode_paket));
         dispatch(change('FormBundleComponent', 'bundle_name', dataDecrypt.nama_paket));
+
         const datanewArr: any = [];
         dataDecrypt.detail_produk.forEach((element: any) => {
           const row = {
@@ -190,6 +193,8 @@ export const actions = {
             unit: element.satuan,
             price: element.harga,
             type: element.type,
+            qty: element.qty,
+            sub_total: element.sub_total,
             // eslint-disable-next-line
             id: element._id,
           };
@@ -239,14 +244,14 @@ export const actions = {
           const dataArrnew: any = [];
           res.forEach((element: any) => {
             const row: DetailProduk = {
-              harga: element.price,
+              harga: Number(element.price),
               jenis_produk: element.product_type.value || element.product_type,
               kode_produk: element.product_code.value || element.product_code,
               nama_produk: element.product_name,
               satuan: element.unit,
               type: element.type,
-              qty: element.qty,
-              sub_total: element.sub_total,
+              qty: Number(element.qty),
+              sub_total: Number(element.sub_total),
             };
             dataArrnew.push(row);
           });
@@ -255,7 +260,7 @@ export const actions = {
             nama_paket: data.bundle_name,
             detail_produk: dataArrnew,
             // eslint-disable-next-line
-            total_harga: res?.reduce((a: any, b: any) => a + parseInt(b.price), 0),
+            total_harga: res?.reduce((a: any, b: any) => a + parseInt(b.sub_total), 0),
           };
           AxiosPut(`bundle/${data.id}`, onSendData)
             .then(() => {

@@ -101,6 +101,7 @@
     "local-qc": "export REACT_APP_BACKEND_URL=http://103.119.55.52:5555/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=http://103.119.55.52:5555/api/&& react-scripts start",
     "build-qc": "export REACT_APP_BACKEND_URL=http://103.119.55.52:5555/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=http://103.119.55.52:5555/api/&& react-scripts build",
     "build-demo": "export REACT_APP_BACKEND_URL=https://103.175.220.93:7979/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=https://103.175.220.93:7979/api/&& react-scripts build",
+    "build-marketing": "export REACT_APP_BACKEND_URL=http://103.196.146.28:5555/api/v1/&& export REACT_APP_BACKEND_URL_LOGIN=http://103.196.146.28:5555/api/v1/&& react-scripts build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

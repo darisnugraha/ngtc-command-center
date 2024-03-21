@@ -1,10 +1,10 @@
 /* eslint-disable */
 import React, { FC } from 'react';
 import { Modal } from 'react-bootstrap-v5';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../setup';
 import { KTSVG } from '../../../_metronic/helpers';
-
+import * as globalRedux from './GlobalModalRedux';
 export interface Props {
   title: string;
   onClose: () => void;
@@ -13,6 +13,7 @@ export interface Props {
 
 const GlobalModal: FC<Props> = ({ children, title, typeModal, onClose }) => {
   const isShowing = useSelector<RootState>(({ modal }) => modal.isShowing, shallowEqual);
+  const dispatch = useDispatch();
   return (
     <Modal
       className='modal fade'
@@ -21,6 +22,7 @@ const GlobalModal: FC<Props> = ({ children, title, typeModal, onClose }) => {
       tabIndex={-1}
       role='dialog'
       show={isShowing}
+      onHide={() => dispatch(globalRedux.actions.hide())}
       dialogClassName={
         title.includes('Bundle') ||
         title.includes('Potential Customer') ||

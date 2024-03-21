@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
-import { currencyMask } from '../../../../../setup/function.js';
+import { currencyMask, NumberOnly } from '../../../../../setup/function.js';
 import { RootState } from '../../../../../setup/index.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField } from '../../../../modules/redux-form/BasicInput';
@@ -118,6 +118,9 @@ const FormSupportService: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             component={RenderField}
             label='Qty'
             placeHolder='Insert Qty'
+            onChange={(e: any) => {
+              dispatch(redux.actions.calculateTotalPriceQty(NumberOnly(e.target.value)));
+            }}
           />
         </div>
         <div className='col-lg-6'>
@@ -144,6 +147,9 @@ const FormSupportService: React.FC<InjectedFormProps<{}, Props>> = (props: any) 
             label='Price'
             placeHolder='Insert Price'
             {...currencyMask}
+            onChange={(e: any) => {
+              dispatch(redux.actions.calculateTotalPricePrice(NumberOnly(e.target.value)));
+            }}
           />
         </div>
         <div className='col-lg-6'>

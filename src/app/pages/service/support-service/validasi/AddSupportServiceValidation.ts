@@ -26,14 +26,6 @@ const AddSupportServiceValidation = (
     errors.unit_code = 'Qty required';
   }
 
-  if (!values.price) {
-    errors.price = 'Price required';
-  }
-
-  if (!values.total_price) {
-    errors.total_price = 'Total Price required';
-  }
-
   return errors;
 };
 export default AddSupportServiceValidation;

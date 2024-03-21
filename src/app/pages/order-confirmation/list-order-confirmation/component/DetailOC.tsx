@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import BootstrapTable, { ColumnDescription } from 'react-bootstrap-table-next';
 // import { KTSVG } from '../../../../../_metronic/helpers';
 import { RootState } from '../../../../../setup';
+import { manipulatePriceData } from '../../../../../setup/function.js';
 
 const DetailOC: FC = () => {
   const dispatch = useDispatch();
@@ -58,9 +59,7 @@ const DetailOC: FC = () => {
       dataField: 'total_harga',
       text: 'Total Price',
       align: 'center',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell?.toLocaleString()}</p>;
-      },
+      formatter: manipulatePriceData,
     },
     {
       dataField: 'status',
@@ -152,21 +151,13 @@ const DetailOC: FC = () => {
       dataField: 'harga',
       text: 'Price',
       align: 'center',
-      formatter: (cell) => {
-        return (
-          <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell.toLocaleString() || '-'}</p>
-        );
-      },
+      formatter: manipulatePriceData,
     },
     {
       dataField: 'sub_total',
       text: 'Sub Total',
       align: 'right',
-      formatter: (cell) => {
-        return (
-          <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell.toLocaleString() || '-'}</p>
-        );
-      },
+      formatter: manipulatePriceData,
     },
   ];
 

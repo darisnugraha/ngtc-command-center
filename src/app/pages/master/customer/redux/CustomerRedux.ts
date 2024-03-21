@@ -9,6 +9,7 @@ import * as modal from '../../../../modules/modal/GlobalModalRedux';
 import * as utility from '../../../../../setup/redux/UtilityRedux';
 import { AxiosDelete } from '../../../../../setup/axios/AxiosDelete';
 import { AxiosPut } from '../../../../../setup/axios/AxiosPut';
+import { replaceDashWithHyphen } from '../../../../../setup/function.js';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -75,8 +76,8 @@ export const actions = {
         nama_toko: data.store_name || '-',
         nama_customer: data.customer_name || '-',
         kota: data.city || '-',
-        alamat: data.address || '-',
-        alamat_korespondensi: data.correspondence_address || '-',
+        alamat: replaceDashWithHyphen(data.address) || '-',
+        alamat_korespondensi: replaceDashWithHyphen(data.correspondence_address) || '-',
         telepon: data.telephone || '-',
         email: data.email || '-',
         tipe_toko: data.type_store.value || data.type_store || '-',
@@ -102,8 +103,8 @@ export const actions = {
         nama_toko: data.store_name,
         nama_customer: data.customer_name,
         kota: data.city,
-        alamat: data.address,
-        alamat_korespondensi: data.correspondence_address,
+        alamat: replaceDashWithHyphen(data.address),
+        alamat_korespondensi: replaceDashWithHyphen(data.correspondence_address),
         telepon: data.telephone || '-',
         email: data.email || '-',
         tipe_toko: data.type_store.value || data.type_store || '-',
@@ -134,8 +135,8 @@ export const actions = {
             email: data.email || '-',
             telepon: data.telephone || '-',
             kota: data.city || '-',
-            alamat_cabang: data.address || '-',
-            alamat_korespondensi: data.correspondence_address || '-',
+            alamat_cabang: replaceDashWithHyphen(data.address) || '-',
+            alamat_korespondensi: replaceDashWithHyphen(data.correspondence_address) || '-',
             tipe_cabang: data.type_branch.value || data.type_branch || '-',
           },
         ],
@@ -164,8 +165,8 @@ export const actions = {
         email: data.email,
         telepon: data.telephone,
         kota: data.city,
-        alamat_cabang: data.address,
-        alamat_korespondensi: data.correspondence_address,
+        alamat_cabang: replaceDashWithHyphen(data.address),
+        alamat_korespondensi: replaceDashWithHyphen(data.correspondence_address),
         tipe_cabang: data.type_branch.value || data.type_branch || '-',
       };
 

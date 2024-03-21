@@ -4,6 +4,8 @@ import { RootState } from '../../../../setup';
 import AddOrderConfirmationCustomer from './AddOrderConfirmationCustomer';
 import AddOrderConfirmationProduct from './AddOrderConfirmationProduct';
 import * as reduxCustomer from './redux/AddOrderConfirmationCustomerRedux';
+import * as supportServiceRedux from '../../service/support-service/redux/SupportServiceRedux';
+import * as productionServiceRedux from '../../service/production-service/redux/ProductionServiceRedux';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
 const connector = connect(mapState);
@@ -18,6 +20,8 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
 
   useEffect(() => {
     dispatch(reduxCustomer.actions.getCustomerLocal());
+    dispatch(supportServiceRedux.actions.getSupportService());
+    dispatch(productionServiceRedux.actions.getProductionService());
   }, [dispatch]);
 
   const dataCustomer: any = useSelector<RootState>(
@@ -37,6 +41,14 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
                     ? ` - ${dataCustomer.central_store_name} - ${dataCustomer.branch_store_name}`
                     : ''}
                 </span>
+                {/* <button
+                  type='button'
+                  onClick={() => {
+                    dispatch(redux.actions.dummyPrint());
+                  }}
+                >
+                  Print
+                </button> */}
               </h3>
             </div>
           </div>
@@ -64,6 +76,14 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
                     ? ` - ${dataCustomer.central_store_name} - ${dataCustomer.branch_store_name}`
                     : ''}
                 </span>
+                {/* <button
+                  type='button'
+                  onClick={() => {
+                    dispatch(redux.actions.dummyPrint());
+                  }}
+                >
+                  Print
+                </button> */}
               </h3>
             </div>
           </div>
@@ -86,6 +106,14 @@ const AddOrderConfirmation: FC<PropsFromRedux> = () => {
                     ? ` - ${dataCustomer.central_store_name} - ${dataCustomer.branch_store_name}`
                     : ''}
                 </span>
+                {/* <button
+                  type='button'
+                  onClick={() => {
+                    dispatch(redux.actions.dummyPrint());
+                  }}
+                >
+                  Print
+                </button> */}
               </h3>
             </div>
           </div>

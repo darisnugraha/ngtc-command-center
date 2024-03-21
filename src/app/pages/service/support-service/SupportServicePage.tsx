@@ -10,6 +10,7 @@ import * as redux from './redux/SupportServiceRedux';
 import * as reduxStore from '../../master/customer/redux/CustomerRedux';
 import * as reduxUnit from '../../master/unit/redux/UnitRedux';
 import FormSupportService from './component/FormSupportService';
+import { manipulatePriceData } from '../../../../setup/function.js';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
 const connector = connect(mapState);
@@ -94,17 +95,13 @@ const SupportServicePage: FC<PropsFromRedux> = () => {
       dataField: 'harga',
       text: 'Price',
       align: 'right',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell.toLocaleString()}</p>;
-      },
+      formatter: manipulatePriceData,
     },
     {
       dataField: 'total_harga',
       text: 'Subtotal',
       align: 'right',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell.toLocaleString()}</p>;
-      },
+      formatter: manipulatePriceData,
     },
     {
       dataField: '',

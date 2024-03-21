@@ -270,6 +270,7 @@ export const saveLocal = async (name, payload, ignore = []) => {
         localStorage.setItem(name, encryptascii(payload));
         resolve('Berhasil');
       } else {
+        console.log(payload);
         localStorage.setItem(name, JSON.stringify(doEncrypt(payload, ignore)));
         resolve('Berhasil');
       }

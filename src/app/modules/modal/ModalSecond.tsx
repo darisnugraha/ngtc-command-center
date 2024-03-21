@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 import { Modal } from 'react-bootstrap-v5';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../setup';
 import { KTSVG } from '../../../_metronic/helpers';
+import * as modalSecondRedux from './ModalSecondRedux';
 
 export interface Props {
   title: string;
@@ -15,6 +16,7 @@ const ModalSecond: FC<Props> = ({ children, title, typeModal, onClose }) => {
     ({ modalSecond }) => modalSecond.isShowing,
     shallowEqual
   );
+  const dispatch = useDispatch();
   return (
     <Modal
       className='modal fade'
@@ -23,6 +25,7 @@ const ModalSecond: FC<Props> = ({ children, title, typeModal, onClose }) => {
       tabIndex={-1}
       role='dialog'
       show={isShowing}
+      onHide={() => dispatch(modalSecondRedux.actions.hide())}
       dialogClassName={
         title.includes('Bundle') ||
         title.includes('Potential Customer') ||

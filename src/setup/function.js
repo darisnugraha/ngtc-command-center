@@ -117,3 +117,25 @@ export const changeDateIndoToGlobal = (data) => {
   const part = data.split('/');
   return part.reverse().join('/');
 };
+
+export function replaceDashWithHyphen(input) {
+  return input.replace(/–/g, '-');
+}
+
+export const manipulatePriceData = (data) => {
+  if (data === 0) {
+    return <p className='text-hover-primary d-block mb-1 text-bold'>FREE</p>;
+  } else {
+    return (
+      <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {data?.toLocaleString() || '0'}</p>
+    );
+  }
+};
+
+export const handleZeroToFree = (data) => {
+  if (data === 0) {
+    return 'FREE';
+  } else {
+    return data?.toLocaleString() || '0';
+  }
+};

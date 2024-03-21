@@ -1,5 +1,6 @@
 import { Action, AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
+import { change, getFormValues } from 'redux-form';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { AxiosGet } from '../../../../../setup';
@@ -75,6 +76,38 @@ export const reducer = persistReducer(
 );
 
 export const actions = {
+  calculateDiscount: (value: number, isPercentage: boolean = false) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const payload: any = getFormValues('FormAddSupportServiceOC')(state);
+      dispatch(
+        change(
+          'FormAddSupportServiceOC',
+          'total_harga_diskon',
+          isPercentage ? (value / 100) * payload.total_price : value
+        )
+      );
+    };
+  },
+  calculateDiscountProduction: (value: number, isPercentage: boolean = false) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const payload: any = getFormValues('FormAddProductionServiceOC')(state);
+      dispatch(
+        change(
+          'FormAddProductionServiceOC',
+          'total_harga_diskon',
+          isPercentage ? (value / 100) * payload.total_price : value
+        )
+      );
+    };
+  },
   getSupportService: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       getLocal('dataCustomer').then((val) => {
@@ -138,58 +171,61 @@ export const actions = {
     };
   },
   getSupportDetail: (no: String) => {
-    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      AxiosGet(`support-service/by-no/${no}`).then((res) => {
-        const dataDecrypt = doDecryptData(res.data, [
-          'no_support_service',
-          'kode_cabang',
-          'kode_satuan',
-          'kode_toko',
-          'qty',
-          'status',
-          '_id',
-          'input_date',
-          'tanggal',
-          'harga',
-          'total_harga',
-        ]);
-        dispatch({
-          type: actionTypes.GetDetailSupportByID,
-          payload: { supportData: dataDecrypt[0] },
-        });
-      });
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => {}
+    ): Promise<void> => {
+      const state: any = getState();
+      const supportservice: any[] = state.supportservice.feedback;
+      const selectedData = supportservice.find((find: any) => find.no_support_service === no);
+      if (selectedData !== null) {
+        dispatch(
+          change(
+            'FormAddSupportServiceOC',
+            'support_service_name',
+            selectedData.nama_support_service
+          )
+        );
+        dispatch(change('FormAddSupportServiceOC', 'price', selectedData.harga));
+        dispatch(change('FormAddSupportServiceOC', 'qty', selectedData.qty));
+        dispatch(change('FormAddSupportServiceOC', 'unit', selectedData.kode_satuan));
+        dispatch(
+          change('FormAddSupportServiceOC', 'total_price', selectedData.qty * selectedData.harga)
+        );
+      }
     };
   },
   getProductionDetail: (no: String) => {
-    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      AxiosGet(`production-service/by-no/${no}`).then((res) => {
-        const dataDecrypt = doDecryptData(res.data, [
-          'no_production_service',
-          'tanggal',
-          'kode_toko',
-          'kode_cabang',
-          'kode_satuan',
-          'lama_pengerjaan',
-          'qc',
-          'total_pengerjaan',
-          'qty',
-          'harga',
-          'total_harga',
-          'status',
-          '_id',
-          'input_date',
-          'no_inquiry',
-        ]);
-        dispatch({
-          type: actionTypes.GetDetailProductionByID,
-          payload: { productionData: dataDecrypt[0] },
-        });
-      });
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => {}
+    ): Promise<void> => {
+      const state: any = getState();
+      const productionservice: any[] = state.productionservice.feedback;
+      const selectedData = productionservice.find((find: any) => find.no_production_service === no);
+      if (selectedData !== null) {
+        dispatch(
+          change(
+            'FormAddProductionServiceOC',
+            'production_service_name',
+            selectedData.nama_production_service
+          )
+        );
+        dispatch(change('FormAddProductionServiceOC', 'qty', selectedData.qty));
+        dispatch(change('FormAddProductionServiceOC', 'unit', selectedData.kode_satuan));
+        dispatch(change('FormAddProductionServiceOC', 'total_price', selectedData.total_harga));
+      }
     };
   },
   addSupport: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listSupport', ['qty', 'harga', 'total_harga']).then((res) => {
+      getLocal('listSupport', [
+        'qty',
+        'harga',
+        'total_harga',
+        'persentase',
+        'total_harga_diskon',
+      ]).then((res) => {
         if (res.length === 0) {
           const dataArr = [];
           const row = {
@@ -200,15 +236,26 @@ export const actions = {
             qty: data.qty,
             satuan: data.unit,
             total_harga: data.total_price,
+            kode_diskon: data.discount_code || '-',
+            nama_diskon: data.discount_name || '-',
+            persentase: Number(data.discount_percentage || 0),
+            total_harga_diskon: Number(data.total_harga_diskon || 0),
           };
           dataArr.push(row);
-          saveLocal('listSupport', dataArr, ['qty', 'harga', 'total_harga']).then(() => {
+          saveLocal('listSupport', dataArr, [
+            'qty',
+            'harga',
+            'total_harga',
+            'persentase',
+            'total_harga_diskon',
+          ]).then(() => {
             toast.success('Success Add Data !');
             dispatch({
               type: actionTypes.GetDetailSupportByID,
               payload: { supportData: [] },
             });
             dispatch(actions.getSupportLocal());
+            dispatch(actions.discountManual());
           });
         } else {
           const dataArr = res;
@@ -221,15 +268,26 @@ export const actions = {
             qty: data.qty,
             satuan: data.unit,
             total_harga: data.total_price,
+            kode_diskon: data.discount_code || '-',
+            nama_diskon: data.discount_name || '-',
+            persentase: Number(data.discount_percentage || 0),
+            total_harga_diskon: Number(data.total_harga_diskon || 0),
           };
           dataArr.push(row);
-          saveLocal('listSupport', dataArr, ['qty', 'harga', 'total_harga']).then(() => {
+          saveLocal('listSupport', dataArr, [
+            'qty',
+            'harga',
+            'total_harga',
+            'persentase',
+            'total_harga_diskon',
+          ]).then(() => {
             toast.success('Success Add Data !');
             dispatch({
               type: actionTypes.GetDetailSupportByID,
               payload: { supportData: [] },
             });
             dispatch(actions.getSupportLocal());
+            dispatch(actions.discountManual());
           });
         }
       });
@@ -237,62 +295,92 @@ export const actions = {
   },
   addProduction: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listProduction', ['qty', 'total_harga']).then((res) => {
-        if (res.length === 0) {
-          const dataArr = [];
-          const row = {
-            key: 1,
-            no_production_service: data.no_production_service,
-            nama_production_service: data.production_service_name,
-            qty: data.qty,
-            satuan: data.unit,
-            total_harga: data.total_price,
-          };
-          dataArr.push(row);
-          saveLocal('listProduction', dataArr, ['qty', 'total_harga']).then(() => {
-            toast.success('Success Add Data !');
-            dispatch({
-              type: actionTypes.GetDetailProductionByID,
-              payload: { productionData: [] },
+      getLocal('listProduction', ['qty', 'total_harga', 'persentase', 'total_harga_diskon']).then(
+        (res) => {
+          if (res.length === 0) {
+            const dataArr = [];
+            const row = {
+              key: 1,
+              no_production_service: data.no_production_service,
+              nama_production_service: data.production_service_name,
+              qty: data.qty,
+              satuan: data.unit,
+              total_harga: data.total_price,
+              kode_diskon: data.discount_code || '-',
+              nama_diskon: data.discount_name || '-',
+              persentase: Number(data.discount_percentage || 0),
+              total_harga_diskon: Number(data.total_harga_diskon || 0),
+            };
+            dataArr.push(row);
+            saveLocal('listProduction', dataArr, [
+              'qty',
+              'total_harga',
+              'persentase',
+              'total_harga_diskon',
+            ]).then(() => {
+              toast.success('Success Add Data !');
+              dispatch({
+                type: actionTypes.GetDetailProductionByID,
+                payload: { productionData: [] },
+              });
+              dispatch(actions.getProductionLocal());
+              dispatch(actions.discountManual());
             });
-            dispatch(actions.getProductionLocal());
-          });
-        } else {
-          const dataArr = res;
-          const no = dataArr.length + 1;
-          const row = {
-            key: no,
-            no_production_service: data.no_production_service,
-            nama_production_service: data.production_service_name,
-            qty: data.qty,
-            satuan: data.unit,
-            total_harga: data.total_price,
-          };
-          dataArr.push(row);
-          saveLocal('listProduction', dataArr, ['qty', 'total_harga']).then(() => {
-            toast.success('Success Add Data !');
-            dispatch({
-              type: actionTypes.GetDetailProductionByID,
-              payload: { productionData: [] },
+          } else {
+            const dataArr = res;
+            const no = dataArr.length + 1;
+            const row = {
+              key: no,
+              no_production_service: data.no_production_service,
+              nama_production_service: data.production_service_name,
+              qty: data.qty,
+              satuan: data.unit,
+              total_harga: data.total_price,
+              kode_diskon: data.discount_code || '-',
+              nama_diskon: data.discount_name || '-',
+              persentase: Number(data.discount_percentage || 0),
+              total_harga_diskon: Number(data.total_harga_diskon || 0),
+            };
+            dataArr.push(row);
+            saveLocal('listProduction', dataArr, [
+              'qty',
+              'total_harga',
+              'persentase',
+              'total_harga_diskon',
+            ]).then(() => {
+              toast.success('Success Add Data !');
+              dispatch({
+                type: actionTypes.GetDetailProductionByID,
+                payload: { productionData: [] },
+              });
+              dispatch(actions.getProductionLocal());
+              dispatch(actions.discountManual());
             });
-            dispatch(actions.getProductionLocal());
-          });
+          }
         }
-      });
+      );
     };
   },
   getSupportLocal: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listSupport', ['qty', 'harga', 'total_harga']).then((res) => {
+      getLocal('listSupport', [
+        'qty',
+        'harga',
+        'total_harga',
+        'persentase',
+        'total_harga_diskon',
+      ]).then((res) => {
         dispatch({ type: actionTypes.GetLocalSupport, payload: { listSupport: res } });
       });
     };
   },
   getProductionLocal: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listProduction', ['qty', 'total_harga']).then((res) => {
-        dispatch({ type: actionTypes.GetLocalProduction, payload: { listProduction: res } });
-      });
+      getLocal('listProduction', ['qty', 'total_harga', 'persentase', 'total_harga_diskon']).then(
+        (res) => {
+          dispatch({ type: actionTypes.GetLocalProduction, payload: { listProduction: res } });
+        }
+      );
     };
   },
   deleteSupportLocal: (key: any) => {
@@ -302,19 +390,106 @@ export const actions = {
         saveLocal('listSupport', newData, ['qty', 'harga', 'total_harga']).then(() => {
           dispatch(actions.getSupportLocal());
           toast.success('Success Delete Data !');
+          dispatch(actions.discountManual());
         });
       });
     };
   },
   deleteProductionLocal: (key: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listProduction', ['qty', 'total_harga']).then((res) => {
-        const newData = res.filter((element: any) => element.key !== key);
-        saveLocal('listProduction', newData, ['qty', 'total_harga']).then(() => {
-          dispatch(actions.getProductionLocal());
-          toast.success('Success Delete Data !');
-        });
-      });
+      getLocal('listProduction', ['qty', 'total_harga', 'persentase', 'total_harga_diskon']).then(
+        (res) => {
+          const newData = res.filter((element: any) => element.key !== key);
+          saveLocal('listProduction', newData, [
+            'qty',
+            'total_harga',
+            'persentase',
+            'total_harga_diskon',
+          ]).then(() => {
+            dispatch(actions.getProductionLocal());
+            toast.success('Success Delete Data !');
+            dispatch(actions.discountManual());
+          });
+        }
+      );
+    };
+  },
+  discountManual: () => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const listProduct: any = await getLocal('listProduct', [
+        'sub_total',
+        'qty',
+        'harga',
+        'persentase',
+        'sub_total_diskon',
+      ]);
+      const discountData: any = await getLocal('listDiscount', [
+        'persentase',
+        'diskon_rp',
+        'final_price_after_discount',
+        'nominal_diskon',
+      ]);
+      const listSupport: any = await getLocal('listSupport', [
+        'qty',
+        'harga',
+        'total_harga',
+        'persentase',
+        'total_harga_diskon',
+      ]);
+      const listProduction: any = await getLocal('listProduction', [
+        'qty',
+        'total_harga',
+        'harga',
+        'persentase',
+        'total_harga_diskon',
+      ]);
+      const sub_total_product = listProduct.reduce((a: any, b: any) => a + b.sub_total, 0);
+      const sub_total_product_diskon = listProduct.reduce(
+        (a: any, b: any) => a + b.sub_total_diskon,
+        0
+      );
+      const sub_total_supp = listSupport.reduce((a: any, b: any) => a + b.total_harga, 0);
+      const sub_total_supp_diskon = listSupport.reduce(
+        (a: any, b: any) => a + b.total_harga_diskon,
+        0
+      );
+      const sub_total_production = listProduction.reduce((a: any, b: any) => a + b.total_harga, 0);
+      const sub_total_production_diskon = listProduction.reduce(
+        (a: any, b: any) => a + b.total_harga_diskon,
+        0
+      );
+      const sub_total =
+        sub_total_product -
+        sub_total_product_diskon +
+        (sub_total_production - sub_total_supp_diskon) +
+        (sub_total_supp - sub_total_production_diskon);
+      const formState: any = getFormValues('FormAddDiscountManual')(state);
+      if (discountData.length > 0) {
+        const lastDiscountData = discountData[discountData.length - 1];
+        dispatch(
+          change('FormAddDiscountManual', 'sub_total', lastDiscountData.final_price_after_discount)
+        );
+        dispatch(
+          change(
+            'FormAddDiscountManual',
+            'grand_total',
+            lastDiscountData.final_price_after_discount - (formState?.manual_discount ?? 0)
+          )
+        );
+      } else {
+        dispatch(change('FormAddDiscountManual', 'sub_total', sub_total));
+        dispatch(
+          change(
+            'FormAddDiscountManual',
+            'grand_total',
+            sub_total - (formState?.manual_discount ?? 0)
+          )
+        );
+      }
     };
   },
 };

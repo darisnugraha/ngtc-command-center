@@ -24,6 +24,8 @@ export const actionTypes = {
   SetCamera: '[VALIDATIONPAYMENT] Set Camera',
   GetListBank: '[VALIDATIONPAYMENT] Get List Bank',
   GetProofOfPayment: '[VALIDATIONPAYMENT] Get Image Proof Of Payment',
+  startSending: '[VALIDATIONPAYMENT] Start Sending Status',
+  stopSending: '[VALIDATIONPAYMENT] Stop Sending Status',
 };
 export interface IPaymentOCState {
   isSending?: boolean;
@@ -72,6 +74,14 @@ export const reducer = persistReducer(
       case actionTypes.GetProofOfPayment: {
         const data = action.payload?.proofOfPaymentIMG;
         return { ...state, proofOfPaymentIMG: data };
+      }
+      case actionTypes.startSending: {
+        const isSending = true;
+        return { ...state, isSending };
+      }
+      case actionTypes.stopSending: {
+        const isSending = false;
+        return { ...state, isSending };
       }
 
       default:
@@ -993,50 +1003,61 @@ export const actions = {
     };
   },
   validationPayment: (noPiutang: any) => {
-    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      const onSendData = {
-        no_piutang: noPiutang,
-      };
-
-      AxiosPost('receivable/validation', onSendData)
-        .then(() => {
-          AxiosGet(`receivable/by-no-v2/${noPiutang}`).then((response: any) => {
-            const dataDecrypt = doDecryptData(response.data, [
-              '_id',
-              'no_piutang',
-              'tanggal',
-              'no_order_konfirmasi',
-              'tanggal_order_konfirmasi',
-              'no_sales_order',
-              'tanggal_sales_order',
-              'kode_toko',
-              'kode_cabang',
-              'total_tagihan',
-              'bayar_rp',
-              'sisa_tagihan',
-              'status',
-              'input_date',
-            ]);
-            AxiosGet(`store/by-kode/${dataDecrypt[0].kode_toko}`).then((resToko) => {
-              const dataDecryptStore = doDecryptData(resToko.data, [
-                'kode_toko',
-                'status',
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      dispatch({ type: actionTypes.startSending });
+      if (state.validationpayment.isSending === false) {
+        const onSendData = {
+          no_piutang: noPiutang,
+        };
+        AxiosPost('receivable/validation', onSendData)
+          .then(() => {
+            AxiosGet(`receivable/by-no-v2/${noPiutang}`).then((response: any) => {
+              const dataDecrypt = doDecryptData(response.data, [
                 '_id',
-                'input_date',
+                'no_piutang',
+                'tanggal',
+                'no_order_konfirmasi',
+                'tanggal_order_konfirmasi',
+                'no_sales_order',
+                'tanggal_sales_order',
+                'kode_toko',
                 'kode_cabang',
+                'total_tagihan',
+                'bayar_rp',
+                'sisa_tagihan',
+                'status',
+                'input_date',
               ]);
-              KwitansiPDF(dataDecrypt, dataDecryptStore);
-              toast.success('Success Validate Data !');
-              dispatch(actions.getListPaymentOC());
-              dispatch(actions.getListPaymentOCDP());
+              AxiosGet(`store/by-kode/${dataDecrypt[0].kode_toko}`).then((resToko) => {
+                const dataDecryptStore = doDecryptData(resToko.data, [
+                  'kode_toko',
+                  'status',
+                  '_id',
+                  'input_date',
+                  'kode_cabang',
+                ]);
+                KwitansiPDF(dataDecrypt, dataDecryptStore);
+                toast.success('Success Validate Data !');
+                dispatch(actions.getListPaymentOC());
+                dispatch(actions.getListPaymentOCDP());
+              });
             });
+          })
+          .catch((err) => {
+            // eslint-disable-next-line
+            console.log(err);
+            toast.error('Failed Validate Data !');
+          })
+          .finally(() => {
+            dispatch({ type: actionTypes.stopSending });
           });
-        })
-        .catch((err) => {
-          // eslint-disable-next-line
-          console.log(err);
-          toast.error('Failed Validate Data !');
-        });
+      } else {
+        toast.error('Proses Validasi Sedang Berjalan!');
+      }
     };
   },
 };

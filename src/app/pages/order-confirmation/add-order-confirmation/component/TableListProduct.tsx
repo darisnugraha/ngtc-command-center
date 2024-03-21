@@ -4,6 +4,7 @@ import BootstrapTable, { ColumnDescription } from 'react-bootstrap-table-next';
 import { KTSVG } from '../../../../../_metronic/helpers';
 import { RootState } from '../../../../../setup';
 import * as redux from '../redux/AddOrderConfirmationRedux';
+import { manipulatePriceData } from '../../../../../setup/function.js';
 
 const TableListProduct: FC = () => {
   const dispatch = useDispatch();
@@ -33,13 +34,16 @@ const TableListProduct: FC = () => {
       dataField: 'nama_produk',
       text: 'Product Name',
       align: 'center',
+      headerStyle: () => {
+        return { width: '15vw' };
+      },
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
       },
     },
     {
       dataField: 'tipe_produk',
-      text: 'Product Type',
+      text: 'Type',
       align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
@@ -65,17 +69,19 @@ const TableListProduct: FC = () => {
       dataField: 'harga',
       text: 'Price',
       align: 'right',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell.toLocaleString()}</p>;
-      },
+      formatter: manipulatePriceData,
     },
     {
       dataField: 'sub_total',
       text: 'Sub Total',
       align: 'right',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell.toLocaleString()}</p>;
-      },
+      formatter: manipulatePriceData,
+    },
+    {
+      dataField: 'sub_total_diskon',
+      text: 'Discount',
+      align: 'right',
+      formatter: manipulatePriceData,
     },
     {
       dataField: '',
@@ -119,30 +125,23 @@ const TableListProduct: FC = () => {
   ];
 
   return (
-    <>
-      <BootstrapTable
-        keyField='_id'
-        columns={columns}
-        data={dataTab}
-        wrapperClasses='table-responsive'
-        classes='table align-middle gs-0 gy-2'
-        headerClasses='fw-bolder text-center'
-        noDataIndication={() => {
-          return (
-            <div className='row'>
-              <div className='col-lg-12' style={{ textAlign: 'center' }}>
-                No Data
-              </div>
+    <BootstrapTable
+      keyField='_id'
+      columns={columns}
+      data={dataTab}
+      wrapperClasses='table-responsive'
+      classes='table align-middle gs-0 gy-2'
+      headerClasses='fw-bolder text-center'
+      noDataIndication={() => {
+        return (
+          <div className='row'>
+            <div className='col-lg-12' style={{ textAlign: 'center' }}>
+              No Data
             </div>
-          );
-        }}
-      />
-      <div className='text-end'>
-        <h3>
-          Total : Rp. {dataTab.reduce((a: any, b: any) => a + b.sub_total, 0).toLocaleString()}
-        </h3>
-      </div>
-    </>
+          </div>
+        );
+      }}
+    />
   );
 };
 

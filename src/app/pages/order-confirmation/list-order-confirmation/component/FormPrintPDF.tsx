@@ -31,8 +31,8 @@ const FormPrintPDF: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
         <div className='col-lg-12'>
           <Field
             name='waktu_pengiriman'
-            type='text'
-            component={RenderField}
+            type='textarea'
+            component={RenderTextArea}
             label='Waktu Pengiriman'
             placeHolder='Insert Waktu Pengiriman'
           />
@@ -40,8 +40,8 @@ const FormPrintPDF: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
         <div className='col-lg-12'>
           <Field
             name='sistem_pembayaran'
-            type='text'
-            component={RenderField}
+            type='textarea'
+            component={RenderTextArea}
             label='Sistem Pembayaran'
             placeHolder='Insert Sistem Pembayaran'
           />

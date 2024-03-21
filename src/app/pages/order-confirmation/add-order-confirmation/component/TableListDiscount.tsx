@@ -43,7 +43,15 @@ const TableListDiscount: FC = () => {
     {
       dataField: 'diskon_rp',
       text: 'Diskon Rp',
-      align: 'right',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell?.toLocaleString()}</p>;
+      },
+    },
+    {
+      dataField: 'final_price_after_discount',
+      text: 'Final Price After Discount',
+      align: 'center',
       formatter: (cell) => {
         return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell?.toLocaleString()}</p>;
       },

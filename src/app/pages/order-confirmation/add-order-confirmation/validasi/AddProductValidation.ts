@@ -16,10 +16,6 @@ const AddProductValidation = (values: productModel): FormErrors<productModel> =>
     errors.product_type = 'Product Type required';
   }
 
-  if (!values.price) {
-    errors.price = 'Price required';
-  }
-
   if (!values.qty) {
     errors.qty = 'Qty required';
   }

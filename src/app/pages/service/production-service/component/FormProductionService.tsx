@@ -1,5 +1,4 @@
 import React from 'react';
-import * as xlsx from 'xlsx';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { currencyMask } from '../../../../../setup/function.js';
@@ -9,7 +8,6 @@ import { RenderField } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
 import AddProductionServiceValidation from '../validasi/AddProductionServiceValidation';
 import * as redux from '../redux/ProductionServiceRedux';
-import TableInquiry from './TableInquiry';
 
 interface Props {}
 
@@ -61,21 +59,21 @@ const FormProductionService: React.FC<InjectedFormProps<{}, Props>> = (props: an
     { value: dataDetailBranch?.kode_cabang, label: dataDetailBranch?.nama_cabang },
   ];
 
-  const readUploadFile = (e: any) => {
-    e.preventDefault();
-    if (e.target.files) {
-      const reader = new FileReader();
-      reader.onload = (element) => {
-        const data = element?.target?.result;
-        const workbook = xlsx.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const json = xlsx.utils.sheet_to_json(worksheet);
-        dispatch(redux.actions.addInquiry(json));
-      };
-      reader.readAsArrayBuffer(e.target.files[0]);
-    }
-  };
+  // const readUploadFile = (e: any) => {
+  //   e.preventDefault();
+  //   if (e.target.files) {
+  //     const reader = new FileReader();
+  //     reader.onload = (element) => {
+  //       const data = element?.target?.result;
+  //       const workbook = xlsx.read(data, { type: 'array' });
+  //       const sheetName = workbook.SheetNames[0];
+  //       const worksheet = workbook.Sheets[sheetName];
+  //       const json = xlsx.utils.sheet_to_json(worksheet);
+  //       dispatch(redux.actions.addInquiry(json));
+  //     };
+  //     reader.readAsArrayBuffer(e.target.files[0]);
+  //   }
+  // };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -189,7 +187,7 @@ const FormProductionService: React.FC<InjectedFormProps<{}, Props>> = (props: an
             placeHolder='Insert Total Processing Time'
           />
         </div>
-        <div className='col-lg-6'>
+        {/* <div className='col-lg-6'>
           <label htmlFor='upload'>Upload File</label>
           <input type='file' name='upload' id='upload' onChange={readUploadFile} />
         </div>
@@ -198,7 +196,7 @@ const FormProductionService: React.FC<InjectedFormProps<{}, Props>> = (props: an
         </div>
         <div className='col-lg-12'>
           <TableInquiry />
-        </div>
+        </div> */}
       </div>
       <div className='row justify-content-end mt-5'>
         <div className='col-lg-3 d-grid'>

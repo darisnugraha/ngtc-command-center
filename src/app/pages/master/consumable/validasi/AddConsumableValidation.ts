@@ -20,10 +20,6 @@ const AddSoftwareValidation = (values: ConsumableModel): FormErrors<ConsumableMo
     errors.supplier = 'Supplier required';
   }
 
-  if (!values.price) {
-    errors.price = 'Price Address required';
-  }
-
   return errors;
 };
 export default AddSoftwareValidation;

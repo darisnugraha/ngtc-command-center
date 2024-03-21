@@ -32,8 +32,32 @@ const TableDataDiskon: FC = () => {
       },
     },
     {
-      dataField: 'diskon_rp',
+      dataField: 'sub_total',
       text: 'Sub Total',
+      align: 'right',
+      formatter: (cell) => {
+        return (
+          <p className='text-hover-primary d-block mb-1 fs-6'>
+            Rp. {cell?.toLocaleString() || '-'}
+          </p>
+        );
+      },
+    },
+    {
+      dataField: 'nominal_diskon',
+      text: 'Discount',
+      align: 'right',
+      formatter: (cell) => {
+        return (
+          <p className='text-hover-primary d-block mb-1 fs-6'>
+            Rp. {cell?.toLocaleString() || '-'}
+          </p>
+        );
+      },
+    },
+    {
+      dataField: 'harga_setelah_diskon',
+      text: 'Final Price',
       align: 'right',
       formatter: (cell) => {
         return (
@@ -65,23 +89,28 @@ const TableDataDiskon: FC = () => {
   ];
 
   return (
-    <BootstrapTable
-      keyField='_id'
-      columns={columns}
-      data={dataTab}
-      wrapperClasses='table-responsive'
-      classes='table align-middle gs-0 gy-2'
-      headerClasses='fw-bolder text-center'
-      noDataIndication={() => {
-        return (
-          <div className='row'>
-            <div className='col-lg-12' style={{ textAlign: 'center' }}>
-              No Data
+    <>
+      <h3 className='card-title align-items-start flex-column mb-5'>
+        <span className='card-label fw-bolder fs-3 mb-1'>List Discount Global</span>
+      </h3>
+      <BootstrapTable
+        keyField='_id'
+        columns={columns}
+        data={dataTab}
+        wrapperClasses='table-responsive'
+        classes='table align-middle gs-0 gy-2'
+        headerClasses='fw-bolder text-center'
+        noDataIndication={() => {
+          return (
+            <div className='row'>
+              <div className='col-lg-12' style={{ textAlign: 'center' }}>
+                No Data
+              </div>
             </div>
-          </div>
-        );
-      }}
-    />
+          );
+        }}
+      />
+    </>
   );
 };
 

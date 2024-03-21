@@ -66,7 +66,7 @@ export const actions = {
         nama_hardware: data.hardware_name,
         kode_supplier: data.supplier.value || data.supplier,
         satuan: data.unit.value || data.unit,
-        harga: data.price,
+        harga: data.price || 0,
       };
 
       AxiosPost('hardware', onSendData)
@@ -131,7 +131,7 @@ export const actions = {
         nama_hardware: data.hardware_name,
         kode_supplier: data.supplier.value || data.supplier,
         satuan: data.unit.value || data.unit,
-        harga: data.price,
+        harga: data.price || 0,
       };
 
       AxiosPut(`hardware/${data.id}`, onSendData)

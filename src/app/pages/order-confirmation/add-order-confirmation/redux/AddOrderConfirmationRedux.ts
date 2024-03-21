@@ -2,7 +2,7 @@
 
 import { Action, AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { change, reset } from 'redux-form';
+import { change, getFormValues, reset } from 'redux-form';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import Swal from 'sweetalert2';
@@ -126,6 +126,8 @@ export const actions = {
             'input_date',
             'harga',
             'type',
+            'persentase',
+            'sub_total_diskon',
           ]);
           const dataSave: any = [];
           let no = 1;
@@ -151,6 +153,8 @@ export const actions = {
             'input_date',
             'harga',
             'type',
+            'persentase',
+            'sub_total_diskon',
           ]);
           const dataSave: any = [];
           let no = 1;
@@ -176,6 +180,8 @@ export const actions = {
             'input_date',
             'harga',
             'type',
+            'persentase',
+            'sub_total_diskon',
           ]);
           const dataSave: any = [];
           let no = 1;
@@ -203,6 +209,8 @@ export const actions = {
             'harga',
             'total_harga',
             'type',
+            'persentase',
+            'sub_total_diskon',
           ]);
           const dataSave: any = [];
           let no = 1;
@@ -237,6 +245,8 @@ export const actions = {
             'input_date',
             'harga',
             'type',
+            'persentase',
+            'sub_total_diskon',
           ]);
           dispatch({
             type: actionTypes.GetDetailDataProduct,
@@ -259,6 +269,8 @@ export const actions = {
             'input_date',
             'harga',
             'type',
+            'persentase',
+            'sub_total_diskon',
           ]);
           dispatch({
             type: actionTypes.GetDetailDataProduct,
@@ -281,6 +293,8 @@ export const actions = {
             'input_date',
             'harga',
             'type',
+            'persentase',
+            'sub_total_diskon',
           ]);
           dispatch({
             type: actionTypes.GetDetailDataProduct,
@@ -305,6 +319,8 @@ export const actions = {
             'harga',
             'total_harga',
             'type',
+            'persentase',
+            'sub_total_diskon',
           ]);
           dispatch({
             type: actionTypes.GetDetailDataProduct,
@@ -346,7 +362,7 @@ export const actions = {
                   'harga',
                   'type',
                   'qty',
-                  'sub_total'
+                  'sub_total',
                 ]);
                 getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
                   if (res.length === 0) {
@@ -374,6 +390,7 @@ export const actions = {
                         toast.success('Success Add Data !');
                         dispatch(reset('FormAddProductOC'));
                         dispatch(actions.getDataProductLocal());
+                        dispatch(actions.discountManual());
                       });
                     });
                   } else {
@@ -400,16 +417,25 @@ export const actions = {
                         toast.success('Success Add Data !');
                         dispatch(reset('FormAddProductOC'));
                         dispatch(actions.getDataProductLocal());
+                        dispatch(actions.discountManual());
                       });
                     });
                   }
                 });
               });
             } else {
-              getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
+              getLocal('listProduct', [
+                'sub_total',
+                'qty',
+                'harga',
+                'sub_total_diskon',
+                'persentase',
+              ]).then((res) => {
                 if (res.length === 0) {
+                  console.log('INI DI SINI A');
+
                   const dataArr = [];
-                  const row: listProductModel = {
+                  const row: any = {
                     key: 1,
                     harga: data.price,
                     kode_produk: data.product.value || data.product,
@@ -419,19 +445,31 @@ export const actions = {
                     sub_total: data.sub_total,
                     tipe_produk: data.product_type.value || data.product_type || typeProd,
                     type: data.type || '-',
+                    kode_diskon: data.discount_code || '-',
+                    nama_diskon: data.discount_name || '-',
+                    persentase: data.discount_percentage || 0,
+                    sub_total_diskon: Number(data.sub_total_diskon || 0),
                   };
                   dataArr.push(row);
-                  saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+                  saveLocal('listProduct', dataArr, [
+                    'sub_total',
+                    'qty',
+                    'harga',
+                    'sub_total_diskon',
+                    'persentase',
+                  ]).then(() => {
                     saveLocal('dataPackage', false).then(() => {
                       toast.success('Success Add Data !');
                       dispatch(reset('FormAddProductOC'));
                       dispatch(actions.getDataProductLocal());
+                      dispatch(actions.discountManual());
                     });
                   });
                 } else {
+                  console.log('INI DI SINI B');
                   const dataArr = res;
                   const no = res.length + 1;
-                  const row: listProductModel = {
+                  const row: any = {
                     // eslint-disable-next-line
                     key: no,
                     harga: data.price,
@@ -442,13 +480,24 @@ export const actions = {
                     sub_total: data.sub_total,
                     tipe_produk: data.product_type.value || data.product_type || typeProd,
                     type: data.type || '-',
+                    kode_diskon: data.discount_code || '-',
+                    nama_diskon: data.discount_name || '-',
+                    persentase: data.discount_percentage || 0,
+                    sub_total_diskon: Number(data.sub_total_diskon || 0),
                   };
                   dataArr.push(row);
-                  saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+                  saveLocal('listProduct', dataArr, [
+                    'sub_total',
+                    'qty',
+                    'harga',
+                    'sub_total_diskon',
+                    'persentase',
+                  ]).then(() => {
                     saveLocal('dataPackage', false).then(() => {
                       toast.success('Success Add Data !');
                       dispatch(reset('FormAddProductOC'));
                       dispatch(actions.getDataProductLocal());
+                      dispatch(actions.discountManual());
                     });
                   });
                 }
@@ -471,11 +520,18 @@ export const actions = {
                 'qty',
                 'sub_total',
               ]);
-              getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
+              getLocal('listProduct', [
+                'sub_total',
+                'qty',
+                'harga',
+                'sub_total_diskon',
+                'persentase',
+              ]).then((res) => {
                 if (res.length === 0) {
                   const dataArr: listProductModel[] = [];
                   let no = 1;
                   dataDecrypt.detail_produk.forEach((element: any) => {
+                    console.log('INI DI SINI C');
                     const row: listProductModel = {
                       // eslint-disable-next-line
                       key: no,
@@ -491,16 +547,24 @@ export const actions = {
                     dataArr.push(row);
                     no += 1;
                   });
-                  saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+                  saveLocal('listProduct', dataArr, [
+                    'sub_total',
+                    'qty',
+                    'harga',
+                    'sub_total_diskon',
+                    'persentase',
+                  ]).then(() => {
                     saveLocal('dataPackage', true).then(() => {
                       toast.success('Success Add Data !');
                       dispatch(reset('FormAddProductOC'));
                       dispatch(actions.getDataProductLocal());
+                      dispatch(actions.discountManual());
                     });
                   });
                 } else {
                   const dataArr: listProductModel[] = res;
                   let no = res.length + 1;
+                  console.log('INI DI SINI D');
                   dataDecrypt.detail_produk.forEach((element: any) => {
                     const row: listProductModel = {
                       // eslint-disable-next-line
@@ -517,21 +581,35 @@ export const actions = {
                     dataArr.push(row);
                     no += 1;
                   });
-                  saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+                  saveLocal('listProduct', dataArr, [
+                    'sub_total',
+                    'qty',
+                    'harga',
+                    'sub_total_diskon',
+                    'persentase',
+                  ]).then(() => {
                     saveLocal('dataPackage', true).then(() => {
                       toast.success('Success Add Data !');
                       dispatch(reset('FormAddProductOC'));
                       dispatch(actions.getDataProductLocal());
+                      dispatch(actions.discountManual());
                     });
                   });
                 }
               });
             });
           } else {
-            getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
+            getLocal('listProduct', [
+              'sub_total',
+              'qty',
+              'harga',
+              'sub_total_diskon',
+              'persentase',
+            ]).then((res) => {
               if (res.length === 0) {
+                console.log('INI DI SINI E');
                 const dataArr = [];
-                const row: listProductModel = {
+                const row: any = {
                   key: 1,
                   harga: data.price,
                   kode_produk: data.product.value || data.product,
@@ -541,19 +619,31 @@ export const actions = {
                   sub_total: data.sub_total,
                   tipe_produk: data.product_type.value || data.product_type || typeProd,
                   type: data.type || '-',
+                  kode_diskon: data.discount_code,
+                  nama_diskon: data.discount_name,
+                  persentase: data.discount_percentage || 0,
+                  sub_total_diskon: Number(data.sub_total_diskon),
                 };
                 dataArr.push(row);
-                saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+                saveLocal('listProduct', dataArr, [
+                  'sub_total',
+                  'qty',
+                  'harga',
+                  'sub_total_diskon',
+                  'persentase',
+                ]).then(() => {
                   saveLocal('dataPackage', false).then(() => {
                     toast.success('Success Add Data !');
                     dispatch(reset('FormAddProductOC'));
                     dispatch(actions.getDataProductLocal());
+                    dispatch(actions.discountManual());
                   });
                 });
               } else {
+                console.log('INI DI SINI F');
                 const dataArr = res;
                 const no = res.length + 1;
-                const row: listProductModel = {
+                const row: any = {
                   // eslint-disable-next-line
                   key: no,
                   harga: data.price,
@@ -564,13 +654,24 @@ export const actions = {
                   sub_total: data.sub_total,
                   tipe_produk: data.product_type.value || data.product_type || typeProd,
                   type: data.type || '-',
+                  kode_diskon: data.discount_code,
+                  nama_diskon: data.discount_name,
+                  persentase: data.discount_percentage || 0,
+                  sub_total_diskon: Number(data.sub_total_diskon),
                 };
                 dataArr.push(row);
-                saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+                saveLocal('listProduct', dataArr, [
+                  'sub_total',
+                  'qty',
+                  'harga',
+                  'sub_total_diskon',
+                  'persentase',
+                ]).then(() => {
                   saveLocal('dataPackage', false).then(() => {
                     toast.success('Success Add Data !');
                     dispatch(reset('FormAddProductOC'));
                     dispatch(actions.getDataProductLocal());
+                    dispatch(actions.discountManual());
                   });
                 });
               }
@@ -578,17 +679,20 @@ export const actions = {
           }
         }
       });
+      dispatch(actions.discountManual());
     };
   },
   getDataProductLocal: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
-        const respon = localStorage.getItem('dataPackage');
-        dispatch({
-          type: actionTypes.GetListProduct,
-          payload: { listProduct: res, isPackage: respon },
-        });
-      });
+      getLocal('listProduct', ['sub_total', 'qty', 'harga', 'persentase', 'sub_total_diskon']).then(
+        (res) => {
+          const respon = localStorage.getItem('dataPackage');
+          dispatch({
+            type: actionTypes.GetListProduct,
+            payload: { listProduct: res, isPackage: respon },
+          });
+        }
+      );
     };
   },
   deleteProductPackage: () => {
@@ -610,6 +714,7 @@ export const actions = {
               payload: { listProduct: [], isPackage: false },
             });
             toast.success('Success Delete Data !');
+            dispatch(actions.discountManual());
           });
         }
       });
@@ -627,14 +732,27 @@ export const actions = {
         confirmButtonText: 'Yes, delete it!',
       }).then((result: any) => {
         if (result.isConfirmed) {
-          getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
+          getLocal('listProduct', [
+            'sub_total',
+            'qty',
+            'harga',
+            'sub_total_diskon',
+            'persentase',
+          ]).then((res) => {
             const newArr = res.filter((object: any) => {
               // eslint-disable-next-line
               return object.key !== id;
             });
-            saveLocal('listProduct', newArr, ['sub_total', 'qty', 'harga']).then(() => {
+            saveLocal('listProduct', newArr, [
+              'sub_total',
+              'qty',
+              'harga',
+              'sub_total_diskon',
+              'persentase',
+            ]).then(() => {
               toast.success('Success Delete Data !');
               dispatch(actions.getDataProductLocal());
+              dispatch(actions.discountManual());
             });
           });
         }
@@ -643,63 +761,75 @@ export const actions = {
   },
   editProduct: (id: String) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
-        const dataFind = res.find((element: any) => element.key === id);
-        dispatch(change('FormEditProduct', 'product_code', dataFind.kode_produk));
-        dispatch(change('FormEditProduct', 'product_name', dataFind.nama_produk));
-        dispatch(change('FormEditProduct', 'product_type', dataFind.tipe_produk));
-        dispatch(change('FormEditProduct', 'qty', dataFind.qty || 1));
-        dispatch(change('FormEditProduct', 'unit', dataFind.satuan));
-        dispatch(change('FormEditProduct', 'price', dataFind.harga));
-        dispatch(change('FormEditProduct', 'sub_total', dataFind.sub_total));
-        dispatch(modalSecond.actions.show());
-      });
+      getLocal('listProduct', ['sub_total', 'qty', 'harga', 'sub_total_diskon', 'persentase']).then(
+        (res) => {
+          const dataFind = res.find((element: any) => element.key === id);
+          dispatch(change('FormEditProduct', 'product_code', dataFind.kode_produk));
+          dispatch(change('FormEditProduct', 'product_name', dataFind.nama_produk));
+          dispatch(change('FormEditProduct', 'product_type', dataFind.tipe_produk));
+          dispatch(change('FormEditProduct', 'qty', dataFind.qty || 1));
+          dispatch(change('FormEditProduct', 'unit', dataFind.satuan));
+          dispatch(change('FormEditProduct', 'price', dataFind.harga));
+          dispatch(change('FormEditProduct', 'sub_total', dataFind.sub_total));
+          dispatch(modalSecond.actions.show());
+          dispatch(actions.discountManual());
+        }
+      );
     };
   },
   saveEditProduct: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
-      getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
-        const dataFind = res.filter((element: any) => element.kode_produk !== data.product_code);
-        const dataArr: listProductModel[] = [];
-        let no = 1;
-        dataFind.forEach((element: any) => {
+      getLocal('listProduct', ['sub_total', 'qty', 'harga', 'sub_total_diskon', 'persentase']).then(
+        (res) => {
+          const dataFind = res.filter((element: any) => element.kode_produk !== data.product_code);
+          const dataArr: listProductModel[] = [];
+          let no = 1;
+          dataFind.forEach((element: any) => {
+            const row: listProductModel = {
+              // eslint-disable-next-line
+              key: no,
+              harga: element.harga,
+              kode_produk: element.kode_produk,
+              nama_produk: element.nama_produk,
+              qty: element.qty || 1,
+              satuan: element.satuan,
+              sub_total: element.sub_total,
+              tipe_produk: element.jenis_produk || element.tipe_produk,
+              type: element.type || '-',
+            };
+            dataArr.push(row);
+            no += 1;
+          });
           const row: listProductModel = {
             // eslint-disable-next-line
-            key: no,
-            harga: element.harga,
-            kode_produk: element.kode_produk,
-            nama_produk: element.nama_produk,
-            qty: element.qty || 1,
-            satuan: element.satuan,
-            sub_total: element.sub_total,
-            tipe_produk: element.jenis_produk || element.tipe_produk,
-            type: element.type || '-',
+            key: dataArr.length + 1,
+            harga: data.price,
+            kode_produk: data.product_code,
+            nama_produk: data.product_name,
+            qty: data.qty || 1,
+            satuan: data.unit,
+            sub_total: data.sub_total,
+            tipe_produk: data.product_type.value || data.product_type,
+            type: data.type || '-',
           };
           dataArr.push(row);
-          no += 1;
-        });
-        const row: listProductModel = {
-          // eslint-disable-next-line
-          key: dataArr.length + 1,
-          harga: data.price,
-          kode_produk: data.product_code,
-          nama_produk: data.product_name,
-          qty: data.qty || 1,
-          satuan: data.unit,
-          sub_total: data.sub_total,
-          tipe_produk: data.product_type.value || data.product_type,
-          type: data.type || '-',
-        };
-        dataArr.push(row);
-        saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
-          toast.success('Success Add Data !');
-          dispatch(reset('FormEditProduct'));
-          dispatch(actions.getDataProductLocal());
-          dispatch(utility.actions.hideLoading());
-          dispatch(modalSecond.actions.hide());
-        });
-      });
+          saveLocal('listProduct', dataArr, [
+            'sub_total',
+            'qty',
+            'harga',
+            'sub_total_diskon',
+            'persentase',
+          ]).then(() => {
+            toast.success('Success Add Data !');
+            dispatch(reset('FormEditProduct'));
+            dispatch(actions.getDataProductLocal());
+            dispatch(utility.actions.hideLoading());
+            dispatch(modalSecond.actions.hide());
+            dispatch(actions.discountManual());
+          });
+        }
+      );
     };
   },
   deleteDiscount: (id: String) => {
@@ -714,13 +844,30 @@ export const actions = {
         confirmButtonText: 'Yes, delete it!',
       }).then((result: any) => {
         if (result.isConfirmed) {
-          getLocal('listDiscount', ['persentase', 'diskon_rp']).then((res) => {
+          getLocal('listDiscount', [
+            'persentase',
+            'diskon_rp',
+            'final_price_after_discount',
+            'nominal_diskon',
+            'no_urut',
+            'harga_sebelum_diskon',
+            'harga_setelah_diskon',
+          ]).then((res) => {
             const newArr = res.filter((object: any) => {
               return object.key !== id;
             });
-            saveLocal('listDiscount', newArr, ['persentase', 'diskon_rp']).then(() => {
+            saveLocal('listDiscount', newArr, [
+              'persentase',
+              'diskon_rp',
+              'final_price_after_discount',
+              'nominal_diskon',
+              'no_urut',
+              'harga_sebelum_diskon',
+              'harga_setelah_diskon',
+            ]).then(() => {
               toast.success('Success Delete Data !');
               dispatch(actions.getDataDiscountLocal());
+              dispatch(actions.discountManual());
             });
           });
         }
@@ -729,18 +876,39 @@ export const actions = {
   },
   addDataDiscount: (data: any) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listDiscount', ['persentase', 'diskon_rp']).then((res) => {
+      getLocal('listDiscount', [
+        'persentase',
+        'diskon_rp',
+        'final_price_after_discount',
+        'nominal_diskon',
+        'no_urut',
+        'harga_sebelum_diskon',
+        'harga_setelah_diskon',
+      ]).then((res) => {
         if (res.length === 0) {
           const dataArr = [];
           const row = {
             key: 1,
+            no_urut: 1,
             kode_diskon: data.discount_code.value || data.discount_code,
             nama_diskon: data.discount_name,
             persentase: data.discount_percentage || 0,
             diskon_rp: data.discount_rp || 0,
+            nominal_diskon: Number(data.nominal_discount) || 0,
+            final_price_after_discount: data.final_price_after_discount || 0,
+            harga_sebelum_diskon: data.final_price_before_discount || 0,
+            harga_setelah_diskon: data.final_price_after_discount || 0,
           };
           dataArr.push(row);
-          saveLocal('listDiscount', dataArr, ['persentase', 'diskon_rp']).then(() => {
+          saveLocal('listDiscount', dataArr, [
+            'persentase',
+            'diskon_rp',
+            'final_price_after_discount',
+            'nominal_diskon',
+            'no_urut',
+            'harga_sebelum_diskon',
+            'harga_setelah_diskon',
+          ]).then(() => {
             toast.success('Success Add Data !');
             dispatch(reset('FormAddDiscount'));
             dispatch(actions.getDataDiscountLocal());
@@ -751,199 +919,222 @@ export const actions = {
           const row = {
             // eslint-disable-next-line
             key: no,
+            no_urut: no,
             kode_diskon: data.discount_code,
             nama_diskon: data.discount_name,
             persentase: data.discount_percentage || 0,
             diskon_rp: data.discount_rp || 0,
+            nominal_diskon: Number(data.nominal_discount) || 0,
+            final_price_after_discount: data.final_price_after_discount || 0,
+            harga_sebelum_diskon: data.final_price_before_discount || 0,
+            harga_setelah_diskon: data.final_price_after_discount || 0,
           };
           dataArr.push(row);
-          saveLocal('listDiscount', dataArr, ['persentase', 'diskon_rp']).then(() => {
+          saveLocal('listDiscount', dataArr, [
+            'persentase',
+            'diskon_rp',
+            'final_price_after_discount',
+            'nominal_diskon',
+            'no_urut',
+            'harga_sebelum_diskon',
+            'harga_setelah_diskon',
+          ]).then(() => {
             toast.success('Success Add Data !');
             dispatch(reset('FormAddDiscount'));
             dispatch(actions.getDataDiscountLocal());
           });
+          dispatch(actions.discountManual());
         }
       });
     };
   },
   getDataDiscountLocal: () => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-      getLocal('listDiscount', ['persentase', 'diskon_rp']).then((res) => {
+      getLocal('listDiscount', [
+        'persentase',
+        'diskon_rp',
+        'final_price_after_discount',
+        'nominal_diskon',
+        'no_urut',
+        'harga_sebelum_diskon',
+        'harga_setelah_diskon',
+      ]).then((res) => {
         dispatch({ type: actionTypes.GetListDiscount, payload: { listDiscount: res } });
       });
     };
   },
-  postAddOC: () => {
+  calculateDiscount: (value: number, isPercentage: boolean = false) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const payload: any = getFormValues('FormAddProductOC')(state);
+      dispatch(
+        change(
+          'FormAddProductOC',
+          'sub_total_diskon',
+          isPercentage ? (value / 100) * payload.sub_total : value
+        )
+      );
+    };
+  },
+  calculateGlobalDiscount: (value: number, isPercentage: boolean = false) => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+      const localData: any = await getLocal('listProduct', [
+        'sub_total',
+        'qty',
+        'harga',
+        'persentase',
+        'sub_total_diskon',
+      ]);
+      const discountData: any = await getLocal('listDiscount', [
+        'persentase',
+        'diskon_rp',
+        'final_price_after_discount',
+        'nominal_diskon',
+        'no_urut',
+        'harga_sebelum_diskon',
+        'harga_setelah_diskon',
+      ]);
+      const listSupport: any = await getLocal('listSupport', [
+        'qty',
+        'harga',
+        'total_harga',
+        'persentase',
+        'total_harga_diskon',
+      ]);
+      const listProduction: any = await getLocal('listProduction', [
+        'qty',
+        'total_harga',
+        'harga',
+        'persentase',
+        'total_harga_diskon',
+      ]);
+      let grandTotal = 0;
+      const sub_total = localData.reduce((a: any, b: any) => a + b.sub_total, 0);
+      const sub_total_diskon = localData.reduce((a: any, b: any) => a + b.sub_total_diskon, 0);
+      const sub_total_supp = listSupport.reduce((a: any, b: any) => a + b.total_harga, 0);
+      const sub_total_supp_diskon = listSupport.reduce(
+        (a: any, b: any) => a + b.total_harga_diskon,
+        0
+      );
+      const sub_total_production = listProduction.reduce((a: any, b: any) => a + b.total_harga, 0);
+      const sub_total_production_diskon = listProduction.reduce(
+        (a: any, b: any) => a + b.total_harga_diskon,
+        0
+      );
+      if (discountData.length > 0) {
+        let lastDiscountData = discountData[discountData.length - 1];
+        grandTotal = lastDiscountData.final_price_after_discount;
+      } else {
+        grandTotal =
+          sub_total -
+          sub_total_diskon +
+          (sub_total_supp - sub_total_supp_diskon) +
+          (sub_total_production - sub_total_production_diskon);
+      }
+
+      dispatch(
+        change(
+          'FormAddDiscount',
+          'final_price_after_discount',
+          parseInt((grandTotal - (isPercentage ? (value / 100) * grandTotal : value)).toString())
+        )
+      );
+      dispatch(change('FormAddDiscount', 'final_price_before_discount', Number(grandTotal)));
+      dispatch(
+        change(
+          'FormAddDiscount',
+          'nominal_discount',
+          isPercentage ? (value / 100) * grandTotal : value
+        )
+      );
+    };
+  },
+  postAddOC: () => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => {}
+    ): Promise<void> => {
+      const state = getState();
       dispatch(utility.actions.showLoadingButton());
       getLocal('dataCustomer').then((resCust) => {
         if (resCust.length === 0) {
           toast.error('Fill Customer Data First !');
           dispatch(utility.actions.hideLoading());
         } else {
-          getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((resProd) => {
+          getLocal('listProduct', [
+            'sub_total',
+            'qty',
+            'harga',
+            'persentase',
+            'sub_total_diskon',
+          ]).then((resProd) => {
             if (resProd.length === 0) {
               toast.error('Fill The Product First !');
               dispatch(utility.actions.hideLoading());
             } else {
-              getLocal('listDiscount', ['persentase', 'diskon_rp']).then((resDisc) => {
+              getLocal('listDiscount', [
+                'persentase',
+                'diskon_rp',
+                'final_price_after_discount',
+                'nominal_diskon',
+                'no_urut',
+                'harga_sebelum_diskon',
+                'harga_setelah_diskon',
+              ]).then((resDisc) => {
                 getLocal('type_oc').then((resType) => {
                   if (resType.length === 0) {
                     toast.error('Fill Product Data First !');
                     dispatch(utility.actions.hideLoading());
                   } else {
-                    getLocal('listSupport', ['qty', 'harga', 'total_harga']).then((resSupp) => {
-                      getLocal('listProduction', ['qty', 'total_harga']).then((resProdServ) => {
-                        // Product
-                        const ProductSoftware = resProd.filter(
-                          (value: any) => value.tipe_produk === 'SOFTWARE'
-                        );
-                        const ProductHardware = resProd.filter(
-                          (value: any) => value.tipe_produk === 'HARDWARE'
-                        );
-                        const ProductConsumable = resProd.filter(
-                          (value: any) => value.tipe_produk === 'CONSUMABLE'
-                        );
-                        // Discount
-                        const DiscountSoftware = resDisc.filter((value: any) =>
-                          value.nama_diskon.includes('SOFTWARE')
-                        );
-                        const DiscountHardware = resDisc.filter((value: any) =>
-                          value.nama_diskon.includes('HARDWARE')
-                        );
-                        const DiscountConsumable = resDisc.filter((value: any) =>
-                          value.nama_diskon.includes('CONSUMABLE')
-                        );
-                        const DiscountSupport = resDisc.filter((value: any) =>
-                          value.nama_diskon.includes('SUPPORT')
-                        );
-                        const DiscountProduction = resDisc.filter((value: any) =>
-                          value.nama_diskon.includes('PRODUCTION')
-                        );
-                        const newArrDiscAll: any = [];
-                        resDisc.forEach((element: any) => {
-                          if (
-                            !element.nama_diskon.includes('SOFTWARE') &&
-                            !element.nama_diskon.includes('HARDWARE') &&
-                            !element.nama_diskon.includes('CONSUMABLE') &&
-                            !element.nama_diskon.includes('SUPPORT') &&
-                            !element.nama_diskon.includes('PRODUCTION')
-                          ) {
-                            newArrDiscAll.push(element);
-                          }
+                    getLocal('listSupport', [
+                      'qty',
+                      'harga',
+                      'total_harga',
+                      'persentase',
+                      'total_harga_diskon',
+                      'kode_satuan',
+                    ]).then((resSupp) => {
+                      const dataSupportService = resSupp.map((support: any) => {
+                        return {
+                          nama_support_service: support.nama_support_service,
+                          no_support_service: support.no_support_service,
+                          kode_satuan: support.satuan,
+                          qty: support.qty,
+                          harga: support.harga,
+                          total_harga: support.total_harga,
+                          kode_diskon: support.kode_diskon,
+                          nama_diskon: support.nama_diskon,
+                          persentase: Number(support.persentase),
+                          total_harga_diskon: support.total_harga_diskon,
+                        };
+                      });
+                      getLocal('listProduction', [
+                        'qty',
+                        'total_harga',
+                        'harga',
+                        'persentase',
+                        'total_harga_diskon',
+                        'kode_satuan',
+                      ]).then((resProdServ) => {
+                        const dataProdService = resProdServ.map((prod: any) => {
+                          return {
+                            nama_production_service: prod.nama_production_service,
+                            no_production_service: prod.no_production_service,
+                            kode_satuan: prod.satuan,
+                            qty: prod.qty,
+                            total_harga: prod.total_harga,
+                            kode_diskon: prod.kode_diskon,
+                            nama_diskon: prod.nama_diskon,
+                            persentase: Number(prod.persentase),
+                            total_harga_diskon: prod.total_harga_diskon,
+                          };
                         });
-                        // Total
-                        const totalSoftware = ProductSoftware.reduce(
-                          (a: any, b: any) => a + b.harga * b.qty,
-                          0
-                        );
-                        const totalHardware = ProductHardware.reduce(
-                          (a: any, b: any) => a + b.harga * b.qty,
-                          0
-                        );
-                        const totalConsumable = ProductConsumable.reduce(
-                          (a: any, b: any) => a + b.harga * b.qty,
-                          0
-                        );
-                        const totalSupport = resSupp.reduce(
-                          (a: any, b: any) => a + b.total_harga,
-                          0
-                        );
-                        const totalProduction = resProdServ.reduce(
-                          (a: any, b: any) => a + b.total_harga,
-                          0
-                        );
-                        // DiscountTotal
-                        const totalDiscountSoftwareRp = DiscountSoftware.reduce(
-                          (a: any, b: any) => a + b.diskon_rp,
-                          0
-                        );
-                        const totalDiscountHardwareRp = DiscountHardware.reduce(
-                          (a: any, b: any) => a + b.diskon_rp,
-                          0
-                        );
-                        const totalDiscountConsumableRp = DiscountConsumable.reduce(
-                          (a: any, b: any) => a + b.diskon_rp,
-                          0
-                        );
-                        const totalDiscountSupportRp = DiscountSupport.reduce(
-                          (a: any, b: any) => a + b.diskon_rp,
-                          0
-                        );
-                        const totalDiscountProductionRp = DiscountProduction.reduce(
-                          (a: any, b: any) => a + b.diskon_rp,
-                          0
-                        );
-                        const totalDiscountAllRp = newArrDiscAll.reduce(
-                          (a: any, b: any) => a + b.diskon_rp,
-                          0
-                        );
-                        const SoftwarePersen = DiscountSoftware.reduce(
-                          (a: any, b: any) => a + b.persentase,
-                          0
-                        );
-                        const HardwarePersen = DiscountHardware.reduce(
-                          (a: any, b: any) => a + b.persentase,
-                          0
-                        );
-                        const ConsumablePersen = DiscountConsumable.reduce(
-                          (a: any, b: any) => a + b.persentase,
-                          0
-                        );
-                        const SupportPersen = DiscountSupport.reduce(
-                          (a: any, b: any) => a + b.persentase,
-                          0
-                        );
-                        const ProductionPersen = DiscountSupport.reduce(
-                          (a: any, b: any) => a + b.persentase,
-                          0
-                        );
-                        const AllPersen = newArrDiscAll.reduce(
-                          (a: any, b: any) => a + b.persentase,
-                          0
-                        );
-                        // Total+Discount
-                        const subTotalSoftware =
-                          totalSoftware -
-                          (totalDiscountSoftwareRp + totalSoftware * (SoftwarePersen / 100)) || 0;
-                        const subTotalHardware =
-                          totalHardware -
-                          (totalDiscountHardwareRp + totalHardware * (HardwarePersen / 100)) || 0;
-                        const subTotalConsumable =
-                          totalConsumable -
-                          (totalDiscountConsumableRp +
-                            totalConsumable * (ConsumablePersen / 100)) || 0;
-                        const subTotalSupport =
-                          totalSupport -
-                          (totalDiscountSupportRp + totalSupport * (SupportPersen / 100)) || 0;
-                        const subTotalProduction =
-                          totalProduction -
-                          (totalDiscountProductionRp +
-                            totalProduction * (ProductionPersen / 100)) || 0;
 
-                        // TotalAll
-                        const grandTotal =
-                          subTotalSoftware +
-                          subTotalHardware +
-                          subTotalConsumable +
-                          subTotalSupport +
-                          subTotalProduction;
-
-                        const grandTotalDiscount: any =
-                          grandTotal - (totalDiscountAllRp + grandTotal * (AllPersen / 100)) || 0;
-
-                        const dataProd: {
-                          kode_produk: any;
-                          nama_produk: any;
-                          jenis_produk: any;
-                          satuan: any;
-                          qty: any;
-                          harga: any;
-                          sub_total: any;
-                          type: any;
-                        }[] = [];
-                        resProd.forEach((element: any) => {
-                          const row = {
+                        const dataProd = resProd.map((element: any) => {
+                          return {
                             kode_produk: element.kode_produk.value || element.kode_produk,
                             nama_produk: element.nama_produk,
                             jenis_produk: element.tipe_produk,
@@ -953,24 +1144,25 @@ export const actions = {
                             harga: element.harga,
                             sub_total: element.sub_total,
                             type: element.type || '-',
+                            kode_diskon: element.kode_diskon,
+                            nama_diskon: element.nama_diskon,
+                            persentase: Number(element.persentase),
+                            sub_total_diskon: element.sub_total_diskon,
                           };
-                          dataProd.push(row);
                         });
-                        const dataDisc: {
-                          kode_diskon: any;
-                          nama_diskon: any;
-                          persentase: any;
-                          sub_total: any;
-                        }[] = [];
-                        resDisc.forEach((element: any) => {
-                          const row = {
+                        const dataDisc = resDisc.map((element: any) => {
+                          return {
                             kode_diskon: element.kode_diskon,
                             nama_diskon: element.nama_diskon,
                             persentase: element.persentase / 100,
+                            nominal_diskon: element.nominal_diskon,
                             sub_total: element.diskon_rp,
+                            no_urut: element.no_urut,
+                            harga_setelah_diskon: element.harga_setelah_diskon,
+                            harga_sebelum_diskon: element.harga_sebelum_diskon,
                           };
-                          dataDisc.push(row);
                         });
+                        let formDiscountManual: any = getFormValues('FormAddDiscountManual')(state);
                         const onSendData = {
                           kode_toko: resCust.central_store_code.value || resCust.central_store_code,
                           nama_toko: resCust.central_store_name,
@@ -988,16 +1180,18 @@ export const actions = {
                           jenis_ok: resType[0],
                           detail_produk: dataProd,
                           detail_diskon: dataDisc,
-                          no_support_service: resSupp[0]?.no_support_service || '-',
-                          no_production_service: resProdServ[0]?.no_production_service || '-',
+                          detail_support_service: dataSupportService,
+                          detail_production_service: dataProdService,
                           // eslint-disable-next-line
-                          total_harga: parseInt(grandTotalDiscount),
+                          total_harga: Math.ceil(formDiscountManual.grand_total),
                           deskripsi_header: '-',
                           waktu_pengiriman: '-',
                           sistem_pembayaran: '-',
                           deskripsi_footer: '-',
                           keterangan: '-',
+                          diskon_manual: formDiscountManual?.manual_discount ?? 0,
                         };
+                        console.log(onSendData);
                         AxiosPost('order-confirmation', onSendData)
                           .then((res: any) => {
                             AxiosGet(
@@ -1024,6 +1218,14 @@ export const actions = {
                                 'jenis_ok',
                                 'jenis_produk',
                                 'type',
+                                'sub_total_diskon',
+                                'nominal_diskon',
+                                'diskon_manual',
+                                'total_harga_diskon',
+                                'kode_satuan',
+                                'harga_setelah_diskon',
+                                'harga_sebelum_diskon',
+                                'no_urut',
                               ]);
                               const desc = {
                                 header_desc:
@@ -1035,6 +1237,8 @@ export const actions = {
                                 footer_desc:
                                   'Demikianlah Order Konfirmasi ini kami sampaikan. Apabila setuju dengan kondisi tersebut diatas, mohon Order Konfirmasi ini ditandatangani dan dikirimkan kembali kepada kami.',
                               };
+                              console.log(dataDecrypt);
+                              console.log(desc);
                               const pdf64 = OC(dataDecrypt, desc);
                               const file = dataURLtoPDFFile(
                                 pdf64,
@@ -1083,11 +1287,11 @@ export const actions = {
                             const dataErr = error.response?.data;
                             toast.error(dataErr.message || 'Failed Add Data !');
                           });
-                        // dispatch({
-                        //   type: actionTypes.SaveData,
-                        //   payload: { dataSend: onSendData },
-                        // });
-                        // dispatch(modal.actions.show());
+                        dispatch({
+                          type: actionTypes.SaveData,
+                          payload: { dataSend: onSendData },
+                        });
+                        dispatch(modal.actions.show());
                       });
                     });
                   }
@@ -1209,6 +1413,338 @@ export const actions = {
       // eslint-disable-next-line
       const total = parseInt(qty) * NumberOnly(harga);
       dispatch(change('FormEditProduct', 'sub_total', total));
+    };
+  },
+  discountManual: () => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const listProduct: any = await getLocal('listProduct', [
+        'sub_total',
+        'qty',
+        'harga',
+        'persentase',
+        'sub_total_diskon',
+      ]);
+      const discountData: any = await getLocal('listDiscount', [
+        'persentase',
+        'diskon_rp',
+        'final_price_after_discount',
+        'nominal_diskon',
+        'no_urut',
+        'harga_sebelum_diskon',
+        'harga_setelah_diskon',
+      ]);
+      const listSupport: any = await getLocal('listSupport', [
+        'qty',
+        'harga',
+        'total_harga',
+        'persentase',
+        'total_harga_diskon',
+      ]);
+      const listProduction: any = await getLocal('listProduction', [
+        'qty',
+        'total_harga',
+        'harga',
+        'persentase',
+        'total_harga_diskon',
+      ]);
+      const sub_total_product = listProduct.reduce((a: any, b: any) => a + b.sub_total, 0);
+      const sub_total_product_diskon = listProduct.reduce(
+        (a: any, b: any) => a + b.sub_total_diskon,
+        0
+      );
+      const sub_total_supp = listSupport.reduce((a: any, b: any) => a + b.total_harga, 0);
+      const sub_total_supp_diskon = listSupport.reduce(
+        (a: any, b: any) => a + b.total_harga_diskon,
+        0
+      );
+      const sub_total_production = listProduction.reduce((a: any, b: any) => a + b.total_harga, 0);
+      const sub_total_production_diskon = listProduction.reduce(
+        (a: any, b: any) => a + b.total_harga_diskon,
+        0
+      );
+      const sub_total =
+        sub_total_product -
+        sub_total_product_diskon +
+        (sub_total_production - sub_total_supp_diskon) +
+        (sub_total_supp - sub_total_production_diskon);
+      const formState: any = getFormValues('FormAddDiscountManual')(state);
+      console.log(formState);
+
+      if (discountData.length > 0) {
+        const lastDiscountData = discountData[discountData.length - 1];
+        dispatch(
+          change('FormAddDiscountManual', 'sub_total', lastDiscountData.final_price_after_discount)
+        );
+        dispatch(
+          change(
+            'FormAddDiscountManual',
+            'grand_total',
+            lastDiscountData.final_price_after_discount - (formState?.manual_discount ?? 0)
+          )
+        );
+      } else {
+        dispatch(change('FormAddDiscountManual', 'sub_total', sub_total));
+        dispatch(
+          change(
+            'FormAddDiscountManual',
+            'grand_total',
+            sub_total - (formState?.manual_discount ?? 0)
+          )
+        );
+      }
+    };
+  },
+  changeDiscountManual: (data: number) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const state = getState();
+      const listProduct: any = await getLocal('listProduct', [
+        'sub_total',
+        'qty',
+        'harga',
+        'persentase',
+        'sub_total_diskon',
+      ]);
+      const discountData: any = await getLocal('listDiscount', [
+        'persentase',
+        'diskon_rp',
+        'final_price_after_discount',
+        'nominal_diskon',
+        'no_urut',
+        'harga_sebelum_diskon',
+        'harga_setelah_diskon',
+      ]);
+      const listSupport: any = await getLocal('listSupport', [
+        'qty',
+        'harga',
+        'total_harga',
+        'persentase',
+        'total_harga_diskon',
+      ]);
+      const listProduction: any = await getLocal('listProduction', [
+        'qty',
+        'total_harga',
+        'harga',
+        'persentase',
+        'total_harga_diskon',
+      ]);
+      const sub_total_product = listProduct.reduce((a: any, b: any) => a + b.sub_total, 0);
+      const sub_total_product_diskon = listProduct.reduce(
+        (a: any, b: any) => a + b.sub_total_diskon,
+        0
+      );
+      const sub_total_supp = listSupport.reduce((a: any, b: any) => a + b.total_harga, 0);
+      const sub_total_supp_diskon = listSupport.reduce(
+        (a: any, b: any) => a + b.total_harga_diskon,
+        0
+      );
+      const sub_total_production = listProduction.reduce((a: any, b: any) => a + b.total_harga, 0);
+      const sub_total_production_diskon = listProduction.reduce(
+        (a: any, b: any) => a + b.total_harga_diskon,
+        0
+      );
+      const sub_total =
+        sub_total_product -
+        sub_total_product_diskon +
+        (sub_total_production - sub_total_supp_diskon) +
+        (sub_total_supp - sub_total_production_diskon);
+
+      if (discountData.length > 0) {
+        const lastDiscountData = discountData[discountData.length - 1];
+        dispatch(
+          change(
+            'FormAddDiscountManual',
+            'sub_total',
+            parseInt(lastDiscountData.final_price_after_discount)
+          )
+        );
+        dispatch(
+          change(
+            'FormAddDiscountManual',
+            'grand_total',
+            parseInt(lastDiscountData.final_price_after_discount) - data
+          )
+        );
+      } else {
+        dispatch(change('FormAddDiscountManual', 'sub_total', parseInt(sub_total.toString())));
+        dispatch(
+          change('FormAddDiscountManual', 'grand_total', parseInt(sub_total.toString()) - data)
+        );
+      }
+    };
+  },
+
+  dummyPrint: () => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => any
+    ): Promise<void> => {
+      const data = {
+        kode_toko: 'TESTINGNEW',
+        nama_toko: 'TESTING NEW',
+        kode_cabang: 'PUSAT',
+        nama_cabang: 'PUSAT',
+        nama_customer: 'TESTING NEW',
+        alamat_cabang: 'Jl. Testing',
+        alamat_korespondensi: 'Jl. Testing',
+        kota: 'BANDUNG',
+        telepon: '085923192389',
+        email: 'TESTING@gmail.com',
+        kode_staff: 'CC',
+        kode_reseller: '-',
+        biaya_reseller: 0,
+        jenis_ok: 'INCLUDE SOFTWARE',
+        detail_produk: [
+          {
+            kode_produk: 'NGSSOF',
+            nama_produk: 'NAGATECH GOLD STORE SOLUTION OFFLINE FULL DESKTOP VERSION',
+            jenis_produk: 'SOFTWARE',
+            satuan: 'PACKET',
+            qty: 1,
+            harga: 35000000,
+            sub_total: 35000000,
+            type: 'OFFLINE',
+            kode_diskon: '-',
+            nama_diskon: '-',
+            persentase: 0,
+            sub_total_diskon: 0,
+          },
+          {
+            kode_produk: 'NGSWB',
+            nama_produk: 'NAGATECH GROCERY SOLUTION FULL ONLINE WEB BASED',
+            jenis_produk: 'SOFTWARE',
+            satuan: 'PACKET',
+            qty: 1,
+            harga: 250000000,
+            sub_total: 250000000,
+            type: 'ONLINE',
+            kode_diskon: 'DHS',
+            nama_diskon: 'DISKON KHUSUS SOFTWARE',
+            persentase: 4,
+            sub_total_diskon: 10000000,
+          },
+          {
+            kode_produk: 'NMOFF',
+            nama_produk: 'NAGATECH MEMBER SOLUTION DESKTOP BASED',
+            jenis_produk: 'SOFTWARE',
+            satuan: 'UNIT',
+            qty: 1,
+            harga: 17000000,
+            sub_total: 17000000,
+            type: 'OFFLINE',
+            kode_diskon: 'SOFTWARE',
+            nama_diskon: 'SOFTWARE',
+            persentase: 0,
+            sub_total_diskon: 2000000,
+          },
+        ],
+        detail_diskon: [
+          {
+            kode_diskon: 'DHS',
+            nama_diskon: 'DISKON KHUSUS SOFTWARE',
+            persentase: 0.05,
+            nominal_diskon: 14667000,
+            sub_total: 0,
+            no_urut: 1,
+            harga_setelah_diskon: 278673000,
+            harga_sebelum_diskon: 293340000,
+          },
+          {
+            kode_diskon: 'DK',
+            nama_diskon: 'DISCOUNT KHUSUS',
+            persentase: 0,
+            nominal_diskon: 2000000,
+            sub_total: 2000000,
+            no_urut: 2,
+            harga_setelah_diskon: 276673000,
+            harga_sebelum_diskon: 278673000,
+          },
+          {
+            kode_diskon: 'SOFTWARE',
+            nama_diskon: 'SOFTWARE',
+            persentase: 0.03,
+            nominal_diskon: 8300190,
+            sub_total: 0,
+            no_urut: 3,
+            harga_setelah_diskon: 268372810,
+            harga_sebelum_diskon: 276673000,
+          },
+        ],
+        detail_support_service: [
+          {
+            nama_support_service: 'pelatihan',
+            no_support_service: 'SPS-190324-0001',
+            kode_satuan: 'DYS',
+            qty: 3,
+            harga: 0,
+            total_harga: 0,
+            kode_diskon: '-',
+            nama_diskon: '-',
+            persentase: 0,
+            total_harga_diskon: 0,
+          },
+          {
+            nama_support_service: 'EXTEND PELATIHAN',
+            no_support_service: 'SPS-190324-0002',
+            kode_satuan: 'DYS',
+            qty: 2,
+            harga: 500000,
+            total_harga: 1000000,
+            kode_diskon: 'DHS',
+            nama_diskon: 'DISKON KHUSUS SOFTWARE',
+            persentase: 3,
+            total_harga_diskon: 30000,
+          },
+        ],
+        detail_production_service: [
+          {
+            nama_production_service: 'perubahan domain',
+            no_production_service: 'PDS-190324-0001',
+            kode_satuan: 'DYS',
+            qty: 2,
+            total_harga: 1000000,
+            kode_diskon: 'DK',
+            nama_diskon: 'DISCOUNT KHUSUS',
+            persentase: 0,
+            total_harga_diskon: 100000,
+          },
+          {
+            nama_production_service: 'SISTEM PEMBAYARAN BARU',
+            no_production_service: 'PDS-190324-0002',
+            kode_satuan: 'DYS',
+            qty: 3,
+            total_harga: 1500000,
+            kode_diskon: 'DHS',
+            nama_diskon: 'DISKON KHUSUS SOFTWARE',
+            persentase: 2,
+            total_harga_diskon: 30000,
+          },
+        ],
+        total_harga: 268000000,
+        deskripsi_header: '-',
+        waktu_pengiriman: '-',
+        sistem_pembayaran: '-',
+        deskripsi_footer: '-',
+        keterangan: '-',
+        diskon_manual: 372810,
+      };
+      const desc = {
+        header_desc:
+          'Sebelumnya kami ucapkan terima kasih atas kerjasama yang telah terjalin selama ini. Bersama ini kami sampaikan Order Konfirmasi Harga Software Nagatech Gold Store Solution web based (Online) dengan kondisi sbb :',
+        waktu_pengiriman: '... Hari setelah order konfirmasi disetujui',
+        sistem_pembayaran: '...% pada saat order konfirmasi disetujui',
+        keterangan:
+          'Harga tersebut termasuk:\nBiaya garansi software selama berlangganan online/cloud & maintenance\nBiaya instalasi software\nBiaya pelatihan User\nHarga tersebut belum termasuk:\nBiaya langganan online/cloud & maintenance \nNagagold+ Member + Accessories Rp.900.000 (Sembilan Ratus Ribu Rupiah) perbulan.\nBiaya langganan online/cloud & maintenance \nsoftware cucian Rp. 400.000 ( Empat Ratus Ribu Rupiah) perbulan',
+        footer_desc:
+          'Demikianlah Order Konfirmasi ini kami sampaikan. Apabila setuju dengan kondisi tersebut diatas, mohon Order Konfirmasi ini ditandatangani dan dikirimkan kembali kepada kami.',
+      };
+      OCPDF(data, desc);
     };
   },
 };

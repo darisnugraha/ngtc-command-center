@@ -8,6 +8,8 @@ import FormSearchOC from './component/FormSearchOC';
 import * as reduxStaff from '../../master/staff/redux/StaffRedux';
 import * as reduxCustomer from '../../master/customer/redux/CustomerRedux';
 import * as redux from './redux/ListOCRedux';
+import * as reduxSupport from '../../service/support-service/redux/SupportServiceRedux';
+import * as reduxProduction from '../../service/production-service/redux/ProductionServiceRedux';
 import GlobalModal from '../../../modules/modal/GlobalModal';
 import * as modal from '../../../modules/modal/GlobalModalRedux';
 import DetailOC from './component/DetailOC';
@@ -17,6 +19,11 @@ import FormEditProductList from './component/FormEditProductList';
 import TableDataProduct from './component/TableDataProduct';
 import FormEditDiskon from './component/FormEditDiskon';
 import TableDataDiskon from './component/TableDataDiskon';
+import FormEditSupportServiceOC from './component/FormEditSupportServiceOC';
+import TableSupportService from './component/TableDataSupportService';
+import TableProductionService from './component/TableDataProductionService';
+import FormEditProductionServiceOC from './component/FormEditProductionServiceOC';
+import FormEditDiskonManual from './component/FormEditDiskonManual';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
 const connector = connect(mapState);
@@ -29,6 +36,8 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
     dispatch(reduxStaff.actions.getStaff());
     dispatch(reduxCustomer.actions.getStore());
     dispatch(redux.actions.getListOC());
+    dispatch(reduxSupport.actions.getSupportService());
+    dispatch(reduxProduction.actions.getProductionService());
   }, [dispatch]);
 
   const dataTab: any = useSelector<RootState>(
@@ -38,6 +47,12 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
   const [typeModal, setTypeModal] = useState('');
 
   const handleCloseModal = () => {
+    localStorage.removeItem('dataDiskon');
+    localStorage.removeItem('dataProduct');
+    localStorage.removeItem('dataSupportService');
+    localStorage.removeItem('dataProductionService');
+    localStorage.removeItem('lastDiscountManual');
+    dispatch(redux.actions.clearDetailData());
     dispatch(modal.actions.hide());
   };
 
@@ -256,15 +271,34 @@ const ListOrderConfirmation: FC<PropsFromRedux> = () => {
                 }}
               />
               <hr />
+              <FormEditSupportServiceOC
+                onSubmit={(data: any) => {
+                  dispatch(redux.actions.saveLocalSupportService(data));
+                }}
+              />
+              <hr />
+              <FormEditProductionServiceOC
+                onSubmit={(data: any) => {
+                  dispatch(redux.actions.saveLocalProductionService(data));
+                }}
+              />
+              <hr />
               <FormEditDiskon
                 onSubmit={(data: any) => {
                   dispatch(redux.actions.saveLocalDiskon(data));
                 }}
               />
               <hr />
+
               <TableDataProduct />
               <hr />
+              <TableSupportService />
+              <hr />
+              <TableProductionService />
+              <hr />
               <TableDataDiskon />
+              <hr />
+              <FormEditDiskonManual />
               <div className='row justify-content-end mt-5'>
                 <div className='col-lg-3 d-grid'>
                   <button

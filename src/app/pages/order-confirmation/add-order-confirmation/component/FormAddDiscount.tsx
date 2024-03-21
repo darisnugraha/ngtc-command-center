@@ -7,6 +7,7 @@ import SubmitButton from '../../../../modules/button';
 import { RenderField } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
 import AddDiscountValidation from '../validasi/AddDiscountValidation';
+import * as redux from '../redux/AddOrderConfirmationRedux';
 
 interface Props {}
 
@@ -70,6 +71,7 @@ const FormAddDiscount: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
             onChange={(e: any) => {
               setDiskonType('PERCENTAGE');
               setDiskonVal(e.target.value);
+              dispatch(redux.actions.calculateGlobalDiscount(NumberOnly(e.target.value), true));
             }}
           />
         </div>
@@ -86,13 +88,48 @@ const FormAddDiscount: React.FC<InjectedFormProps<{}, Props>> = (props: any) => 
             onChange={(e: any) => {
               setDiskonType('RP');
               setDiskonVal(NumberOnly(e.target.value));
+              dispatch(redux.actions.calculateGlobalDiscount(NumberOnly(e.target.value), false));
             }}
+          />
+        </div>
+        <div className='col-lg-2 d-none'>
+          <Field
+            name='nominal_discount'
+            type='text'
+            component={RenderField}
+            label='Discount Rp'
+            placeHolder='Insert Discount Rp'
+            {...currencyMask}
+          />
+        </div>
+        <div className='col-lg-4 d-none'>
+          <Field
+            name='final_price_before_discount'
+            type='text'
+            component={RenderField}
+            label='Total Before Discount'
+            placeHolder='Insert Total Before Discount'
+            {...currencyMask}
+            isEdit={false}
+            readOnly={false}
+          />
+        </div>
+        <div className='col-lg-4'>
+          <Field
+            name='final_price_after_discount'
+            type='text'
+            component={RenderField}
+            label='Total After Discount'
+            placeHolder='Insert Total After Discount'
+            {...currencyMask}
+            isEdit={false}
+            readOnly={false}
           />
         </div>
       </div>
       <div className='row justify-content-end mt-5'>
         <div className='col-lg-3 d-grid'>
-          <SubmitButton title='Add Data' imagePath='' />
+          <SubmitButton title='Add Discount Global' imagePath='' />
         </div>
       </div>
     </form>

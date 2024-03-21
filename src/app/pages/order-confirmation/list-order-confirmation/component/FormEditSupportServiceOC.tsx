@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { change, Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { RootState } from '../../../../../setup';
 import { currencyMask, NumberOnly } from '../../../../../setup/function.js';
-import { RootState } from '../../../../../setup/index.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
@@ -11,37 +11,31 @@ import * as redux from '../redux/ListOCRedux';
 interface Props {}
 
 // eslint-disable-next-line
-const mapState = (state: RootState) => {};
+const mapState = (state: RootState) => {
+  if (state.addorderconfirmationservice.supportData !== undefined) {
+    return {
+      initialValues: {
+        no_support_service: state.addorderconfirmationservice.supportData.no_support_service,
+        support_service_name: state.addorderconfirmationservice.supportData.nama_support_service,
+        price: state.addorderconfirmationservice.supportData.harga,
+        qty: state.addorderconfirmationservice.supportData.qty,
+        unit: state.addorderconfirmationservice.supportData.kode_satuan,
+        total_price: state.addorderconfirmationservice.supportData.total_harga,
+      },
+    };
+  }
+};
 
-const FormEditProductList: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
+const FormEditSupportServiceOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const { handleSubmit } = props;
   const dispatch = useDispatch();
-
+  const disable = true;
+  // eslint-disable-next-line
+  const dataSupport: any =
+    useSelector<RootState>(({ supportservice }) => supportservice.feedback) || [];
   const dataDiscount: any = useSelector<RootState>(({ discount }) => discount.feedback);
   const [diskonType, setDiskonType] = useState('');
   const [diskonVal, setDiskonVal] = useState(0);
-
-  const typeOC = useSelector<RootState>(
-    ({ listorderconfirmation }) => listorderconfirmation.typeOC
-  );
-
-  const dataProductType = [
-    { value: 'PACKAGE', label: 'PACKAGE' },
-    { value: 'SOFTWARE', label: 'SOFTWARE' },
-    { value: 'HARDWARE', label: 'HARDWARE' },
-    { value: 'CONSUMABLE', label: 'CONSUMABLE' },
-  ];
-
-  const dataProductTypeSecond = [
-    { value: 'HARDWARE', label: 'HARDWARE' },
-    { value: 'CONSUMABLE', label: 'CONSUMABLE' },
-  ];
-
-  const dataProduct: any = useSelector<RootState>(
-    ({ listorderconfirmation }) => listorderconfirmation.dataProduct
-  );
-
-  const typeProduct = 'PACKAGE';
 
   function calculateDiscount(value: number, isPersentage: boolean = false) {
     dispatch(redux.actions.calculateDiscount(value, isPersentage));
@@ -55,104 +49,80 @@ const FormEditProductList: React.FC<InjectedFormProps<{}, Props>> = (props: any)
         </div>
         <div className='col-lg-4'>
           <Field
-            name='product_type'
+            name='no_support_service'
             type='text'
             component={RenderFieldSelect}
-            options={
-              // eslint-disable-next-line
-              typeOC === 'INCLUDE SOFTWARE'
-                ? dataProductType
-                : typeOC === 'NOT INCLUDE SOFTWARE'
-                ? dataProductTypeSecond
-                : []
-            }
-            label='Product Type'
-            placeHolder='Select Product Type'
-            onChange={(e: any) => dispatch(redux.actions.setTypeProduct(e.value))}
+            options={dataSupport.map((element: any) => {
+              const row = {
+                value: element.no_support_service,
+                label: element.no_support_service,
+              };
+              return row;
+            })}
+            label='No Support Service'
+            placeHolder='Select No Support Service'
+            onChange={(e: any) => {
+              dispatch(redux.actions.getSupportDetail(e.value));
+            }}
           />
         </div>
         <div className='col-lg-4'>
           <Field
-            name='product'
-            type='text'
-            component={RenderFieldSelect}
-            options={dataProduct.map((element: any) => {
-              const row = {
-                value: element.product_code,
-                label: element.product_name,
-              };
-              return row;
-            })}
-            label='Product'
-            placeHolder='Select Product'
-            onChange={(e: any) => dispatch(redux.actions.getDetailProduct(e.value))}
-          />
-        </div>
-        <div className='col-lg-2 d-none'>
-          <Field
-            name='product_name'
+            name='support_service_name'
             type='text'
             component={RenderField}
-            label='Product Name'
-            placeHolder='Insert Product Name'
+            label='Support Service Name'
+            placeHolder='Insert Support Service Name'
+            readOnly={disable}
+            isEdit={disable}
           />
         </div>
-        <div className='col-lg-2'>
-          <Field
-            name='type'
-            type='text'
-            component={RenderField}
-            label='Type'
-            placeHolder='Insert Type'
-            isEdit={typeProduct === 'PACKAGE'}
-            readOnly={typeProduct === 'PACKAGE'}
-          />
-        </div>
-        <div className='col-lg-2'>
-          <Field
-            name='qty'
-            type='text'
-            component={RenderField}
-            label='Qty'
-            placeHolder='Insert Qty'
-            onChange={(e: any) => {
-              dispatch(redux.actions.setSubTotal(e.target.value));
-            }}
-          />
-        </div>
-        <div className='col-lg-2'>
-          <Field
-            isEdit={typeProduct === 'PACKAGE'}
-            readOnly={typeProduct === 'PACKAGE'}
-            name='unit'
-            type='text'
-            component={RenderField}
-            label='Unit'
-            placeHolder='Insert Unit'
-          />
-        </div>
-        <div className='col-lg-2'>
+        <div className='col-lg-4'>
           <Field
             name='price'
             type='text'
             component={RenderField}
             label='Price'
             placeHolder='Insert Price'
+            readOnly={disable}
+            isEdit={disable}
             {...currencyMask}
-            onChange={(e: any) => dispatch(redux.actions.setSubTotalRp(e.target.value))}
           />
         </div>
-        <div className='col-lg-2'>
+        <div className='col-lg-4'>
           <Field
-            name='sub_total'
+            name='qty'
             type='text'
             component={RenderField}
-            label='Sub Total'
-            placeHolder='Insert Sub Total'
+            label='Qty'
+            placeHolder='Insert Qty'
+            readOnly={disable}
+            isEdit={disable}
+          />
+        </div>
+        <div className='col-lg-4'>
+          <Field
+            name='unit'
+            type='text'
+            component={RenderField}
+            label='Unit'
+            placeHolder='Insert Unit'
+            readOnly={disable}
+            isEdit={disable}
+          />
+        </div>
+        <div className='col-lg-4'>
+          <Field
+            name='total_price'
+            type='text'
+            component={RenderField}
+            label='Total Price'
+            placeHolder='Insert Total Price'
+            readOnly={disable}
+            isEdit={disable}
             {...currencyMask}
           />
         </div>
-        <div className='col-lg-6' />
         <div className='col-lg-4'>
           <Field
             name='discount_code'
@@ -168,7 +138,7 @@ const FormEditProductList: React.FC<InjectedFormProps<{}, Props>> = (props: any)
             label='Discount Name'
             placeHolder='Select Discount Name'
             onChange={(e: any) => {
-              dispatch(change('FormAddProductOC', 'discount_name', e.label));
+              dispatch(change('FormEditSupportServiceOC', 'discount_name', e.label));
             }}
           />
         </div>
@@ -216,7 +186,7 @@ const FormEditProductList: React.FC<InjectedFormProps<{}, Props>> = (props: any)
         </div>
         <div className='col-lg-4'>
           <Field
-            name='sub_total_diskon'
+            name='total_harga_diskon'
             type='text'
             component={RenderField}
             label='Total Discount'
@@ -226,10 +196,9 @@ const FormEditProductList: React.FC<InjectedFormProps<{}, Props>> = (props: any)
           />
         </div>
       </div>
-
       <div className='row justify-content-end mt-5'>
         <div className='col-lg-3 d-grid'>
-          <SubmitButton title='Add Product' imagePath='' />
+          <SubmitButton title='Add Support Service' imagePath='' />
         </div>
       </div>
     </form>
@@ -237,10 +206,9 @@ const FormEditProductList: React.FC<InjectedFormProps<{}, Props>> = (props: any)
 };
 
 const form = reduxForm<{}, Props>({
-  destroyOnUnmount: true,
+  destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
-  form: 'FormEditProductList',
+  form: 'FormEditSupportServiceOC',
   touchOnChange: true,
-  //   validate: AddProductionServiceValidation,
-})(FormEditProductList);
+})(FormEditSupportServiceOC);
 export default connect(mapState, null)(form);

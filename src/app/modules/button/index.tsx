@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../setup';
 // import { useSelector } from 'react-redux';
 // import { RootState } from '../../../setup';
 import { KTSVG } from '../../../_metronic/helpers';
@@ -20,8 +22,8 @@ const SubmitButton: React.FC<Props> = ({
   color = 'primary',
   disable,
 }) => {
-  // const isLoading = useSelector<RootState, boolean>(({ utility }) => utility.isLoadingButton);
-  const isLoading = false;
+  const isLoading = useSelector<RootState, boolean>(({ utility }) => utility.isLoadingButton);
+  // const isLoading = false;
   return (
     <button
       type='submit'

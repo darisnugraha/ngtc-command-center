@@ -47,6 +47,10 @@ export interface listProductModel {
   harga: number;
   sub_total: number;
   type: string;
+  // kode_diskon: string;
+  // nama_diskon: string;
+  // persentase: number;
+  // sub_total_diskon: number;
 }
 
 export interface branchModel {

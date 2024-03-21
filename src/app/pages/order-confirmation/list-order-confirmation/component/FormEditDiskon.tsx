@@ -8,6 +8,7 @@ import { RenderField } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
 // import * as redux from '../redux/ListOCRedux';
 import * as reduxDiscount from '../../../master/discount/redux/DiscountRedux';
+import * as redux from '../redux/ListOCRedux';
 
 interface Props {}
 
@@ -71,6 +72,7 @@ const FormEditDiskon: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             onChange={(e: any) => {
               setDiskonType('PERCENTAGE');
               setDiskonVal(e.target.value);
+              dispatch(redux.actions.calculateGlobalDiscount(NumberOnly(e.target.value), true));
             }}
           />
         </div>
@@ -87,7 +89,42 @@ const FormEditDiskon: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
             onChange={(e: any) => {
               setDiskonType('RP');
               setDiskonVal(NumberOnly(e.target.value));
+              dispatch(redux.actions.calculateGlobalDiscount(NumberOnly(e.target.value), false));
             }}
+          />
+        </div>
+        <div className='col-lg-2 '>
+          <Field
+            name='nominal_discount'
+            type='text'
+            component={RenderField}
+            label='Discount Rp'
+            placeHolder='Insert Discount Rp'
+            {...currencyMask}
+          />
+        </div>
+        <div className='col-lg-4 '>
+          <Field
+            name='final_price_before_discount'
+            type='text'
+            component={RenderField}
+            label='Total Before Discount'
+            placeHolder='Insert Total Before Discount'
+            {...currencyMask}
+            isEdit={false}
+            readOnly={false}
+          />
+        </div>
+        <div className='col-lg-4'>
+          <Field
+            name='final_price_after_discount'
+            type='text'
+            component={RenderField}
+            label='Total After Discount'
+            placeHolder='Insert Total After Discount'
+            {...currencyMask}
+            isEdit={false}
+            readOnly={false}
           />
         </div>
       </div>

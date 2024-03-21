@@ -20,6 +20,7 @@ import * as modal from '../../../modules/modal/GlobalModalRedux';
 import * as modalsecond from '../../../modules/modal/ModalSecondRedux';
 import ModalSecond from '../../../modules/modal/ModalSecond';
 import FormEditProduct from './component/FormEditProduct';
+import FormAddDiscountManual from './component/FormAddDiscountManual';
 
 interface Props {}
 
@@ -98,34 +99,6 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
           </div>
         </div>
         <div className='accordion-item'>
-          <h2 className='accordion-header' id='kt_accordion_1_discount'>
-            <button
-              className='accordion-button fs-4 fw-bold collapsed'
-              type='button'
-              data-bs-toggle='collapse'
-              data-bs-target='#kt_accordion_1_body_discount'
-              aria-expanded='false'
-              aria-controls='kt_accordion_1_body_discount'
-            >
-              Add Discount
-            </button>
-          </h2>
-          <div
-            id='kt_accordion_1_body_discount'
-            className='accordion-collapse collapse'
-            aria-labelledby='kt_accordion_1_discount'
-            data-bs-parent='#kt_accordion_1'
-          >
-            <div className='accordion-body'>
-              <FormAddDiscount
-                onSubmit={(data: any) => {
-                  dispatch(redux.actions.addDataDiscount(data));
-                }}
-              />
-            </div>
-          </div>
-        </div>
-        <div className='accordion-item d-none'>
           <h2 className='accordion-header' id='kt_accordion_1_support'>
             <button
               className='accordion-button fs-4 fw-bold collapsed'
@@ -154,7 +127,7 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
             </div>
           </div>
         </div>
-        <div className='accordion-item d-none'>
+        <div className='accordion-item'>
           <h2 className='accordion-header' id='kt_accordion_1_support'>
             <button
               className='accordion-button fs-4 fw-bold collapsed'
@@ -196,6 +169,13 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
             <div className='col-lg-12'>
               <TableListProduct />
             </div>
+            <div className='col-lg-12'>
+              <TableSupportService />
+            </div>
+
+            <div className='col-lg-12'>
+              <TableProductionService />
+            </div>
             <div className={isPackage === 'true' ? 'col-lg-12' : 'd-none'}>
               <div className='row justify-content-end mt-5'>
                 <div className='col-lg-3 d-grid'>
@@ -213,28 +193,38 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
                 </div>
               </div>
             </div>
-            <div className='col-lg-12'>
-              <TableListDiscount />
-            </div>
           </div>
         </div>
       </div>
       <div className='card mb-5 mb-xl-8 mt-10'>
-        <div className='card-header border-0 pt-5 d-none'>
-          <h3 className='card-title align-items-start flex-column'>
-            <span className='card-label fw-bolder fs-3 mb-1'>List Service</span>
-          </h3>
-        </div>
-        <div className='card-body py-3'>
+        <div className='card-body py-3 mt-5'>
           <div className='row'>
-            <div className='col-lg-12 d-none'>
-              <TableSupportService />
-            </div>
-            <div className='col-lg-12 d-none'>
-              <TableProductionService />
-            </div>
+            <h3 className='card-title align-items-start flex-column mb-4'>
+              <span className='card-label fw-bolder fs-3 mb-1'>Add Discount Global</span>
+            </h3>
+            <FormAddDiscount
+              onSubmit={(data: any) => {
+                dispatch(redux.actions.addDataDiscount(data));
+              }}
+            />
+            <h3 className='card-title align-items-start flex-column mb-4'>
+              <span className='card-label fw-bolder fs-3 mb-1'>List Discount Global</span>
+            </h3>
             <div className='col-lg-12'>
-              <div className='row justify-content-end mt-5'>
+              <TableListDiscount />
+            </div>
+            <h3 className='card-title align-items-start flex-column mb-4'>
+              <span className='card-label fw-bolder fs-3 mb-1'>Manual Discount</span>
+            </h3>
+            <FormAddDiscountManual />
+          </div>
+        </div>
+      </div>
+      <div className='card mb-5 mb-xl-8 mt-5'>
+        <div className='card-body py-3 mt-3 mb-3'>
+          <div className='row'>
+            <div className='col-lg-12'>
+              <div className='row justify-content-end'>
                 <div className='col-lg-3 d-grid'>
                   <button
                     type='button'

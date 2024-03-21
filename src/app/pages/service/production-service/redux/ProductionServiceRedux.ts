@@ -166,7 +166,7 @@ export const actions = {
         detailInquiry.push(row);
       });
       const onSendData = {
-        nama_production_service: data.production_service_name,
+        nama_production_service: data.production_service_name?.toUpperCase(),
         kode_toko: data.store_code,
         kode_cabang: data.branch_code,
         kode_satuan: data.unit,
@@ -189,6 +189,9 @@ export const actions = {
         .catch(() => {
           toast.error('Failed Add Data !');
           dispatch(utility.actions.hideLoading());
+        })
+        .finally(() => {
+          window.location.reload();
         });
     };
   },
@@ -341,6 +344,9 @@ export const actions = {
             .catch(() => {
               toast.error('Failed Delete Data !');
               dispatch(utility.actions.hideLoading());
+            })
+            .finally(() => {
+              window.location.reload();
             });
         }
       });
@@ -351,7 +357,7 @@ export const actions = {
       dispatch(utility.actions.showLoadingButton());
 
       const onSendData = {
-        nama_production_service: data.production_service_name,
+        nama_production_service: data.production_service_name?.toUpperCase(),
         kode_toko: data.store_code,
         kode_cabang: data.branch_code,
         kode_satuan: data.unit,
@@ -377,6 +383,9 @@ export const actions = {
         .catch(() => {
           toast.error('Failed Edit Data !');
           dispatch(utility.actions.hideLoading());
+        })
+        .finally(() => {
+          window.location.reload();
         });
     };
   },

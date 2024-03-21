@@ -10,6 +10,7 @@ import DefaultTable from '../../../modules/custom-table';
 import * as redux from './redux/ConsumableRedux';
 import * as reduxUnit from '../unit/redux/UnitRedux';
 import * as reduxSupplier from '../supplier/redux/SupplierRedux';
+import { manipulatePriceData } from '../../../../setup/function.js';
 
 const mapState = (state: RootState) => ({ auth: state.modal });
 const connector = connect(mapState);
@@ -70,9 +71,7 @@ const ConsumablePage: FC<PropsFromRedux> = () => {
       dataField: 'harga',
       text: 'Price',
       align: 'right',
-      formatter: (cell) => {
-        return <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell?.toLocaleString()}</p>;
-      },
+      formatter: manipulatePriceData,
     },
     {
       dataField: '',

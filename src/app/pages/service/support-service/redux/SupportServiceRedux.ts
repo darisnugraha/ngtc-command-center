@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { persistReducer } from 'redux-persist';
 import Swal from 'sweetalert2';
 import storage from 'redux-persist/lib/storage';
+import { change, getFormValues } from 'redux-form';
 import { AxiosGet, AxiosPost } from '../../../../../setup';
 import { AxiosDelete } from '../../../../../setup/axios/AxiosDelete';
 import { AxiosPut } from '../../../../../setup/axios/AxiosPut';
@@ -109,14 +110,14 @@ export const actions = {
       const onSendData = {
         detail_support_service: [
           {
-            nama_support_service: data.support_service_name,
+            nama_support_service: data.support_service_name?.toUpperCase(),
             kode_toko: data.store_code,
             kode_cabang: data.branch_code,
             kode_satuan: data.unit,
             // eslint-disable-next-line
             qty: parseInt(data.qty),
-            harga: data.price,
-            total_harga: data.total_price,
+            harga: data.price || 0,
+            total_harga: data.total_price || 0,
           },
         ],
       };
@@ -130,6 +131,9 @@ export const actions = {
         .catch(() => {
           toast.error('Failed Add Data !');
           dispatch(utility.actions.hideLoading());
+        })
+        .finally(() => {
+          window.location.reload();
         });
     };
   },
@@ -137,6 +141,28 @@ export const actions = {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch({ type: actionTypes.CloseModal });
       dispatch(modal.actions.hide());
+    };
+  },
+  calculateTotalPriceQty: (data: number) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => {}
+    ): Promise<void> => {
+      const state = getState();
+      const formState: any = getFormValues('FormSupportService')(state);
+      const totalPrice = data * (formState.price ?? 0);
+      dispatch(change('FormSupportService', 'total_price', totalPrice));
+    };
+  },
+  calculateTotalPricePrice: (data: number) => {
+    return async (
+      dispatch: ThunkDispatch<{}, {}, AnyAction>,
+      getState: () => {}
+    ): Promise<void> => {
+      const state = getState();
+      const formState: any = getFormValues('FormSupportService')(state);
+      const totalPrice = (formState.qty ?? 0) * data;
+      dispatch(change('FormSupportService', 'total_price', totalPrice));
     };
   },
   getStoreDetailDataByCode: (code: string) => {
@@ -249,6 +275,9 @@ export const actions = {
             .catch(() => {
               toast.error('Failed Delete Data !');
               dispatch(utility.actions.hideLoading());
+            })
+            .finally(() => {
+              window.location.reload();
             });
         }
       });
@@ -258,14 +287,14 @@ export const actions = {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
       const onSendData = {
-        nama_support_service: data.support_service_name,
+        nama_support_service: data.support_service_name?.toUpperCase(),
         kode_toko: data.store_code,
         kode_cabang: data.branch_code,
         kode_satuan: data.unit,
         // eslint-disable-next-line
         qty: parseInt(data.qty),
-        harga: data.price,
-        total_harga: data.total_price,
+        harga: data.price || 0,
+        total_harga: data.total_price || 0,
       };
       AxiosPut(`support-service/${data.id}`, onSendData)
         .then(() => {
@@ -277,6 +306,9 @@ export const actions = {
         .catch(() => {
           toast.error('Failed Edit Data !');
           dispatch(utility.actions.hideLoading());
+        })
+        .finally(() => {
+          window.location.reload();
         });
     };
   },

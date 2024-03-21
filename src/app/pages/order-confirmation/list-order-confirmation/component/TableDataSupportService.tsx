@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import BootstrapTable, { ColumnDescription } from 'react-bootstrap-table-next';
 import { KTSVG } from '../../../../../_metronic/helpers';
 import { RootState } from '../../../../../setup';
-import * as redux from '../redux/AddOrderConfirmationServiceRedux';
+import * as redux from '../redux/ListOCRedux';
 import { manipulatePriceData } from '../../../../../setup/function.js';
 
 const TableSupportService: FC = () => {
@@ -12,19 +12,10 @@ const TableSupportService: FC = () => {
   useEffect(() => {}, [dispatch]);
 
   const dataTab: any = useSelector<RootState>(
-    ({ addorderconfirmationservice }) => addorderconfirmationservice.listSupport
+    ({ listorderconfirmation }) => listorderconfirmation.feedbackSupportService
   );
 
   const columns: ColumnDescription[] = [
-    {
-      dataField: 'key',
-      text: 'No',
-      align: 'center',
-      headerClasses: 'ps-4 min-w-100px rounded-start',
-      formatter: (cell) => {
-        return <p className='ps-4 text-hover-primary d-block mb-1 fs-6'>{cell}</p>;
-      },
-    },
     {
       dataField: 'no_support_service',
       text: 'No Support Service',
@@ -56,7 +47,7 @@ const TableSupportService: FC = () => {
       },
     },
     {
-      dataField: 'satuan',
+      dataField: 'kode_satuan',
       text: 'Unit',
       align: 'right',
       formatter: (cell) => {
@@ -84,16 +75,27 @@ const TableSupportService: FC = () => {
       headerClasses: 'ps-4 min-w-100px rounded-end',
       formatter: (cell, row) => {
         return (
-          <button
-            type='button'
-            onClick={() => {
-              // eslint-disable-next-line
-              dispatch(redux.actions.deleteSupportLocal(row.key));
-            }}
-            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-          >
-            <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
-          </button>
+          <>
+            {/* <button
+              type='button'
+              onClick={() => {
+                dispatch(redux.actions.editProduct(row.kode_produk));
+                // dispatch(modalSecond.actions.show());
+              }}
+              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+            >
+              <KTSVG path='/media/icons/duotune/general/gen055.svg' className='svg-icon-3' />
+            </button> */}
+            <button
+              type='button'
+              onClick={() => {
+                dispatch(redux.actions.deleteProduct(row.kode_produk));
+              }}
+              className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+            >
+              <KTSVG path='/media/icons/duotune/general/gen027.svg' className='svg-icon-3' />
+            </button>
+          </>
         );
       },
     },
@@ -101,7 +103,7 @@ const TableSupportService: FC = () => {
 
   return (
     <>
-      <h3 className='card-title align-items-start flex-column'>
+      <h3 className='card-title align-items-start flex-column mb-5'>
         <span className='card-label fw-bolder fs-3 mb-1'>List Support Service</span>
       </h3>
       <BootstrapTable

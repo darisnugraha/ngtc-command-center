@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { change, Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { RootState } from '../../../../../setup';
-import { currencyMask } from '../../../../../setup/function.js';
+import { currencyMask, NumberOnly } from '../../../../../setup/function.js';
 import SubmitButton from '../../../../modules/button';
 import { RenderField } from '../../../../modules/redux-form/BasicInput';
 import { RenderFieldSelect } from '../../../../modules/redux-form/dropdown';
@@ -17,7 +17,9 @@ const mapState = (state: RootState) => {};
 const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) => {
   const dispatch = useDispatch();
   const { handleSubmit } = props;
-
+  const dataDiscount: any = useSelector<RootState>(({ discount }) => discount.feedback);
+  const [diskonType, setDiskonType] = useState('');
+  const [diskonVal, setDiskonVal] = useState(0);
   const dataOCType = [
     { value: 'INCLUDE SOFTWARE', label: 'INCLUDE SOFTWARE' },
     { value: 'NOT INCLUDE SOFTWARE', label: 'NOT INCLUDE SOFTWARE' },
@@ -50,9 +52,9 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
     ({ addorderconfirmation }) => addorderconfirmation.typeProduct
   );
 
-  // const typeProductList = useSelector<RootState>(
-  //   ({ addorderconfirmation }) => addorderconfirmation.isPackage
-  // );
+  function calculateDiscount(value: number, isPersentage: boolean = false) {
+    dispatch(redux.actions.calculateDiscount(value, isPersentage));
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -173,6 +175,82 @@ const FormAddProductOC: React.FC<InjectedFormProps<{}, Props>> = (props: any) =>
             label='Sub Total'
             placeHolder='Insert Sub Total'
             {...currencyMask}
+          />
+        </div>
+        <div className='col-lg-4' />
+        <div className='col-lg-12 d-none'>
+          <Field name='id' type='text' component={RenderField} label='ID' placeHolder='Insert ID' />
+        </div>
+        <div className='col-lg-4'>
+          <Field
+            name='discount_code'
+            type='text'
+            component={RenderFieldSelect}
+            options={dataDiscount.map((element: any) => {
+              const row = {
+                value: element.kode_diskon,
+                label: element.nama_diskon,
+              };
+              return row;
+            })}
+            label='Discount Name'
+            placeHolder='Select Discount Name'
+            onChange={(e: any) => {
+              dispatch(change('FormAddProductOC', 'discount_name', e.label));
+            }}
+          />
+        </div>
+        <div className='col-lg-2 d-none'>
+          <Field
+            name='discount_name'
+            type='text'
+            component={RenderField}
+            label='Discount Name'
+            placeHolder='Insert Discount Name'
+          />
+        </div>
+        <div className='col-lg-2'>
+          <Field
+            name='discount_percentage'
+            type='text'
+            component={RenderField}
+            label='Discount %'
+            placeHolder='Insert Discount %'
+            isEdit={diskonType === 'RP' && diskonVal > 0}
+            readOnly={diskonType === 'RP' && diskonVal > 0}
+            onChange={(e: any) => {
+              setDiskonType('PERCENTAGE');
+              setDiskonVal(e.target.value);
+              calculateDiscount(NumberOnly(e.target.value), true);
+            }}
+          />
+        </div>
+        <div className='col-lg-2'>
+          <Field
+            name='discount_rp'
+            type='text'
+            component={RenderField}
+            label='Discount Rp'
+            placeHolder='Insert Discount Rp'
+            {...currencyMask}
+            isEdit={diskonType === 'PERCENTAGE' && diskonVal > 0}
+            readOnly={diskonType === 'PERCENTAGE' && diskonVal > 0}
+            onChange={(e: any) => {
+              setDiskonType('RP');
+              setDiskonVal(NumberOnly(e.target.value));
+              calculateDiscount(NumberOnly(e.target.value), false);
+            }}
+          />
+        </div>
+        <div className='col-lg-4'>
+          <Field
+            name='sub_total_diskon'
+            type='text'
+            component={RenderField}
+            label='Total Discount'
+            {...currencyMask}
+            isEdit={false}
+            readOnly={false}
           />
         </div>
       </div>

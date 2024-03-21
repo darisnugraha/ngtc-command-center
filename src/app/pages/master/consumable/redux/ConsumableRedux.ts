@@ -70,7 +70,7 @@ export const actions = {
         nama_consumable: data.consumable_name,
         kode_supplier: data.supplier.value || data.supplier,
         satuan: data.unit.value || data.unit,
-        harga: data.price,
+        harga: data.price || 0,
       };
 
       AxiosPost('consumable', onSendData)
@@ -93,7 +93,7 @@ export const actions = {
         nama_consumable: data.consumable_name,
         kode_supplier: data.supplier.value || data.supplier,
         satuan: data.unit,
-        harga: data.price,
+        harga: data.price || 0,
       };
 
       AxiosPut(`consumable/${data.id}`, onSendData)

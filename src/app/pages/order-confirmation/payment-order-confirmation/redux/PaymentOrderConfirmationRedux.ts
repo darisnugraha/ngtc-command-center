@@ -23,6 +23,8 @@ export const actionTypes = {
   SetCamera: '[PAYMENTOC] Set Camera',
   GetListBank: '[PAYMENTOC] Get List Bank',
   GetProofOfPayment: '[PAYMENTOC] Get Image Proof Of Payment',
+  startSending: '[PAYMENTOC]Starting Sending Data',
+  stopSending: '[PAYMENTOC]Finish Sending Data',
 };
 export interface IPaymentOCState {
   isSending?: boolean;
@@ -71,6 +73,14 @@ export const reducer = persistReducer(
       case actionTypes.GetProofOfPayment: {
         const data = action.payload?.proofOfPaymentIMG;
         return { ...state, proofOfPaymentIMG: data };
+      }
+      case actionTypes.startSending: {
+        const isSending = action.payload?.isSending;
+        return { ...state, isSending };
+      }
+      case actionTypes.stopSending: {
+        const isSending = action.payload?.isSending;
+        return { ...state, isSending };
       }
 
       default:
@@ -991,6 +1001,7 @@ export const actions = {
       const onSendData = {
         no_piutang: noPiutang,
       };
+      dispatch({ type: actionTypes.startSending, payload: { isSending: true } });
       AxiosPost('receivable/validation', onSendData)
         .then(() => {
           toast.success('Success Validate Data !');
@@ -1001,6 +1012,9 @@ export const actions = {
           // eslint-disable-next-line
           console.log(err);
           toast.error('Failed Validate Data !');
+        })
+        .finally(() => {
+          dispatch({ type: actionTypes.stopSending, payload: { isSending: false } });
         });
     };
   },

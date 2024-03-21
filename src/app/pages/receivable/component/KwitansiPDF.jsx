@@ -37,7 +37,7 @@ const KwitansiPDF = (data, head) => {
 
   while (remainingAlamat.length > 0) {
     let textToDisplay = cutTextAtWordBoundary(remainingAlamat, 48);
-    doc.text(textToDisplay, 68, initY + lineAlamat * 10);
+    doc.text(textToDisplay, 68, initY + lineAlamat * 7);
     remainingAlamat = remainingAlamat.substring(textToDisplay.length).trim();
     lineAlamat++;
   }
@@ -61,13 +61,13 @@ const KwitansiPDF = (data, head) => {
 
   while (remainingText.length > 0) {
     let textToDisplay = cutTextAtWordBoundary(remainingText, 58);
-    doc.text(textToDisplay, 68, finalY + line * 10);
+    doc.text(textToDisplay, 68, finalY + line * 7);
     remainingText = remainingText.substring(textToDisplay.length).trim();
     line++;
   }
-  finalY = finalY;
-  doc.text(`Terbilang`, 15, finalY + 10);
-  doc.text(':', 65, finalY + 10);
+  finalY = finalY + line * 8;
+  doc.text(`Terbilang`, 15, finalY);
+  doc.text(':', 65, finalY);
   const terbilang = angkaTerbilang(data[0].bayar_rp).toUpperCase() + ' RUPIAH';
 
   let remainingTerbilang = terbilang;
@@ -75,13 +75,13 @@ const KwitansiPDF = (data, head) => {
 
   while (remainingTerbilang.length > 0) {
     let textToDisplay = cutTextAtWordBoundary(remainingTerbilang, 58);
-    doc.text(textToDisplay, 68, finalY + 10 + lineTerbilang * 10);
+    doc.text(textToDisplay, 68, finalY + lineTerbilang * 7);
     remainingTerbilang = remainingTerbilang.substring(textToDisplay.length).trim();
     lineTerbilang++;
   }
   const date = moment(data[0].tanggal).format('DD MMMM YYYY');
-  doc.text(`Bandung, ${date}`, 174, finalY + 30);
-  doc.text('Ismahria Sujana', 187, finalY + 70);
+  doc.text(`Bandung, ${date}`, 174, finalY + 22);
+  doc.text('Ismahria Sujana', 187, finalY + 55);
 
   const pages = doc.internal.getNumberOfPages();
   const pageWidth = doc.internal.pageSize.width;

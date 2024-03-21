@@ -20,10 +20,6 @@ const AddHardwareValidation = (values: HardwareModel): FormErrors<HardwareModel>
     errors.supplier = 'Supplier required';
   }
 
-  if (!values.price) {
-    errors.price = 'Price Address required';
-  }
-
   return errors;
 };
 export default AddHardwareValidation;

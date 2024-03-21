@@ -7,6 +7,7 @@ import * as redux from '../redux/ListOCRedux';
 import * as modalSecond from '../../../../modules/modal/ModalSecondRedux';
 import FormEditProduct from '../../add-order-confirmation/component/FormEditProduct';
 import ModalSecond from '../../../../modules/modal/ModalSecond';
+import { manipulatePriceData } from '../../../../../setup/function.js';
 
 const TableDataProduct: FC = () => {
   const dispatch = useDispatch();
@@ -46,21 +47,19 @@ const TableDataProduct: FC = () => {
       dataField: 'harga',
       text: 'Price',
       align: 'center',
-      formatter: (cell) => {
-        return (
-          <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell.toLocaleString() || '-'}</p>
-        );
-      },
+      formatter: manipulatePriceData,
     },
     {
       dataField: 'sub_total',
       text: 'Sub Total',
       align: 'right',
-      formatter: (cell) => {
-        return (
-          <p className='text-hover-primary d-block mb-1 fs-6'>Rp. {cell.toLocaleString() || '-'}</p>
-        );
-      },
+      formatter: manipulatePriceData,
+    },
+    {
+      dataField: 'sub_total_diskon',
+      text: 'Discount',
+      align: 'right',
+      formatter: manipulatePriceData,
     },
     {
       dataField: '',
@@ -70,7 +69,7 @@ const TableDataProduct: FC = () => {
       formatter: (cell, row) => {
         return (
           <>
-            <button
+            {/* <button
               type='button'
               onClick={() => {
                 dispatch(redux.actions.editProduct(row.kode_produk));
@@ -79,7 +78,7 @@ const TableDataProduct: FC = () => {
               className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
             >
               <KTSVG path='/media/icons/duotune/general/gen055.svg' className='svg-icon-3' />
-            </button>
+            </button> */}
             <button
               type='button'
               onClick={() => {
@@ -108,6 +107,9 @@ const TableDataProduct: FC = () => {
           }}
         />
       </ModalSecond>
+      <h3 className='card-title align-items-start flex-column mb-5'>
+        <span className='card-label fw-bolder fs-3 mb-1'>List Product</span>
+      </h3>
       <BootstrapTable
         keyField='_id'
         columns={columns}

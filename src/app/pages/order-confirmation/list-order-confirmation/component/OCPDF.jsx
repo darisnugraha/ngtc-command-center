@@ -234,7 +234,7 @@ const OCPDF = (data, head) => {
       DiscTot = res.nominal_diskon;
       const footerDiscountAll = [
         {
-          content: `Diskon ${res.nama_diskon} ${PersenTot}`,
+          content: `Diskon ${res.nama_diskon} ${PersenTot.toLocaleString()}`,
           colSpan: 6,
           styles: { halign: 'right', fillColor: '#E8E5E5', textColor: '#000', fontStyle: 'bold' },
         },

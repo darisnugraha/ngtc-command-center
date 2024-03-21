@@ -1093,28 +1093,7 @@ export const actions = {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
       AxiosGet(`order-confirmation/by-no?no_order_konfirmasi=${data.id}`).then((res) => {
-        const dataDecrypt = doDecryptData(res.data, [
-          'status',
-          '_id',
-          'input_date',
-          'no_order_konfirmasi',
-          'kode_toko',
-          'kode_cabang',
-          'tanggal_order_konfirmasi',
-          'total_harga',
-          'kode_produk',
-          'satuan',
-          'harga',
-          'sub_total',
-          'qty',
-          'kode_diskon',
-          'nama_diskon',
-          'persentase',
-          'jenis_ok',
-          'jenis_produk',
-          'sub_total_diskon',
-          'persentase',
-        ]);
+        const dataDecrypt = doDecryptData(res.data, ignoredListOrderConfirmation);
         const pdf64 = OC(dataDecrypt, data);
         const file = dataURLtoPDFFile(
           pdf64,

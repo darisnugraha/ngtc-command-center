@@ -169,13 +169,6 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
             <div className='col-lg-12'>
               <TableListProduct />
             </div>
-            <div className='col-lg-12'>
-              <TableSupportService />
-            </div>
-
-            <div className='col-lg-12'>
-              <TableProductionService />
-            </div>
             <div className={isPackage === 'true' ? 'col-lg-12' : 'd-none'}>
               <div className='row justify-content-end mt-5'>
                 <div className='col-lg-3 d-grid'>
@@ -192,6 +185,13 @@ const AddOrderConfirmationProduct: FC<Props> = () => {
                   </button>
                 </div>
               </div>
+            </div>
+            <div className='col-lg-12'>
+              <TableSupportService />
+            </div>
+
+            <div className='col-lg-12'>
+              <TableProductionService />
             </div>
           </div>
         </div>

@@ -314,7 +314,10 @@ export const actions = {
         }
       });
       const lastPriceAfterDicount = lastGrandTotalAfterDiscount;
-      let diskonManual = selectedData[0].diskon_manual;
+      let diskonManual: any = 0;
+      if (selectedData !== undefined) {
+        diskonManual = selectedData[0]?.diskon_manual;
+      }
       if (localStorage.getItem('lastDiscountManual') !== null) {
         diskonManual = localStorage.getItem('lastDiscountManual');
       }

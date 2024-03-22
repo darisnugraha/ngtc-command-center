@@ -364,12 +364,18 @@ export const actions = {
                   'qty',
                   'sub_total',
                 ]);
-                getLocal('listProduct', ['sub_total', 'qty', 'harga']).then((res) => {
+                getLocal('listProduct', [
+                  'sub_total',
+                  'qty',
+                  'harga',
+                  'sub_total_diskon',
+                  'persentase',
+                ]).then((res) => {
                   if (res.length === 0) {
-                    const dataArr: listProductModel[] = [];
+                    const dataArr: any[] = [];
                     let no = 1;
                     dataDecrypt.detail_produk.forEach((element: any) => {
-                      const row: listProductModel = {
+                      const row: any = {
                         // eslint-disable-next-line
                         key: no,
                         harga: element.harga,
@@ -380,12 +386,22 @@ export const actions = {
                         sub_total: element.sub_total,
                         tipe_produk: element.jenis_produk || typeProd,
                         type: element.type || '-',
+                        kode_diskon: data.discount_code || '-',
+                        nama_diskon: data.discount_name || '-',
+                        persentase: data.discount_percentage || 0,
+                        sub_total_diskon: Number(data.sub_total_diskon || 0),
                       };
                       dataArr.push(row);
                       no += 1;
                     });
 
-                    saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+                    saveLocal('listProduct', dataArr, [
+                      'sub_total',
+                      'qty',
+                      'harga',
+                      'sub_total_diskon',
+                      'persentase',
+                    ]).then(() => {
                       saveLocal('dataPackage', true).then(() => {
                         toast.success('Success Add Data !');
                         dispatch(reset('FormAddProductOC'));
@@ -394,10 +410,10 @@ export const actions = {
                       });
                     });
                   } else {
-                    const dataArr: listProductModel[] = res;
+                    const dataArr: any[] = res;
                     let no = res.length + 1;
                     dataDecrypt.detail_produk.forEach((element: any) => {
-                      const row: listProductModel = {
+                      const row: any = {
                         // eslint-disable-next-line
                         key: no,
                         harga: element.harga,
@@ -408,11 +424,21 @@ export const actions = {
                         sub_total: element.harga,
                         tipe_produk: element.jenis_produk || typeProd,
                         type: element.type || '-',
+                        kode_diskon: data.discount_code || '-',
+                        nama_diskon: data.discount_name || '-',
+                        persentase: data.discount_percentage || 0,
+                        sub_total_diskon: Number(data.sub_total_diskon || 0),
                       };
                       dataArr.push(row);
                       no += 1;
                     });
-                    saveLocal('listProduct', dataArr, ['sub_total', 'qty', 'harga']).then(() => {
+                    saveLocal('listProduct', dataArr, [
+                      'sub_total',
+                      'qty',
+                      'harga',
+                      'sub_total_diskon',
+                      'persentase',
+                    ]).then(() => {
                       saveLocal('dataPackage', true).then(() => {
                         toast.success('Success Add Data !');
                         dispatch(reset('FormAddProductOC'));
@@ -528,11 +554,11 @@ export const actions = {
                 'persentase',
               ]).then((res) => {
                 if (res.length === 0) {
-                  const dataArr: listProductModel[] = [];
+                  const dataArr: any[] = [];
                   let no = 1;
                   dataDecrypt.detail_produk.forEach((element: any) => {
                     console.log('INI DI SINI C');
-                    const row: listProductModel = {
+                    const row: any = {
                       // eslint-disable-next-line
                       key: no,
                       harga: element.harga,
@@ -543,6 +569,10 @@ export const actions = {
                       sub_total: element.sub_total,
                       tipe_produk: element.jenis_produk || typeProd,
                       type: element.type || '-',
+                      kode_diskon: data.discount_code || '-',
+                      nama_diskon: data.discount_name || '-',
+                      persentase: data.discount_percentage || 0,
+                      sub_total_diskon: Number(data.sub_total_diskon || 0),
                     };
                     dataArr.push(row);
                     no += 1;
@@ -562,11 +592,11 @@ export const actions = {
                     });
                   });
                 } else {
-                  const dataArr: listProductModel[] = res;
+                  const dataArr: any[] = res;
                   let no = res.length + 1;
                   console.log('INI DI SINI D');
                   dataDecrypt.detail_produk.forEach((element: any) => {
-                    const row: listProductModel = {
+                    const row: any = {
                       // eslint-disable-next-line
                       key: no,
                       harga: element.harga,
@@ -577,6 +607,10 @@ export const actions = {
                       sub_total: element.harga,
                       tipe_produk: element.jenis_produk || typeProd,
                       type: element.type || '-',
+                      kode_diskon: data.discount_code || '-',
+                      nama_diskon: data.discount_name || '-',
+                      persentase: data.discount_percentage || 0,
+                      sub_total_diskon: Number(data.sub_total_diskon || 0),
                     };
                     dataArr.push(row);
                     no += 1;
@@ -619,10 +653,10 @@ export const actions = {
                   sub_total: data.sub_total,
                   tipe_produk: data.product_type.value || data.product_type || typeProd,
                   type: data.type || '-',
-                  kode_diskon: data.discount_code,
-                  nama_diskon: data.discount_name,
+                  kode_diskon: data.discount_code || '-',
+                  nama_diskon: data.discount_name || '-',
                   persentase: data.discount_percentage || 0,
-                  sub_total_diskon: Number(data.sub_total_diskon),
+                  sub_total_diskon: Number(data.sub_total_diskon || 0),
                 };
                 dataArr.push(row);
                 saveLocal('listProduct', dataArr, [
@@ -654,10 +688,10 @@ export const actions = {
                   sub_total: data.sub_total,
                   tipe_produk: data.product_type.value || data.product_type || typeProd,
                   type: data.type || '-',
-                  kode_diskon: data.discount_code,
-                  nama_diskon: data.discount_name,
+                  kode_diskon: data.discount_code || '-',
+                  nama_diskon: data.discount_name || '-',
                   persentase: data.discount_percentage || 0,
-                  sub_total_diskon: Number(data.sub_total_diskon),
+                  sub_total_diskon: Number(data.sub_total_diskon || 0),
                 };
                 dataArr.push(row);
                 saveLocal('listProduct', dataArr, [
@@ -1191,7 +1225,6 @@ export const actions = {
                           keterangan: '-',
                           diskon_manual: formDiscountManual?.manual_discount ?? 0,
                         };
-                        console.log(onSendData);
                         AxiosPost('order-confirmation', onSendData)
                           .then((res: any) => {
                             AxiosGet(
@@ -1237,8 +1270,6 @@ export const actions = {
                                 footer_desc:
                                   'Demikianlah Order Konfirmasi ini kami sampaikan. Apabila setuju dengan kondisi tersebut diatas, mohon Order Konfirmasi ini ditandatangani dan dikirimkan kembali kepada kami.',
                               };
-                              console.log(dataDecrypt);
-                              console.log(desc);
                               const pdf64 = OC(dataDecrypt, desc);
                               const file = dataURLtoPDFFile(
                                 pdf64,
@@ -1251,7 +1282,7 @@ export const actions = {
                                 .then(() => {
                                   Swal.fire('Success!', 'Success Add Data !', 'success').then(
                                     () => {
-                                      OCPDF(dataDecrypt, desc);
+                                      // OCPDF(dataDecrypt, desc);
                                       localStorage.removeItem('dataCustomer');
                                       localStorage.removeItem('listProduct');
                                       localStorage.removeItem('listDiscount');
@@ -1266,6 +1297,8 @@ export const actions = {
                                   );
                                 })
                                 .catch(() => {
+                                  console.log('INI DI CATCH SAAT POSTPDF');
+
                                   Swal.fire().then(() => {
                                     OCPDF(dataDecrypt, desc);
                                     localStorage.removeItem('dataCustomer');
@@ -1291,7 +1324,6 @@ export const actions = {
                           type: actionTypes.SaveData,
                           payload: { dataSend: onSendData },
                         });
-                        dispatch(modal.actions.show());
                       });
                     });
                   }

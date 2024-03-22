@@ -11,6 +11,7 @@ import * as utility from '../../../../setup/redux/UtilityRedux';
 import * as redux from '../../master/customer/redux/CustomerRedux';
 import { AxiosDelete } from '../../../../setup/axios/AxiosDelete';
 import { AxiosPut } from '../../../../setup/axios/AxiosPut';
+import { replaceDashWithHyphen } from '../../../../setup/function';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -200,8 +201,8 @@ export const actions = {
         kode_cabang: 'PUSAT',
         nama_cabang: 'PUSAT',
         nama_customer: data.customer_name || '-',
-        alamat: data.address || '-',
-        alamat_korespondensi: data.correspondence_address || '-',
+        alamat: replaceDashWithHyphen(data.address || '-'),
+        alamat_korespondensi: replaceDashWithHyphen(data.correspondence_address || '-'),
         kota: data.city || '-',
         telepon: data.telephone || '-',
         email: data.email || '-',
@@ -284,8 +285,8 @@ export const actions = {
         kode_cabang: 'PUSAT',
         nama_cabang: 'PUSAT',
         nama_customer: data.customer_name || '-',
-        alamat: data.address || '-',
-        alamat_korespondensi: data.correspondence_address || '-',
+        alamat: replaceDashWithHyphen(data.address || '-'),
+        alamat_korespondensi: replaceDashWithHyphen(data.correspondence_address || '-'),
         kota: data.city || '-',
         telepon: data.telephone || '-',
         email: data.email || '-',

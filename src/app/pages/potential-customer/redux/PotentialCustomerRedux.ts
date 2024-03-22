@@ -11,7 +11,7 @@ import * as utility from '../../../../setup/redux/UtilityRedux';
 import * as redux from '../../master/customer/redux/CustomerRedux';
 import { AxiosDelete } from '../../../../setup/axios/AxiosDelete';
 import { AxiosPut } from '../../../../setup/axios/AxiosPut';
-import { replaceDashWithHyphen } from '../../../../setup/function';
+import { replaceDashWithHyphen } from '../../../../setup/function.js';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;

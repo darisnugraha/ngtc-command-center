@@ -158,6 +158,15 @@ const ValidationPayment: FC<PropsFromRedux> = () => {
       </ModalSecond>
       <div className='card mb-5 mb-xl-8'>
         <div className='card-header border-0 pt-5'>
+          <button
+            className='btn btn-primary'
+            type='button'
+            onClick={() => {
+              dispatch(redux.actions.dummyKwitansi());
+            }}
+          >
+            Dummy
+          </button>
           <h3 className='card-title align-items-start flex-column'>
             <span className='card-label fw-bolder fs-3 mb-1'>Validation Payment</span>
           </h3>

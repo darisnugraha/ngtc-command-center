@@ -59,7 +59,13 @@ const TableDataProduct: FC = () => {
       dataField: 'sub_total_diskon',
       text: 'Discount',
       align: 'right',
-      formatter: manipulatePriceData,
+      formatter: (cell) => {
+        return (
+          <p className='text-hover-primary d-block mb-1 fs-6'>
+            Rp. {cell?.toLocaleString() || '0'}
+          </p>
+        );
+      },
     },
     {
       dataField: '',

@@ -45,6 +45,25 @@ const initialReceivableState: IReceivableState = {
   proofOfPaymentIMG: undefined,
 };
 
+export const ignoreReceivable = [
+  '_id',
+  'no_piutang',
+  'tanggal',
+  'no_order_konfirmasi',
+  'tanggal_order_konfirmasi',
+  'no_sales_order',
+  'tanggal_sales_order',
+  'kode_toko',
+  'kode_cabang',
+  'total_tagihan',
+  'bayar_rp',
+  'sisa_tagihan',
+  'status',
+  'input_date',
+];
+
+export const ignoreStore = ['kode_toko', 'status', '_id', 'input_date', 'kode_cabang'];
+
 export const reducer = persistReducer(
   { storage, key: 'v100-demo1-receivable', whitelist: ['isSending'] },
   (
@@ -974,30 +993,9 @@ export const actions = {
     // eslint-disable-next-line
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       AxiosGet(`receivable/by-no/${noPiutang}`).then((response: any) => {
-        const dataDecrypt = doDecryptData(response.data, [
-          '_id',
-          'no_piutang',
-          'tanggal',
-          'no_order_konfirmasi',
-          'tanggal_order_konfirmasi',
-          'no_sales_order',
-          'tanggal_sales_order',
-          'kode_toko',
-          'kode_cabang',
-          'total_tagihan',
-          'bayar_rp',
-          'sisa_tagihan',
-          'status',
-          'input_date',
-        ]);
+        const dataDecrypt = doDecryptData(response.data, ignoreReceivable);
         AxiosGet(`store/by-kode/${dataDecrypt[0].kode_toko}`).then((res) => {
-          const dataDecryptStore = doDecryptData(res.data, [
-            'kode_toko',
-            'status',
-            '_id',
-            'input_date',
-            'kode_cabang',
-          ]);
+          const dataDecryptStore = doDecryptData(res.data, ignoreStore);
           KwitansiPDF(dataDecrypt, dataDecryptStore);
         });
       });

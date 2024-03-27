@@ -3,7 +3,7 @@ import 'jspdf-autotable';
 import { toAbsoluteUrl } from '../../../../_metronic/helpers';
 import angkaTerbilang from '@develoka/angka-terbilang-js';
 import moment from 'moment';
-import { isPos } from '../../../../setup/function';
+import { isPos, replaceDashWithHyphen } from '../../../../setup/function.js';
 
 const KwitansiPDF = (data, head) => {
   const doc = new jsPDF('l', 'mm', 'a4');
@@ -23,7 +23,8 @@ const KwitansiPDF = (data, head) => {
   doc.setFont(undefined, 'bold');
   doc.text(head[0].nama_toko, 68, y + 25 + moreSpace);
   doc.setFont(undefined, 'normal');
-  const alamat = data[0].alamat_cabang ?? '';
+  console.log(data[0].alamat_cabang);
+  const alamat = replaceDashWithHyphen(data[0].alamat_cabang) ?? '';
   let initY = y + 33 + moreSpace;
 
   function cutTextAtWordBoundary(text, maxLength) {
@@ -42,46 +43,84 @@ const KwitansiPDF = (data, head) => {
     lineAlamat++;
   }
 
-  doc.text('Banyaknya Uang', 15, y + 63 + moreSpace - 5);
-  doc.text(':', 65, y + 63 + moreSpace - 5);
-  doc.text(`Rp. ${data[0].bayar_rp.toLocaleString()}`, 68, y + 63 + moreSpace - 5);
-  doc.text('Untuk Pembayaran', 15, y + 73 + moreSpace - 5);
-  doc.text(':', 65, y + 73 + moreSpace - 5);
-  const desc = data[0].deskripsi;
-  let finalY = y + 73 + moreSpace - 5;
+  const tableColumn = [];
 
-  function cutTextAtWordBoundary(text, maxLength) {
-    if (text.length <= maxLength) return text;
-    let cutOffIndex = text.lastIndexOf(' ', maxLength);
-    return cutOffIndex > -1 ? text.slice(0, cutOffIndex) : text.slice(0, maxLength);
-  }
+  const tableRows = [
+    [
+      { content: 'Banyaknya Uang' },
+      { content: ':' },
+      { content: `Rp. ${data[0].bayar_rp.toLocaleString()}` },
+    ],
+    [{ content: 'Untuk Pembayaran' }, { content: ':' }, { content: data[0].deskripsi }],
+    [
+      { content: 'Terbilang' },
+      { content: ':' },
+      { content: angkaTerbilang(data[0].bayar_rp).toUpperCase() + ' RUPIAH' },
+    ],
+  ];
 
-  let remainingText = desc;
-  let line = 0;
+  doc.autoTable({
+    head: tableColumn,
+    body: tableRows,
+    startY: y + 63 + moreSpace - 5,
+    theme: 'plain',
+    pageBreak: 'auto',
+    rowPageBreak: 'avoid',
+    margin: { top: 10 },
+    bodyStyles: {
+      fontSize: 15,
+      halign: 'left',
+      valign: 'top',
+    },
+    headStyles: {
+      fontSize: 15,
+      fillColor: '#E8E5E5',
+      textColor: '#000',
+      valign: 'middle',
+      halign: 'left',
+    },
+  });
+  let finalY = doc.lastAutoTable.finalY + moreSpace;
+  // doc.text('Banyaknya Uang', 15, y + 63 + moreSpace - 5);
+  // doc.text(':', 65, y + 63 + moreSpace - 5);
+  // doc.text(`Rp. ${data[0].bayar_rp.toLocaleString()}`, 68, y + 63 + moreSpace - 5);
+  // doc.text('Untuk Pembayaran', 15, y + 73 + moreSpace - 5);
+  // doc.text(':', 65, y + 73 + moreSpace - 5);
+  // const desc = data[0].deskripsi;
+  // let finalY = y + 73 + moreSpace - 5;
 
-  while (remainingText.length > 0) {
-    let textToDisplay = cutTextAtWordBoundary(remainingText, 58);
-    doc.text(textToDisplay, 68, finalY + line * 7);
-    remainingText = remainingText.substring(textToDisplay.length).trim();
-    line++;
-  }
-  finalY = finalY + line * 8;
-  doc.text(`Terbilang`, 15, finalY);
-  doc.text(':', 65, finalY);
-  const terbilang = angkaTerbilang(data[0].bayar_rp).toUpperCase() + ' RUPIAH';
+  // function cutTextAtWordBoundary(text, maxLength) {
+  //   if (text.length <= maxLength) return text;
+  //   let cutOffIndex = text.lastIndexOf(' ', maxLength);
+  //   return cutOffIndex > -1 ? text.slice(0, cutOffIndex) : text.slice(0, maxLength);
+  // }
 
-  let remainingTerbilang = terbilang;
-  let lineTerbilang = 0;
+  // let remainingText = desc;
+  // let line = 0;
 
-  while (remainingTerbilang.length > 0) {
-    let textToDisplay = cutTextAtWordBoundary(remainingTerbilang, 58);
-    doc.text(textToDisplay, 68, finalY + lineTerbilang * 7);
-    remainingTerbilang = remainingTerbilang.substring(textToDisplay.length).trim();
-    lineTerbilang++;
-  }
+  // while (remainingText.length > 0) {
+  //   let textToDisplay = cutTextAtWordBoundary(remainingText, 58);
+  //   doc.text(textToDisplay, 68, finalY + line * 7);
+  //   remainingText = remainingText.substring(textToDisplay.length).trim();
+  //   line++;
+  // }
+  // finalY = finalY + line * 8;
+  // doc.text(`Terbilang`, 15, finalY);
+  // doc.text(':', 65, finalY);
+  // const terbilang = angkaTerbilang(data[0].bayar_rp).toUpperCase() + ' RUPIAH';
+
+  // let remainingTerbilang = terbilang;
+  // let lineTerbilang = 0;
+
+  // while (remainingTerbilang.length > 0) {
+  //   let textToDisplay = cutTextAtWordBoundary(remainingTerbilang, 58);
+  //   doc.text(textToDisplay, 68, finalY + lineTerbilang * 7);
+  //   remainingTerbilang = remainingTerbilang.substring(textToDisplay.length).trim();
+  //   lineTerbilang++;
+  // }
   const date = moment(data[0].tanggal).format('DD MMMM YYYY');
-  doc.text(`Bandung, ${date}`, 174, finalY + 22);
-  doc.text('Ismahria Sujana', 187, finalY + 55);
+  doc.text(`Bandung, ${date}`, 174, finalY);
+  doc.text('Ismahria Sujana', 187, finalY + 33);
 
   const pages = doc.internal.getNumberOfPages();
   const pageWidth = doc.internal.pageSize.width;

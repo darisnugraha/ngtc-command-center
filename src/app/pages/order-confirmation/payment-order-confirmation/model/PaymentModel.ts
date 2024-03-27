@@ -8,4 +8,5 @@ export interface PaymentModel {
   nominal?: Number;
   remaining_payment?: Number;
   foto: String;
+  description?: String;
 }

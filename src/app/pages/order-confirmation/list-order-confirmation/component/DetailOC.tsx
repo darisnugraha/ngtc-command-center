@@ -159,6 +159,120 @@ const DetailOC: FC = () => {
       align: 'right',
       formatter: manipulatePriceData,
     },
+    {
+      dataField: 'sub_total_diskon',
+      text: 'Diskon',
+      align: 'right',
+      formatter: (cell) => {
+        return (
+          <p className='text-hover-primary d-block mb-1 fs-6'>
+            Rp. {cell?.toLocaleString() || '0'}
+          </p>
+        );
+      },
+    },
+  ];
+
+  const columnsSupport: ColumnDescription[] = [
+    {
+      dataField: 'nama_support_service',
+      text: 'Name',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;
+      },
+    },
+    {
+      dataField: 'qty',
+      text: 'Qty',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;
+      },
+    },
+    {
+      dataField: 'kode_satuan',
+      text: 'Unit',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;
+      },
+    },
+    {
+      dataField: 'harga',
+      text: 'Price',
+      align: 'center',
+      formatter: manipulatePriceData,
+    },
+    {
+      dataField: 'total_harga',
+      text: 'Sub Total',
+      align: 'right',
+      formatter: manipulatePriceData,
+    },
+    {
+      dataField: 'total_harga_diskon',
+      text: 'Diskon',
+      align: 'right',
+      formatter: (cell) => {
+        return (
+          <p className='text-hover-primary d-block mb-1 fs-6'>
+            Rp. {cell?.toLocaleString() || '0'}
+          </p>
+        );
+      },
+    },
+  ];
+
+  const columnsProduction: ColumnDescription[] = [
+    {
+      dataField: 'nama_production_service',
+      text: 'Name',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;
+      },
+    },
+    {
+      dataField: 'qty',
+      text: 'Qty',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;
+      },
+    },
+    {
+      dataField: 'kode_satuan',
+      text: 'Unit',
+      align: 'center',
+      formatter: (cell) => {
+        return <p className='text-hover-primary d-block mb-1 fs-6'>{cell || '-'}</p>;
+      },
+    },
+    {
+      dataField: 'harga',
+      text: 'Price',
+      align: 'center',
+      formatter: manipulatePriceData,
+    },
+    {
+      dataField: 'total_harga',
+      text: 'Sub Total',
+      align: 'right',
+      formatter: manipulatePriceData,
+    },
+    {
+      dataField: 'total_harga_diskon',
+      text: 'Diskon',
+      align: 'right',
+      formatter: (cell) => {
+        return (
+          <p className='text-hover-primary d-block mb-1 fs-6'>
+            Rp. {cell?.toLocaleString() || '0'}
+          </p>
+        );
+      },
+    },
   ];
 
   const columnsDiscount: ColumnDescription[] = [
@@ -372,11 +486,11 @@ const DetailOC: FC = () => {
 
   return (
     <>
-      <h2 style={{ textAlign: 'center' }}>{dataTab[0].nama_toko}</h2>
+      <h2 style={{ textAlign: 'center' }}>{dataTab !== undefined ? dataTab[0]?.nama_toko : '-'}</h2>
       <BootstrapTable
         keyField='_id'
         columns={columns}
-        data={dataTab}
+        data={dataTab !== undefined ? dataTab : []}
         wrapperClasses='table-responsive'
         classes='table align-middle gs-0 gy-2'
         headerClasses='fw-bolder text-center'
@@ -394,7 +508,7 @@ const DetailOC: FC = () => {
       <BootstrapTable
         keyField='_id'
         columns={columnsTwo}
-        data={dataTab}
+        data={dataTab !== undefined ? dataTab : []}
         wrapperClasses='table-responsive'
         classes='table align-middle gs-0 gy-2'
         headerClasses='fw-bolder text-center'
@@ -413,7 +527,7 @@ const DetailOC: FC = () => {
       <BootstrapTable
         keyField='_id'
         columns={columnsProduct}
-        data={dataTab[0].detail_produk}
+        data={dataTab !== undefined ? dataTab[0].detail_produk : []}
         wrapperClasses='table-responsive'
         classes='table align-middle gs-0 gy-2'
         headerClasses='fw-bolder text-center'
@@ -427,10 +541,49 @@ const DetailOC: FC = () => {
           );
         }}
       />
+      <hr />
+      <h3 style={{ textAlign: 'center' }}>Detail Support Service</h3>
+      <BootstrapTable
+        keyField='_id'
+        columns={columnsSupport}
+        data={dataTab !== undefined ? dataTab[0].detail_support_service : []}
+        wrapperClasses='table-responsive'
+        classes='table align-middle gs-0 gy-2'
+        headerClasses='fw-bolder text-center'
+        noDataIndication={() => {
+          return (
+            <div className='row'>
+              <div className='col-lg-12' style={{ textAlign: 'center' }}>
+                No Data
+              </div>
+            </div>
+          );
+        }}
+      />
+      <hr />
+      <h3 style={{ textAlign: 'center' }}>Detail Production Service</h3>
+      <BootstrapTable
+        keyField='_id'
+        columns={columnsProduction}
+        data={dataTab !== undefined ? dataTab[0].detail_production_service : []}
+        wrapperClasses='table-responsive'
+        classes='table align-middle gs-0 gy-2'
+        headerClasses='fw-bolder text-center'
+        noDataIndication={() => {
+          return (
+            <div className='row'>
+              <div className='col-lg-12' style={{ textAlign: 'center' }}>
+                No Data
+              </div>
+            </div>
+          );
+        }}
+      />
+      <hr />
       <BootstrapTable
         keyField='_id'
         columns={columnsDiscount}
-        data={dataTab[0].detail_diskon}
+        data={dataTab !== undefined ? dataTab[0].detail_diskon : []}
         wrapperClasses='table-responsive'
         classes='table align-middle gs-0 gy-2'
         headerClasses='fw-bolder text-center'

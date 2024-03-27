@@ -19,6 +19,7 @@ import {
   changeDateIndoToGlobal,
   dataURLtoPDFFile,
   NumberOnly,
+  replaceDashWithHyphen,
 } from '../../../../../setup/function.js';
 import { postPDF } from '../../../../../setup/axios/Firebase';
 import * as modalSecond from '../../../../modules/modal/ModalSecondRedux';
@@ -189,7 +190,6 @@ export const reducer = persistReducer(
           feedbackProductionService: [],
           feedbackSupportService: [],
           editProduct: undefined,
-          feedbackNo: undefined,
         };
       }
 
@@ -461,10 +461,14 @@ export const actions = {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       AxiosGet(`order-confirmation/by-no?no_order_konfirmasi=${no_order_konfirmasi}`).then(
         (res) => {
-          const dataDecrypt = doDecryptData(res.data, ignoredListOrderConfirmation);
+          let data = res.data as any[];
+          const dataDecrypt: any[] = doDecryptData([...data], ignoredListOrderConfirmation);
+          const finalResult = [...dataDecrypt];
+          console.log('MASUK SIN');
+          console.log(finalResult[0]['detail_produk']);
 
-          dispatch({ type: actionTypes.GetListOCByNo, payload: { feedbackNo: dataDecrypt } });
-          dispatch({ type: actionTypes.setTypeOC, payload: { typeOC: dataDecrypt[0].jenis_ok } });
+          dispatch({ type: actionTypes.GetListOCByNo, payload: { feedbackNo: finalResult } });
+          dispatch({ type: actionTypes.setTypeOC, payload: { typeOC: finalResult[0].jenis_ok } });
           dispatch(actions.setLocalProd(no_order_konfirmasi));
           dispatch(actions.setLocalDiskon(no_order_konfirmasi));
           dispatch(actions.setLocalSupportService(no_order_konfirmasi));
@@ -480,7 +484,7 @@ export const actions = {
       getState: () => {}
     ): Promise<void> => {
       const state: any = getState();
-      const selectedData = state.listorderconfirmation.feedbackNo;
+      const selectedData = [...state.listorderconfirmation.feedbackNo];
       const dataDecrypt = { ...selectedData[0] };
 
       saveLocal('dataProduct', dataDecrypt.detail_produk, ignoredListProduct).then(() => {
@@ -1182,8 +1186,8 @@ export const actions = {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
       dispatch(utility.actions.showLoadingButton());
       const onSendData = {
-        alamat_cabang: data.alamat_cabang,
-        alamat_korespondensi: data.alamat_korespondensi,
+        alamat_cabang: replaceDashWithHyphen(data.alamat_cabang),
+        alamat_korespondensi: replaceDashWithHyphen(data.alamat_korespondensi),
         kota: data.kota,
         email: data.email,
       };

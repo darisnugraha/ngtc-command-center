@@ -263,7 +263,7 @@ export const saveLocal = async (name, payload, ignore = []) => {
   return new Promise((resolve, reject) => {
     try {
       if (Array.isArray(payload)) {
-        const hasil = payload.map((x) => doEncrypt(x, ignore));
+        const hasil = payload.map((x) => doEncryptData(x, ignore));
         localStorage.setItem(name, JSON.stringify(hasil));
         resolve('Berhasil');
       } else if (typeof payload === 'string') {
@@ -289,13 +289,13 @@ export const getLocal = (name, ignore = []) => {
         resolve([]);
       }
       if (result.includes('[')) {
-        const hasil = JSON.parse(result).map((x) => doDecrypt(x, ignore));
+        const hasil = JSON.parse(result).map((x) => doDecryptData(x, ignore));
         resolve(hasil);
       } else if (result.includes('{')) {
-        const hasil = doDecrypt(JSON.parse(result), ignore);
+        const hasil = doDecryptData(JSON.parse(result), ignore);
         resolve(hasil);
       } else {
-        resolve(doDecrypt(result, ignore));
+        resolve(doDecryptData(result, ignore));
       }
     } catch (error) {
       reject(error);

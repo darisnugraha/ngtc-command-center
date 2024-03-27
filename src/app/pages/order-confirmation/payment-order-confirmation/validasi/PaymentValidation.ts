@@ -39,6 +39,9 @@ const PaymentValidation = (values: PaymentModel): FormErrors<PaymentModel> => {
   if (!values.foto) {
     errors.foto = 'Foto Required';
   }
+  if (!values.description) {
+    errors.foto = 'Description Required';
+  }
 
   return errors;
 };

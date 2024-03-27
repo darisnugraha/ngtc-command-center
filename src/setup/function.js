@@ -119,7 +119,7 @@ export const changeDateIndoToGlobal = (data) => {
 };
 
 export function replaceDashWithHyphen(input) {
-  return input.replace(/–/g, '-');
+  return input.replaceAll(/–/g, '-');
 }
 
 export const manipulatePriceData = (data) => {

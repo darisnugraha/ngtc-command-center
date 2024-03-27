@@ -12,6 +12,7 @@ import * as modalSecond from '../../../modules/modal/ModalSecondRedux';
 import * as utility from '../../../../setup/redux/UtilityRedux';
 import { dataURLtoFile } from '../../../../setup/function.js';
 import KwitansiPDF from '../../receivable/component/KwitansiPDF.jsx';
+import { ignoreReceivable, ignoreStore } from '../../receivable/redux/ReceivableRedux';
 
 export interface ActionWithPayload<T> extends Action {
   payload?: T;
@@ -1058,6 +1059,57 @@ export const actions = {
       } else {
         toast.error('Proses Validasi Sedang Berjalan!');
       }
+    };
+  },
+  dummyKwitansi: () => {
+    return async (): Promise<void> => {
+      const responseReceivable = {
+        _id: '66036fadfb24f1373b971d48',
+        no_piutang: 'PTG-270324-0004',
+        tanggal: '2024-03-27',
+        no_order_konfirmasi: 'MRK-OK/27/03/24/0002',
+        tanggal_order_konfirmasi: '2024-03-27',
+        no_sales_order: '-',
+        tanggal_sales_order: '2024-03-27',
+        kode_toko: 'MBP',
+        kode_cabang: 'PUSAT',
+        tipe_pembayaran: 'B685B382C6B6BAC6',
+        bank: 'A485BB',
+        no_rekening: '9464A666A4A5A7',
+        total_tagihan: 1250000000,
+        bayar_rp: 1250000000,
+        sisa_tagihan: 0,
+        deskripsi:
+          'B298DF96D4E9D6E692D653E299E5E4D6E1928887E19FE290BAE192DB53CC95E5D195B593C997D39D93BED6D598D79FD654C6E4E4E6968886E1A0E8E4DEE39F72539854C1D1DCD5A5CD96DA54C0D5E2D696DA53C5A8E2E2DA9484D79FE7A8DCDFE3',
+        status: 'DONE',
+        status_validasi: 'DONE',
+        input_date: '2024-03-27T01:00:29.837Z',
+        __v: 0,
+        alamat_cabang:
+          'AC9FA054B6D9E1D99FCF9EE495E1D795A551B6A2A065A4A5A19474D1A6E7A6E8E0D6E25D887ED797A190B8DD93D1A5E76093BBE4E8928875D3A2D7E5E3DB5D887DD3ABD490B7D5A3C9A79268A3A6A6A85195609F61A0',
+      };
+      const responseStore = {
+        _id: '66024b0c49b9995408235fb2',
+        kode_toko: 'MBP',
+        nama_toko: 'AF74BC8993B2BAC684A980B354C3C5C8B585',
+        nama_customer: 'B17FBE7593C2B6C17DA981',
+        kota: 'A474C078C8BEBC',
+        alamat:
+          'AC9FA054B6D9E1D99FCF9EE495E1D795A551B6A2A065A4A5A19474D1A6E7A6E8E0D6E25D887ED797A190B8DD93D1A5E76093BBE4E8928875D3A2D7E5E3DB5D887DD3ABD490B7D5A3C9A79268A3A6A6A8',
+        alamat_korespondensi:
+          'AC9FA054B6D9E1D99FCF9EE495E1D795A551B6A2A065A4A5A19474D1A6E7A6E8E0D6E25D887ED797A190B8DD93D1A5E76093BBE4E8928875D3A2D7E5E3DB5D887DD3ABD490B7D5A3C9A79268A3A6A6A8',
+        telepon: '9265A46AA6A7AAAD699A64',
+        email: 'C5A2E4A7D8D3A3E292CF94E699D6D8E8DD71CFA0D39DDF9ED8E39E',
+        tipe_toko: 'BARU',
+        status: 'OPEN',
+        input_date: '2024-03-26T04:11:56.163Z',
+        __v: 0,
+      };
+
+      KwitansiPDF(
+        [doDecryptData(responseReceivable, ignoreReceivable)],
+        [doDecryptData(responseStore, ignoreStore)]
+      );
     };
   },
 };

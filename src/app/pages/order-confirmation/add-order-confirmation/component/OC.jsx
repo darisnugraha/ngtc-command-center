@@ -116,20 +116,34 @@ const OCPDF = (data, head) => {
     doc.text(data[0].no_order_konfirmasi, 90, final + 65 + tambahanY);
   }
   doc.text('Dengan Hormat ,', 23, final + 70 + tambahanY);
-  const headerDesc = head.header_desc;
-  const jumlah_header_desc = headerDesc.length;
-  if (jumlah_header_desc > 0) {
-    doc.text(headerDesc.slice(0, 127), 26, final + 75 + tambahanY);
-  }
-  if (jumlah_header_desc > 157) {
-    doc.text(headerDesc.slice(127, 254), 15, final + 80 + tambahanY);
-  }
-  // doc.text(head.header_desc, 26, 70);
+  const tableDesc = [[{ content: `         ${head.header_desc}` }]];
+
+  doc.autoTable({
+    head: [],
+    body: tableDesc,
+    startY: final + 75 + tambahanY,
+    theme: 'plain',
+    pageBreak: 'auto',
+    rowPageBreak: 'avoid',
+    margin: { top: 10 },
+    bodyStyles: {
+      fontSize: 8,
+      halign: 'left',
+      valign: 'top',
+    },
+    headStyles: {
+      fontSize: 8,
+      fillColor: '#E8E5E5',
+      textColor: '#000',
+      valign: 'middle',
+      halign: 'left',
+    },
+  });
 
   let tableRows = [];
   let tableColumn = [];
 
-  let finalY = final + 85 + tambahanY;
+  let finalY = doc.lastAutoTable.finalY;
 
   tableColumn = [
     [
